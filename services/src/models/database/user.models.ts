@@ -1,75 +1,72 @@
 
-import {
-  DataTypes,
-  Model,
-  Optional,
-} from 'sequelize';
+import { DataTypes, Model, Optional } from "sequelize";
 
-import sequelize from '../../database/config';
+import sequelize from "../../database/config";
+import UserRoleModel from "./user-role.models";
 
+// Define the attributes (fields) for the UserModel
 type UserAttributes = {
-  uuid: string,
-  name: string,
-  last_name: string,
-  email: string,
-  userName: string,
-  password: string,
-  fkRol: string,
-  status: boolean,
+  uuid: string;
+  email: string;
+  userName: string;
+  password: string;
+  status: boolean;
 };
 
-type UserCreationAttributes = Optional<UserAttributes, 'uuid'>;
+// Define the attributes that can be created without specifying 'uuid' (used for creating instances)
+type UserCreationAttributes = Optional<UserAttributes, "uuid" | "status">;
 
+// Create the UserModel class extending the Sequelize Model class
 class UserModel extends Model<UserAttributes, UserCreationAttributes> {
   declare uuid: string;
-  declare name: string;
-  declare last_name: string;
   declare userName: string;
   declare email: string;
   declare password: string;
-  declare fkRol: string;
   declare status: boolean;
+
+  static associate(models: any) {
+    this.belongsToMany(models.RoleModel, {
+      through: UserRoleModel,
+      foreignKey: "fkCatUser",
+      constraints: true,
+    });
+  }
 }
 
-UserModel.init({
-  uuid: {
-    type: DataTypes.STRING,
-    allowNull: false,
+// Initialize the UserModel with its attributes and table settings
+UserModel.init(
+  {
+    uuid: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
+      allowNull: false,
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
+    userName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    status: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
   },
-  name: {
-    type: DataTypes.STRING,
-    allowNull: false,
+  {
+    sequelize,
+    tableName: "CatUser",
+    modelName: "UserModel",
   },
-  last_name: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  email: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
-  },
-  userName: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
-  },
-  password: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  fkRol: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  status: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: true,
-  },
-}, {
-  tableName: 'cat_user',
-  modelName: 'UserModel',
-  sequelize,
-});
+)
+
 
 export default UserModel;

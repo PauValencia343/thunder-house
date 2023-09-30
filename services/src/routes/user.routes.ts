@@ -1,56 +1,69 @@
 
-import { Router } from 'express';
-import { check } from 'express-validator';
+import { Router } from "express";
+import { check } from "express-validator";
 import {
   userGet,
   userDelete,
   userPost,
   userPut,
-} from '../controllers/user.controllers';
+} from "../controllers/user.controllers";
 import {
-  validarCampos,
-  validarJWT,
-  esAdminRole,
-  tieneRole,
-} from '../middlewares';
+  validateFields,
+  validateJWT,
+  isAdminRole,
+  hasRole,
+} from "../middlewares";
 import {
-  esRoleValido,
-  emailExiste,
-  existeUsuarioPorId,
-} from '../helpers/db-validators';
+  emailExists,
+  userExistsById,
+} from "../helpers/db-validators";
 
 const router = Router();
 
+// GET route for fetching user data
+router.get("/", [
+    validateJWT,
+    validateFields,
+  ], userGet
+);
 
-router.get('/', userGet);
+// PUT route for updating a user's data by ID
+router.put("/:uuid", [
+    validateJWT,
+    check("uuid", "Invalid UUID").isUUID(),
+    check("uuid").custom(userExistsById),
+    check("password", "Password is required").not().isEmpty(),
+    check("password", "Password must be at least 6 characters long").isLength({
+      min: 6,
+    }),
+    check("roles", "field (roles) is required").not().isEmpty(),
+    validateFields,
+  ],
+  userPut
+);
 
-router.put('/:id', [
-  check('id', 'No es un ID válido').isMongoId(),
-  check('id').custom(existeUsuarioPorId),
-  check('rol').custom(esRoleValido).optional(),
-  validarCampos
-], userPut);
+// POST route for creating a new user
+router.post("/", [
+    validateJWT,
+    check("password", "Password is required").not().isEmpty(),
+    check("password", "Password must be at least 6 characters long").isLength({
+      min: 6,
+    }),
+    check("email").custom(emailExists),
+    check("roles", "field (roles) is required").not().isEmpty(),
+    validateFields,
+  ],
+  userPost
+);
 
-router.post('/', [
-  check('nombre', 'El nombre es obligatorio').not().isEmpty(),
-  check('password', 'El password es obligatorio').not().isEmpty(),
-  check('password', 'El password debe tener más de 6 letras').isLength({ min: 6 }),
-  // check('rol', 'No es un rol válido').isIn(['ADMIN_ROLE','USER_ROLE']),
-  // check('rol').custom( (rol) => esRoleValido(rol) ),
-  check('rol').custom(esRoleValido),
-  check('correo').custom(emailExiste),
-  validarCampos
-], userPost);
-
-
-router.delete('/:id', [
-  validarJWT,
-  // esAdminRole,
-  tieneRole('ADMIN_ROLE', 'VENTAS_ROLE'),
-  check('id', 'No es un ID válido').isMongoId(),
-  check('id').custom(existeUsuarioPorId),
-  validarCampos
-], userDelete);
-
+// DELETE route for deleting a user by ID
+router.delete("/:uuid", [
+    validateJWT,
+    check("uuid", "Invalid UUID").isUUID(),
+    check("uuid").custom(userExistsById),
+    validateFields,
+  ],
+  userDelete
+);
 
 export default router;

@@ -1,18 +1,57 @@
 
-import { DataTypes } from 'sequelize';
+import { DataTypes, Model, Optional } from "sequelize";
 
-import sequelize from '../../database/config';
+import sequelize from "../../database/config";
+import UserRoleModel from "./user-role.models";
 
+// Define the attributes (fields) for the RoleModel
+type RoleAttributes = {
+  uuid: string;
+  role: string;
+  status: boolean;
+};
 
-const RoleModel = sequelize.define('cat_role', {
-  rol: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
+// Define the attributes that can be created without specifying 'uuid' (used for creating instances)
+type RoleCreationAttributes = Optional<RoleAttributes, "uuid" | "status">;
+
+// Create the RoleModel class extending the Sequelize Model class
+class RoleModel extends Model<RoleAttributes, RoleCreationAttributes> {
+  declare uuid: string;
+  declare role: string;
+  declare status: boolean;
+  
+  static associate(models: any) {
+    this.belongsToMany(models.UserModel, {
+      through: UserRoleModel,
+      foreignKey: "fkCatRole",
+      constraints: true,
+    });
   }
-}, {
-  tableName: 'cat_role',
 }
+
+// Initialize the RoleModel with its attributes and table settings
+RoleModel.init(
+  {
+    uuid: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true,
+      allowNull: false,
+    },
+    role: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    status: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
+  },
+  {
+    sequelize,
+    tableName: "CatRole",
+    modelName: "RoleModel",
+  },
 );
 
 

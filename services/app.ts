@@ -1,9 +1,18 @@
 
-require('dotenv').config();
-
+import dotenv from 'dotenv';
 import Server from './src/models/server.models';
+import argv from './src/config/yargs';
+import generator from './src/generator';
 
-const server = new Server();
+dotenv.config();
+
+const server = new Server;
 
 server.listen();
-server.updateDatabase();
+
+if (argv.database) {
+  (async ()=> {
+    await generator();
+  })();
+}
+

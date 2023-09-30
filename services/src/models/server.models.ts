@@ -1,81 +1,80 @@
 
-import express, { Express } from 'express';
-import cors from 'cors';
-import fileUpload from 'express-fileupload';
+import express, { Application } from "express";
+import cors from "cors";
+import fileUpload from "express-fileupload";
 
-import sequelize from '../database/config';
+import sequelize from "../database/config";
+import {
+  UserRoute,
+  RoleRoute,
+  AuthRoute,
+} from '../routes';
 
 class Server {
-  private app: Express;
+  private app: Application;
   private port: number;
   private paths: {
     user: string;
+    role: string;
     auth: string;
     search: string;
-    uploads: string;
   };
 
   constructor() {
     this.app = express();
-    this.port = Number(process.env.PORT) || 8000;
+    this.port = Number(process.env.PORT) || 8080;
     this.paths = {
-      user: '/api/user',
-      auth: '/api/auth',
-      search: '/api/search',
-      uploads: '/api/uploads'
+      user: "/api/user",
+      role: "/api/role",
+      auth: "/api/auth",
+      search: "/api/search",
     };
-    // Conectar a base ded atos
-    this.conectarDB();
+    // Connect to the database
+    this.connectDB();
     this.middlewares();
     this.routes();
   }
 
-  async conectarDB() {
-    await sequelize.authenticate();
+  async connectDB() {
+    try {
+      await sequelize.authenticate();
+      console.log("Connected to the database successfully");
+    } catch (error) {
+      console.error("Unable to connect to the database:", error);
+    }
   }
 
   middlewares() {
-    // cors
+    // Enable CORS
     this.app.use(cors());
-    // lectura y parseo de body
+    // Parse request body as JSON
     this.app.use(express.json());
-    // directorio público
-    this.app.use(express.static('public'));
-    // carga de archivos
+    // Serve static files from the "public" directory
+    this.app.use(express.static("public"));
+    // Enable file upload
     this.app.use(
       fileUpload({
         useTempFiles: true,
-        tempFileDir: '/tmp/',
-        // Permite crear directorios especificados
-        createParentPath: true
+        tempFileDir: "/tmp/",
+        createParentPath: true, // Allow creating parent directories if they don't exist
       })
     );
   }
 
   routes() {
-    this.app.use(this.paths.user, require('../routes/user.routes'));
-    this.app.use(this.paths.auth, require('../routes/auth.routes'));
-    this.app.use(this.paths.search, require('../routes/search.routes'));
-    this.app.use(this.paths.uploads, require('../routes/uploads.routes'));
+    // Configure routes for user, auth
+    this.app.use(this.paths.user, UserRoute);
+    this.app.use(this.paths.role, RoleRoute);
+    this.app.use(this.paths.auth, AuthRoute);
   }
 
   listen() {
     this.app.listen(this.port, () => {
-      console.log('Server is running in', this.port);
+      console.log("Server is running on port", this.port);
       console.log(`http://localhost:${this.port}/`);
     });
   }
 
-  updateDatabase() {
-    sequelize
-      .sync()
-      .then(() => {
-        console.log('Tables created successfully!');
-      })
-      .catch((error) => {
-        console.error('Unable to create tables : ', error);
-      });
-  }
 }
 
 export default Server;

@@ -1,4 +1,4 @@
 
 export * from './db-validators';
-export * from './generar-jwt';
-export * from './subir-archivo';
+export * from './generate-jwt';
+export * from './upload-files';

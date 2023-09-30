@@ -1,5 +1,5 @@
 
-export * from './../middlewares/validar-campos';
-export * from '../middlewares/validar-jwt';
-export * from '../middlewares/validar-roles';
-export * from '../middlewares/validar-archivo';
+export * from './validate-fields';
+export * from './validate-jwt';
+export * from './validate-roles';
+export * from './validate-file';

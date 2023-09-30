@@ -1,37 +1,38 @@
 
-import {
-  Usuario,
-  Role,
-} from '../models/index';
+import { UserModel, RoleModel } from "../models/index";
 
-export const esRoleValido = async (rol = '') => {
-  const existeRol = await Role.findOne({ rol });
-  if (!existeRol) {
-    throw new Error(`El rol ${rol} no está registrado en la BD`);
+// Check if a given email exists in the database
+export const emailExists = async (email = "") => {
+  const emailExists = await UserModel.findOne({
+    where: { email },
+  });
+  if (emailExists) {
+    throw new Error(
+      `The email ${email} has already been registered in the database`
+    );
   }
   return true;
-}
+};
 
-export const emailExiste = async (correo = '') => {
-  const existeEmail = await Usuario.findOne({ correo });
-  if (existeEmail) {
-    throw new Error(`El correo ${correo} ya fue registrado en la BD`);
+// Check if a user with a given ID exists in the database
+export const userExistsById = async (uuid: string) => {
+  const userExists = await UserModel.findByPk(uuid);
+  if (!userExists) {
+    throw new Error(`The ID ${uuid} does not exist in the database - user`);
   }
   return true;
-}
+};
 
-export const existeUsuarioPorId = async (id) => {
-  const existencia = await Usuario.findByPk(id);
-  if (!existencia) {
-    throw new Error(`El id ${id} no existe en la BD - usuario`);
+// Check if a given collection is allowed based on a list of allowed collections
+export const allowedCollections = (
+  collection = "",
+  collections: string[] = []
+) => {
+  const isAllowed = collections.includes(collection);
+  if (!isAllowed) {
+    throw new Error(
+      `The collection ${collection} is not allowed, allowed collections: ${collections}`
+    );
   }
   return true;
-}
-
-export const coleccionesPermitidas = (coleccion = '', colecciones: string[] = []) => {
-  const incluida = colecciones.includes(coleccion);
-  if (!incluida) {
-    throw new Error(`La colección ${coleccion} no está permitida, ${colecciones}`);
-  }
-  return true;
-}
+};
