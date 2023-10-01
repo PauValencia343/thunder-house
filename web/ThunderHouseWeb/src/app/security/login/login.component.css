@@ -16,6 +16,12 @@ input{
 button{
     border-radius: 20px;
     background-color: #948E8E;
+    border: none;
+}
+
+button:hover{
+    background-color: #08398B;
+    font-size: 20px;
 }
 
 col-8 {
@@ -26,7 +32,6 @@ col-8 {
   }
 
 .login-img {
-    width: 100%;
-    display: block;
-    height: auto;
+    background-image: url('/assets/img/imageLogin.png'); 
+    background-size: cover;
 }
