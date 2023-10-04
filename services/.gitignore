@@ -27,7 +27,7 @@ Thumbs.db
 desktop.ini
 
 # Build and dependency configuration
-tsconfig.json
+# tsconfig.json
 package-lock.json
 yarn.lock
 

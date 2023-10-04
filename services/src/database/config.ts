@@ -7,8 +7,8 @@ const sequelize = new Sequelize({
   dialectOptions: {
     trustedConnection: true,
   },
-  server: "IVAN",
-  database: "db_thunder_house",
+  server: process.env.SERVER_DATABASE,
+  database: process.env.NAME_DATABASE,
 } as Options);
 
 export default sequelize;

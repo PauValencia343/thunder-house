@@ -10,10 +10,6 @@ Before you begin, ensure you have met the following requirements:
 - **Node.js:** Install Node.js if you haven't already.
 - **TypeScript:** Install TypeScript globally using the following command:
 
-    ```
-    npm install -g typescript
-    ```
-
 ## Installation
 1. Create a SQL Server Database:
 
@@ -34,15 +30,25 @@ GO
 USE db_thunder_house;
 GO
 ```
-2. Navigate to the project directory:
+2. Enable connections:
+- Open "SQL Server 2022 Configuration Manager"
+- Go to
+```
+SQL Server Configuration Manager (Local)
+|_SQL Server Network Configuration
+|__Protocols for MSSQLSERVER
+```
+- Enable all
+
+3. Navigate to the project directory:
 ```
 cd services
 ```
-3. Install Dependencies
+4. Install Dependencies
 ```
 npm install
 ```
-4. Build the Project:
+5. Build the Project:
 ```
 npm run ts
 npm run build
