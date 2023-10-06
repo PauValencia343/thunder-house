@@ -8,14 +8,14 @@
             </div>
             <div class="col-12 mt-2 px-5">
                 <h5><b>Email:</b></h5>
-                <input class="form-control" type="text">
+                <input class="form-control" type="text" [(ngModel)]="strEmail">
             </div>
             <div class="col-12 mt-3 px-5">
                 <h5><b>Password:</b></h5>
-                <input class="form-control" type="password">
+                <input class="form-control" type="password" [(ngModel)]="strPassword">
             </div>
             <div class="col-12 mt-4 px-5 text-center d-grid gap-2">
-                <button type="button" class="btn btn-secondary"><span class="text-white"><b>Log in</b></span></button>
+                <button type="button" class="btn btn-secondary" (click)="verifyUser()"><span class="text-white"><b>Log in</b></span></button>
             </div>
             <div class="col-12 text-star mt-4 px-5">
                 <span class="account" style="color: brown;">Don´t have an account?</span>
