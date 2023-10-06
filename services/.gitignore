@@ -1,0 +1,38 @@
+# Node modules
+node_modules/
+
+# Build output
+dist/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Log files
+logs/
+*.log
+
+# User-specific or IDE-related files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# OS and editor files
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Build and dependency configuration
+# tsconfig.json
+package-lock.json
+yarn.lock
+
+# Dependency directory (if using Yarn)
+.yarn/
+
+# Visual Studio Code workspace settings (if applicable)
+.code-workspace
