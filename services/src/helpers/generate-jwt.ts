@@ -1,7 +1,7 @@
 
 import jwt from "jsonwebtoken";
 
-// Generate a JWT token with the provided UID (user ID)
+
 export const generateJWT = (uid = "") => {
   return new Promise((resolve, reject) => {
     const payload = { uid };

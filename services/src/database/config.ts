@@ -1,14 +1,19 @@
 
-import { Options, Sequelize } from "sequelize";
+import { DataSource } from "typeorm";
 
-const sequelize = new Sequelize({
-  dialect: "mssql",
-  dialectModulePath: "msnodesqlv8/lib/sequelize",
-  dialectOptions: {
-    trustedConnection: true,
-  },
-  server: process.env.SERVER_DATABASE,
+import * as entities from "../entity/index";
+
+
+export const AppDataSource = new DataSource({
+  type: "mysql",
+  host: process.env.SERVER_DATABASE,
+  port: parseInt(process.env.PORT_DATABASE || "3306") as number,
+  username: process.env.USER_NAME_DATABASE,
+  password: process.env.PASSWORD_DATABASE,
   database: process.env.NAME_DATABASE,
-} as Options);
+  synchronize: true,
+  // logging: true,
+  entities
+});
 
-export default sequelize;
+export default AppDataSource;

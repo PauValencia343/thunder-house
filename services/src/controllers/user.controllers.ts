@@ -1,90 +1,111 @@
 
 import { Request, Response } from "express";
-import bcryptjs from "bcryptjs";
 
-import UserModel from "./../models/database/user.models";
-import { UserRoleModel } from "../models";
+import {
+  RoleEntity,
+  UserEntity,
+  UserInterface,
+} from "../entity";
+import { generatePassword } from "../helpers";
 
 
-// Handler for getting a list of users
 export const userGet = async (req: Request, res: Response) => {
-  const { limit = 10, page = 1 } = req.query;
-  const parsedPage = parseInt(page as string, 10);
-  const parsedLimit = parseInt(limit as string, 10);
-  const offset = (parsedPage - 1) * parsedLimit;
-  const query = { status: true };
   try {
-    // Find and count all users that meet the query criteria
-    const users = await UserModel.findAndCountAll({
-      where: query,
-      limit: parseInt(limit as string),
-      offset: offset,
+    const { uuid } = req.params;
+    const userFound = await UserEntity.findOne({
+      where: {
+        uuid,
+      },
+      relations: {
+        roles: true,
+      },
     });
-    return res.json({ users });
+    return res.status(200).json({
+      user: userFound,
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).json({
-      error: "Internal server error"
+      error: 'Internal server error',
     });
   }
 };
 
-// Handler for updating a user
+export const userGetAll = async (req: Request, res: Response) => {
+  const { limit = 10, page = 1 } = req.query;
+  const parsedPage = parseInt(page as string, 10);
+  const parsedLimit = parseInt(limit as string, 10);
+  const skip = (parsedPage - 1) * parsedLimit;
+  try {
+    const [list, count] = await Promise.all([
+      UserEntity.find({
+        skip,
+        take: parsedLimit,
+        relations: {
+          roles: true,
+        },
+      }),
+      UserEntity.count(),
+    ]);
+    const listResult = list.map((user) => {
+      const { password, ...rest } = user;
+      return rest;
+    });
+    
+    return res.status(200).json({
+      list: listResult,
+      count,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      error: 'Internal server error',
+    });
+  }
+};
+
 export const userPut = async (req: Request, res: Response) => {
   const { uuid } = req.params;
-  const { password, email, roles } = req.body;
+  const { password, email, user_name, roles, status } = req.body;
   try {
-    const userFound = await UserModel.findByPk(uuid);
-    if (!userFound) {
-      return res.status(404).json({ msg: "User not found" });
-    }
-    const salt = bcryptjs.genSaltSync();
-    const newPassword = bcryptjs.hashSync(password, salt);
-    const userName = email.split("@")[0];
-    await userFound.update({
+    const userFound = await UserEntity.findOneBy({
+      uuid
+    });
+    userFound!.checkUpdate({
       email,
-      userName,
-      password: newPassword,
+      user_name,
+      status,
+      password: generatePassword(password),
+      roles,
+    } as UserInterface);
+    UserEntity.update(uuid, userFound!);
+
+    const user: any = { ...userFound };
+    delete user.password;
+    
+    return res.status(200).json({
+      user,
     });
-    await UserRoleModel.destroy({
-      where: {
-        fkCatUser: uuid,
-      },
-    });
-    for (const roleId of roles) {
-      await UserRoleModel.create({
-        fkCatRole: roleId,
-        fkCatUser: uuid,
-      });
-    }
-    const updatedUser = await UserModel.findByPk(uuid);
-    res.json(updatedUser);
   } catch (error) {
     console.error("Error updating user:", error);
     res.status(500).json({ msg: "Internal server error" });
   }
 };
 
-// Handler for creating a new user
 export const userPost = async (req: Request, res: Response) => {
-  const { email, password, roles } = req.body;
-  const salt = bcryptjs.genSaltSync();
-  const passwordHash = bcryptjs.hashSync(password, salt);
-  const userName = email.split("@")[0];
+  const { email, user_name, password } = req.body;
   try {
-    const newUser = await UserModel.create({
-      email,
-      userName,
-      password: passwordHash,
-    });
-    for (const uuidRole of roles) {
-      await UserRoleModel.create({
-        fkCatRole: uuidRole,
-        fkCatUser: newUser.uuid,
-      });
-    }
+    const newUser = new UserEntity();
+    newUser.email = email;
+    newUser.user_name = user_name;
+    newUser.password = generatePassword(password);
+    await newUser.save();
+
+    const user: any = { ...newUser };
+    delete user.password;
+    
     return res.status(200).json({
-      user: newUser,
+      user,
     });
   } catch (error) {
     return res.status(500).json({
@@ -94,20 +115,24 @@ export const userPost = async (req: Request, res: Response) => {
 };
 
 
-// Handler for soft-deleting a user
 export const userDelete = async (req: Request, res: Response) => {
   const { uuid } = req.params;
   try {
-    // Find the user by uuid
-    const usuario = await UserModel.findOne({ where: { uuid } });
-    if (!usuario) {
+    const userFound = await UserEntity.findOne({ where: { uuid } });
+    if (!userFound) {
       return res.status(404).json({ error: "User not found" });
     }
-    // Update the user's status to false to "soft-delete" the user
-    await usuario.update({ status: false });
-    // Retrieve the authenticated user from the request (if available)
-    const usuarioAutentificado = req.user;
-    return res.json({ usuario, usuarioAutentificado });
+    userFound.status = false;
+    await userFound.save();
+    // const authenticatedUser = req.user;
+    
+    const user: any = { ...userFound };
+    delete user.password;
+    
+    return res.status(200).json({
+      user,
+      // authenticatedUser,
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Internal Server Error" });
