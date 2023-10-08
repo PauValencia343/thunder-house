@@ -3,12 +3,15 @@ import express, { Application } from "express";
 import cors from "cors";
 import fileUpload from "express-fileupload";
 
-import sequelize from "../database/config";
+import argv from '../config/yargs';
 import {
   UserRoute,
   RoleRoute,
   AuthRoute,
 } from '../routes';
+import AppDataSource from "../database/config";
+import seedDatabase from "../database/seedDatabase";
+
 
 class Server {
   private app: Application;
@@ -37,8 +40,13 @@ class Server {
 
   async connectDB() {
     try {
-      await sequelize.authenticate();
+      await AppDataSource.initialize();
       console.log("Connected to the database successfully");
+      if (argv.database) {
+        (async ()=> {
+          await seedDatabase();
+        })();
+      }
     } catch (error) {
       console.error("Unable to connect to the database:", error);
     }
@@ -56,7 +64,7 @@ class Server {
       fileUpload({
         useTempFiles: true,
         tempFileDir: "/tmp/",
-        createParentPath: true, // Allow creating parent directories if they don't exist
+        createParentPath: true,
       })
     );
   }

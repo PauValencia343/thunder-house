@@ -1,3 +1,4 @@
+
 export type ConfigType = {
   [key: string]: {
     dialect: string;

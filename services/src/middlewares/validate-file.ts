@@ -1,7 +1,7 @@
 
 import { NextFunction, Request, Response } from "express";
 
-// Middleware to validate if a file is included in the request
+
 export const validateFileUpload = (
   req: Request,
   res: Response,
