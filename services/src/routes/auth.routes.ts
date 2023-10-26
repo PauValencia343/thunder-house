@@ -12,7 +12,8 @@ router.post("/login", [
     check("credential", "field (credential) is required: user_name or email").not().isEmpty(),
     check("password", "field (password) is required").not().isEmpty(),
     validateFields,
-  ], login
+  ],
+  login,
 );
 
 export default router;

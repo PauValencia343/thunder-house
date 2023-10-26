@@ -1,23 +1,23 @@
 
-import { v4 as uuidv4 } from 'uuid';
 import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
   BaseEntity,
-  ManyToMany,
-  JoinTable,
+  OneToMany,
 } from 'typeorm';
+
 import {
-  RoleEntity
-} from './role.entity';
+  CatRoleEntity
+} from './cat-role.entity';
+import { DetailUserRoleEntity } from './detail-user-role.entity';
 
 
 @Entity({ name: 'cat_user', schema: 'public' })
-export class UserEntity extends BaseEntity {
+export class CatUserEntity extends BaseEntity {
 
-  @PrimaryGeneratedColumn('uuid')
-  uuid: string = uuidv4();
+  @PrimaryGeneratedColumn('increment')
+  id_cat_user?: number;
 
   @Column()
   email!: string;
@@ -30,10 +30,9 @@ export class UserEntity extends BaseEntity {
 
   @Column({ default: true })
   status: boolean = true;
-
-  @ManyToMany(() => RoleEntity)
-  @JoinTable({ name: 'detail_user_role', schema: 'public' })
-  roles!: RoleEntity[];
+  
+  @OneToMany(type => DetailUserRoleEntity, (detailUserRole: DetailUserRoleEntity) => detailUserRole.users)
+  userRoles!: DetailUserRoleEntity[];
 
   checkUpdate(objUser: UserInterface){
     if (objUser.email !== null) this.email = objUser.email;
@@ -41,8 +40,9 @@ export class UserEntity extends BaseEntity {
     if (objUser.password !== null) this.password = objUser.password;
     if (objUser.password !== null) this.password = objUser.password;
     if (objUser.status !== null) this.status = objUser.status;
-    if (objUser.roles !== null) this.roles = objUser.roles;
+    // if (objUser.roles !== null) this.roles = objUser.roles;
   }
+
 }
 
 export interface UserInterface {
@@ -51,6 +51,6 @@ export interface UserInterface {
   user_name: string;
   password: string;
   status: boolean;
-  roles: RoleEntity[];
+  roles: CatRoleEntity[];
 }
 

@@ -2,19 +2,20 @@
 import { Request, Response } from "express";
 import bcryptjs from "bcryptjs";
 
-import { UserEntity } from "../entity";
+import { CatUserEntity } from "../entity";
 import { generateJWT } from "../helpers/generate-jwt";
 
 
 export const login = async (req: Request, res: Response) => {
   const { credential, password } = req.body;
   try {
-    const user = await UserEntity.findOne({
+    const user = await CatUserEntity.findOne({
       where: [
         { user_name: credential },
         { email: credential },
       ]
     });
+    // TODO Validate { status: true },
     if (!user) {
       return res.status(400).json({
         msg: "user_name or password is incorrect - email",
@@ -31,7 +32,7 @@ export const login = async (req: Request, res: Response) => {
         msg: "user_name or password is incorrect - password",
       });
     }
-    const token = await generateJWT(user.uuid);
+    const token = await generateJWT(user.id_cat_user!.toString());
     return res.json({
       credential,
       token,

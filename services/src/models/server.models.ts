@@ -5,9 +5,16 @@ import fileUpload from "express-fileupload";
 
 import argv from '../config/yargs';
 import {
-  UserRoute,
-  RoleRoute,
-  AuthRoute,
+  EquipmentCatalogRoute,
+  UserCatalogRoute,
+  RoleCatalogRoute,
+  AuthCatalogRoute,
+  RoomTypeCatalogRoute,
+  SupplieCatalogRoute,
+  RoomStatusCatalogRoute,
+  RoomCatalogRoute,
+  FloorCatalogRoute,
+  RoomActionRoute,
 } from '../routes';
 import AppDataSource from "../database/config";
 import seedDatabase from "../database/seedDatabase";
@@ -16,21 +23,38 @@ import seedDatabase from "../database/seedDatabase";
 class Server {
   private app: Application;
   private port: number;
-  private paths: {
-    user: string;
-    role: string;
-    auth: string;
-    search: string;
+  private pathsCatalogs: {
+    userCatalog: string;
+    roleCatalog: string;
+    equipmentCatalog: string;
+    roomTypeCatalog: string;
+    supplieCatalog: string;
+    roomStatusCatalog: string;
+    roomCatalog: string;
+    floorCatalog: string;
+    authCatalog: string;
+    searchCatalog: string;
   };
-
+  private pathsActions: {
+    roomAction: string;
+  };
   constructor() {
     this.app = express();
     this.port = Number(process.env.PORT) || 8080;
-    this.paths = {
-      user: "/api/user",
-      role: "/api/role",
-      auth: "/api/auth",
-      search: "/api/search",
+    this.pathsCatalogs = {
+      userCatalog: "/api/catalogs/user",
+      roleCatalog: "/api/catalogs/role",
+      equipmentCatalog: "/api/catalogs/equipment",
+      roomTypeCatalog: "/api/catalogs/room-type",
+      supplieCatalog: "/api/catalogs/supplie",
+      roomStatusCatalog: "/api/catalogs/room-status",
+      roomCatalog: "/api/catalogs/room",
+      floorCatalog: "/api/catalogs/floor",
+      authCatalog: "/api/catalogs/auth",
+      searchCatalog: "/api/actions/search",
+    };
+    this.pathsActions = {
+      roomAction: "/api/actions/room",
     };
     // Connect to the database
     this.connectDB();
@@ -71,11 +95,18 @@ class Server {
 
   routes() {
     // Configure routes for user, auth
-    this.app.use(this.paths.user, UserRoute);
-    this.app.use(this.paths.role, RoleRoute);
-    this.app.use(this.paths.auth, AuthRoute);
+    this.app.use(this.pathsCatalogs.userCatalog, UserCatalogRoute);
+    this.app.use(this.pathsCatalogs.roleCatalog, RoleCatalogRoute);
+    this.app.use(this.pathsCatalogs.equipmentCatalog, EquipmentCatalogRoute);
+    this.app.use(this.pathsCatalogs.roomTypeCatalog, RoomTypeCatalogRoute);
+    this.app.use(this.pathsCatalogs.supplieCatalog, SupplieCatalogRoute);
+    this.app.use(this.pathsCatalogs.roomStatusCatalog, RoomStatusCatalogRoute);
+    this.app.use(this.pathsCatalogs.roomCatalog, RoomCatalogRoute);
+    this.app.use(this.pathsCatalogs.floorCatalog, FloorCatalogRoute);
+    this.app.use(this.pathsCatalogs.authCatalog, AuthCatalogRoute);
+    this.app.use(this.pathsActions.roomAction, RoomActionRoute);
   }
-
+  
   listen() {
     this.app.listen(this.port, () => {
       console.log("Server is running on port", this.port);

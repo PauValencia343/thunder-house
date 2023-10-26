@@ -2,7 +2,7 @@
 import { Request, Response } from "express";
 import { getMetadataArgsStorage } from 'typeorm';
 
-import { UserEntity } from "../entity";
+import { CatUserEntity } from "../entity";
 
 // const allowedCollections = getMetadataArgsStorage().tables.map((table) => table.targetName);
 
