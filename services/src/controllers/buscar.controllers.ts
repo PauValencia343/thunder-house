@@ -1,60 +1,52 @@
 
 import { Request, Response } from "express";
-import { UserModel } from "../models";
-import { Op } from "sequelize";
+import { getMetadataArgsStorage } from 'typeorm';
 
-// Define an array of allowed collections
-const allowedCollections = ["users"];
+import { CatUserEntity } from "../entity";
 
-// Define a function called 'buscarUsuarios' that searches for users based on a search term
-const buscarUsuarios = async (term = "", res: Response) => {
-  const isUUID = true;
+// const allowedCollections = getMetadataArgsStorage().tables.map((table) => table.targetName);
 
-  if (isUUID) {
-    // If it's a UUID ID, search for a user by primary key
-    const user = await UserModel.findByPk(term);
-    return res.json({
-      results: user ? [user] : [], // Return the user if found, or an empty array if not
-    });
-  }
+// const buscarUsuarios = async (term = "", res: Response) => {
+//   const isUUID = true;
+//   if (isUUID) {
+//     const user = await UserEntity.findByPk(term);
+//     return res.json({
+//       results: user ? [user] : [],
+//     });
+//   }
 
-  // If it's not a UUID ID, perform a case-insensitive search for users
-  const regex = new RegExp(term, "i");
-  const users: UserModel[] = await UserModel.findAll({
-    where: {
-      status: true,
-      [Op.or]: [
-        { userName: { [Op.regexp]: term } },
-        { email: { [Op.regexp]: term } },
-      ],
-    },
-  });
+//   const regex = new RegExp(term, "i");
+//   const users: UserEntity[] = await UserEntity.findAll({
+//     where: {
+//       status: true,
+//       [Op.or]: [
+//         { user_name: { [Op.regexp]: term } },
+//         { email: { [Op.regexp]: term } },
+//       ],
+//     },
+//   });
+//   return res.json({
+//     results: users,
+//   });
+// };
 
-  // Return the search results
-  return res.json({
-    results: users,
-  });
-};
+// export const buscar = (req: Request, res: Response) => {
+//   const { collection, term } = req.params;
 
-// Define a function called 'buscar' to handle search requests
-export const buscar = (req: Request, res: Response) => {
-  const { collection, term } = req.params;
+//   if (!allowedCollections.includes(collection)) {
+//     return res.status(400).json({
+//       msg: `Allowed collections are ${allowedCollections.join(", ")}`,
+//     });
+//   }
 
-  // Check if the requested collection is allowed
-  if (!allowedCollections.includes(collection)) {
-    return res.status(400).json({
-      msg: `Allowed collections are ${allowedCollections.join(", ")}`,
-    });
-  }
-
-  switch (collection) {
-    case "users":
-      buscarUsuarios(term, res); // Call 'buscarUsuarios' to search for users
-      break;
-    default:
-      res.status(500).json({
-        msg: "Server error",
-      });
-      break;
-  }
-};
+//   switch (collection) {
+//     case "users":
+//       buscarUsuarios(term, res);
+//       break;
+//     default:
+//       res.status(500).json({
+//         msg: "Server error",
+//       });
+//       break;
+//   }
+// };

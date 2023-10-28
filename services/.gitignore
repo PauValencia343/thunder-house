@@ -1,38 +1,34 @@
-# Node modules
+
+# Node.js
 node_modules/
-
-# Build output
-dist/
-
-# Environment variables
-.env
-.env.*
-!.env.example
-
-# Log files
-logs/
-*.log
-
-# User-specific or IDE-related files
-.vscode/
-.idea/
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-
-# OS and editor files
-Thumbs.db
-.DS_Store
-desktop.ini
-
-# Build and dependency configuration
-# tsconfig.json
+npm-debug.log
+yarn-error.log
 package-lock.json
 yarn.lock
 
-# Dependency directory (if using Yarn)
-.yarn/
+# TypeScript
+*.tsbuildinfo
 
-# Visual Studio Code workspace settings (if applicable)
-.code-workspace
+# Build output
+dist/
+build/
+
+# Editor/IDE specific
+.vscode/
+.idea/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Environment variables
+.env
+.env.local
+!.env.example
+
+# Logs
+*.log
+*.log.*
+*.log-*.gz

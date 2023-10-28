@@ -1,10 +1,9 @@
 
-import { Request } from "express";
 import fileUpload from "express-fileupload";
 import path from "path";
 import { v4 as uuidv4 } from "uuid";
 
-// Upload one or more files and return an array of their generated file names
+
 export const uploadFiles = (
   files: fileUpload.UploadedFile | fileUpload.UploadedFile[],
   allowedExtensions = ["png", "jpg", "jpeg", "gif"],

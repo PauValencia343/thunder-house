@@ -2,40 +2,37 @@
 import { Request, Response } from "express";
 import bcryptjs from "bcryptjs";
 
-import UserModel from "./../models/database/user.models";
+import { CatUserEntity } from "../entity";
 import { generateJWT } from "../helpers/generate-jwt";
-import { Op } from "sequelize";
 
 
-// Define a function called 'login' that handles login requests
 export const login = async (req: Request, res: Response) => {
   const { credential, password } = req.body;
   try {
-    const user = await UserModel.findOne({
-      where: {
-        [Op.or]: [
-          { userName: credential },
-          { email: credential },
-        ],
-      }
+    const user = await CatUserEntity.findOne({
+      where: [
+        { user_name: credential },
+        { email: credential },
+      ]
     });
+    // TODO Validate { status: true },
     if (!user) {
       return res.status(400).json({
-        msg: "Username or password is incorrect - email",
+        msg: "user_name or password is incorrect - email",
       });
     }
     if (!user.status) {
       return res.status(400).json({
-        msg: "Username or password is incorrect - status: false",
+        msg: "user_name or password is incorrect - status: false",
       });
     }
     const validPassword = bcryptjs.compareSync(password, user.password);
     if (!validPassword) {
       return res.status(400).json({
-        msg: "Username or password is incorrect - password",
+        msg: "user_name or password is incorrect - password",
       });
     }
-    const token = await generateJWT(user.uuid);
+    const token = await generateJWT(user.id_cat_user!.toString());
     return res.json({
       credential,
       token,
