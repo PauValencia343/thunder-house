@@ -9,6 +9,9 @@ import { MainComponent } from './main/main/main.component';
 import { HomeComponent } from './modules/home/home.component';
 import { ModulesModule } from './modules/modules.module';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { DateInputsModule } from '@progress/kendo-angular-dateinputs';
+
 
 
 @NgModule({
@@ -21,7 +24,8 @@ import { NavbarComponent } from './components/navbar/navbar.component';
     AppRoutingModule,
     SecurityRoutingModule,
     BrowserAnimationsModule,
-    ModulesModule
+    HttpClientModule,
+    DateInputsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

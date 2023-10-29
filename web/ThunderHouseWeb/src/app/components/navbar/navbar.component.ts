@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
@@ -8,40 +9,48 @@ import { Component } from '@angular/core';
 export class NavbarComponent {
   arrayModules:any[]=new Array();
 
-  constructor(){
+  constructor(private _router: Router){
+  }
+
+  ngOnInit(): void {
     this.arrayModules=[
       {
         name:'Home',
-        route:'th'
+        route:'thunderhouse'
       },
       {
         name:'Rooms',
-        route:'th'
+        route:'roomManagement'
       },
       {
         name:'Reception',
-        route:'th'
+        route:'receptionManagement'
       },
       {
         name:'Inventory',
-        route:'th'
+        route:'inventoryManagement'
       },
-      {
-        name:'Payments',
-        route:'th'
-      },
-      {
-        name:'Laundry',
-        route:'th'
-      },
+      // {
+      //   name:'Payments',
+      //   route:'th'
+      // },
+      // {
+      //   name:'Laundry',
+      //   route:'th'
+      // },
       {
         name:'Luggage',
-        route:'th'
+        route:'leggageManagement'
       },
       {
         name:'Logbook',
-        route:'th'
+        route:'logbookManagement'
       },
     ]
+    
+  }
+
+  goRoute(route:any){
+    this._router.navigateByUrl(route);
   }
 }
