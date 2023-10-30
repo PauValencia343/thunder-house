@@ -30,10 +30,10 @@ export class NavbarComponent {
         name:'Inventory',
         route:'inventoryManagement'
       },
-      // {
-      //   name:'Payments',
-      //   route:'th'
-      // },
+      {
+        name:'Users',
+        route:'userManagement'
+      },
       // {
       //   name:'Laundry',
       //   route:'th'

@@ -10,6 +10,8 @@ import { InventoryManagementComponent } from './modules/inventory-management/inv
 import { LeggageManagementComponent } from './modules/leggage-management/leggage-management.component';
 import { LogBookManagementComponent } from './modules/log-book-management/log-book-management.component';
 import { RoomPdfComponent } from './modules/room-management/room-pdf/room-pdf.component';
+import { RolesManagementComponent } from './modules/roles-management/roles-management.component';
+import { UserManagementComponent } from './modules/user-management/user-management.component';
 
 const routes: Routes = [
   {
@@ -51,6 +53,10 @@ const routes: Routes = [
   {
     path: "roomPDF",
     component: RoomPdfComponent
+  },
+  {
+    path: "userManagement",
+    component: UserManagementComponent
   },
   {
     path: '**',

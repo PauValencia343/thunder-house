@@ -12,6 +12,8 @@ import { InventoryManagementComponent } from './inventory-management/inventory-m
 import { LeggageManagementComponent } from './leggage-management/leggage-management.component';
 import { LogBookManagementComponent } from './log-book-management/log-book-management.component';
 import { RoomPdfComponent } from './room-management/room-pdf/room-pdf.component';
+import { RolesManagementComponent } from './roles-management/roles-management.component';
+import { UserManagementComponent } from './user-management/user-management.component';
 
 
 @NgModule({
@@ -24,7 +26,9 @@ import { RoomPdfComponent } from './room-management/room-pdf/room-pdf.component'
     InventoryManagementComponent,
     LeggageManagementComponent,
     LogBookManagementComponent,
-    RoomPdfComponent
+    RoomPdfComponent,
+    RolesManagementComponent,
+    UserManagementComponent
   ],
   imports: [
     CommonModule,
