@@ -15,6 +15,31 @@ import { RoomManagementService } from 'src/app/services/room-management.service'
 
 })
 export class RoomManagementComponent {
+    arrayRooms:any[]=new Array();
+
+    constructor(private customerService: LoginService, 
+                private productService: LoginService, 
+                private serviceRooms: RoomManagementService) 
+    {
+        this.getAllRooms();
+     }
+
+    getAllRooms(){
+        this.serviceRooms.getAllRooms().subscribe((rooms:any)=>{
+            this.arrayRooms=rooms.list;
+            console.log(this.arrayRooms)
+        }, (err)=>{
+            console.log(err)
+        });
+    }
+
+
+
+
+
+
+
+
   customers1: any[] = [];
 
     customers2: any[] = [];
@@ -49,7 +74,6 @@ export class RoomManagementComponent {
 
     @ViewChild('filter') filter!: ElementRef;
 
-    constructor(private customerService: LoginService, private productService: LoginService, private serviceRooms: RoomManagementService) { }
 
     ngOnInit() {
         this.customerService.getCustomersLarge().then(customers => {

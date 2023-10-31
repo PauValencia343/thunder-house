@@ -8,7 +8,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 d-flex justify-content-center align-items-center">
               <div class="card">
                 <p-table #dt1 [tableStyle]="{ 'min-width': '50rem' }"
-                    [style]="{'font-size': '15px'}" [value]="customers1" dataKey="id" [rows]="5" [loading]="loading" [rowHover]="true" styleClass="p-datatable-gridlines" [paginator]="true" [globalFilterFields]="['name','country.name','representative.name','status']" responsiveLayout="scroll" >
+                    [style]="{'font-size': '15px'}" [value]="arrayRooms" dataKey="id" [rows]="5" [loading]="loading" [rowHover]="true" styleClass="p-datatable-gridlines" [paginator]="true" [globalFilterFields]="['name','country.name','representative.name','status']" responsiveLayout="scroll" >
                   <ng-template pTemplate="caption">
                     <div class="row">
                       <div class="col-6 text-start">
@@ -27,40 +27,23 @@
                     <tr >
                       <th style="min-width: 18rem;">
                         <div class="flex justify-content-between align-items-center">
-                          Name
+                          Number Floot
+                          <p-columnFilter type="text" field="number" display="menu" placeholder="Search by name"></p-columnFilter>
+                        </div>
+                      </th>
+                      <th style="min-width: 18rem;">
+                        <div class="flex justify-content-between align-items-center">
+                          Name Floot
                           <p-columnFilter type="text" field="name" display="menu" placeholder="Search by name"></p-columnFilter>
                         </div>
                       </th>
-                     
-                      <th style="min-width: 24rem">
+                      <th style="min-width: 18rem;">
                         <div class="flex justify-content-between align-items-center">
-                          Agent
-                          <p-columnFilter field="representative" matchMode="in" display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false">
-                            <ng-template pTemplate="header">
-                              <div class="px-3 pt-3 pb-0">
-                                <span class="font-bold">Agent Picker</span>
-                              </div>
-                            </ng-template>
-                            <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-                              <p-multiSelect [ngModel]="value" [options]="representatives" placeholder="Any" (onChange)="filter($event.value)" optionLabel="name">
-                                <ng-template let-option pTemplate="item">
-                                  <div class="p-multiselect-representative-option">
-                                    <img [alt]="option.label" src="assets/demo/images/avatar/{{option.image}}" width="32" style="vertical-align: middle" />
-                                    <span class="ml-2">{{option.name}}</span>
-                                  </div>
-                                </ng-template>
-                              </p-multiSelect>
-                            </ng-template>
-                          </p-columnFilter>
+                          Status Floot
+                          <p-columnFilter type="text" field="status" display="menu" placeholder="Search by name"></p-columnFilter>
                         </div>
                       </th>
-                      <th style="min-width: 10rem">
-                        <div class="flex justify-content-between align-items-center">
-                          Date
-                          <p-columnFilter type="date" field="date" display="menu" placeholder="mm/dd/yyyy"></p-columnFilter>
-                        </div>
-                      </th>
-                      <th style="min-width: 12rem">
+                      <!-- <th style="min-width: 12rem">
                         <div class="flex justify-content-between align-items-center">
                           Status
                           <p-columnFilter field="status" matchMode="equals" display="menu">
@@ -73,7 +56,7 @@
                             </ng-template>
                           </p-columnFilter>
                         </div>
-                      </th>
+                      </th> -->
                       <th style="min-width: 10rem">
                         <div class="flex justify-content-between align-items-center">
                           Actions
@@ -81,34 +64,30 @@
                       </th>
                     </tr>
                   </ng-template>
-                  <ng-template pTemplate="body" let-customer>
+                  <ng-template pTemplate="body" let-room>
                     <tr>
                       <td>
-                        {{customer.name}}
+                        {{room.number}}
                       </td>
                       <td>
-                        <span class="image-text ml-2">{{customer.representative.name}}</span>
+                        {{room.name}}
                       </td>
                       <td>
-                        {{customer.date | date: 'MM/dd/yyyy'}}
-                      </td>
-                      <td class="text-center">
-                        <p-tag [value]="customer.status || ''" [severity]="getSeverity(customer.status || '')"></p-tag>
+                        {{room.status}}
                       </td>
                       <td class="text-center">
                         <p-button icon="pi pi-info-circle" styleClass="p-button-success p-button-outlined"></p-button>
-
                       </td>
                     </tr>
                   </ng-template>
                   <ng-template pTemplate="emptymessage">
                     <tr>
-                      <td colspan="8">No customers found.</td>
+                      <td colspan="8">No Romms found.</td>
                     </tr>
                   </ng-template>
                   <ng-template pTemplate="loadingbody">
                     <tr>
-                      <td colspan="8">Loading customers data. Please wait.</td>
+                      <td colspan="8">Loading Romms data. Please wait.</td>
                     </tr>
                   </ng-template>
                   </p-table>

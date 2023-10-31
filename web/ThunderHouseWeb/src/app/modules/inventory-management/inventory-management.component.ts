@@ -2,6 +2,8 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Table } from 'primeng/table';
 import { LoginService } from 'src/app/services/login.service';
 import { MessageService, ConfirmationService } from 'primeng/api';
+import { InventaryService } from 'src/app/services/inventary/inventary.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-inventory-management',
@@ -11,6 +13,90 @@ import { MessageService, ConfirmationService } from 'primeng/api';
 
 })
 export class InventoryManagementComponent {
+    arrayInventary: any[]= new Array();
+    inventoryDialog:boolean=false;
+    idInventory:number=0;
+    nameEquipament!:string;
+    totalNumberPeople!:number;
+
+    constructor(private customerService: LoginService, 
+                private productService: LoginService, 
+                private messageService: MessageService,
+                private serviceInventary: InventaryService) {
+    this.getAllInventary();
+                 }
+
+    getAllInventary(){
+        this.serviceInventary.getAllInventary().subscribe((inventary:any)=>{
+            this.arrayInventary=inventary.list;
+            console.log(this.arrayInventary);
+        },(err)=>{
+            console.log(err);
+        })
+    }
+
+    openDialog(){
+        this.inventoryDialog=true;
+    }
+
+    addInventory(){
+        if (this.idInventory != 0) {
+            this.serviceInventary.updateInventory(this.idInventory, this.nameEquipament, this.totalNumberPeople).subscribe(()=>{
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Successful',
+                    text: 'Inventory update sucessful',
+                    showConfirmButton: false
+                  });
+                  this.inventoryDialog=false;
+                  this.getAllInventary();
+            },(err)=>{
+                console.log(err);
+            });
+        }else{
+            this.serviceInventary.addInventory(this.nameEquipament, this.totalNumberPeople).subscribe(()=>{
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Successful',
+                    text: 'Inventory add sucessful',
+                    showConfirmButton: false
+                  });
+                this.inventoryDialog=false;
+                this.getAllInventary();
+            },(err)=>{
+                console.log(err);
+            });
+        }
+    }
+
+    detailInventory(idInventory:number){
+        this.idInventory=idInventory;
+        this.serviceInventary.getAllId(this.idInventory).subscribe((inventoryId:any)=>{
+            this.inventoryDialog=true;
+            this.idInventory=inventoryId.equipment.id_cat_equipment;
+            this.nameEquipament=inventoryId.equipment.equipment;
+            this.totalNumberPeople=inventoryId.equipment.total_number_people;
+        },(err)=>{
+            console.log(err);
+        });
+    }
+
+    deleteInventory(idInventory:number){
+        this.serviceInventary.deleteInventory(idInventory).subscribe(()=>{
+            Swal.fire({
+                icon: 'success',
+                title: 'Successful',
+                text: 'Inventory delete sucessful',
+                showConfirmButton: false
+              });
+            this.getAllInventary();
+        }, (err)=>{
+            console.log(err);
+        });
+    }
+
+
+    
   customers1: any[] = [];
 
   customers2: any[] = [];
@@ -45,7 +131,6 @@ export class InventoryManagementComponent {
 
   @ViewChild('filter') filter!: ElementRef;
 
-  constructor(private customerService: LoginService, private productService: LoginService, private messageService: MessageService) { }
 
   ngOnInit() {
       this.customerService.getCustomersLarge().then(customers => {
