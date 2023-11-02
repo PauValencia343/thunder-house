@@ -11,13 +11,15 @@ import { ModulesModule } from './modules/modules.module';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { DateInputsModule } from '@progress/kendo-angular-dateinputs';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    MainComponent,
+    MainComponent
+  
   ],
   imports: [
     BrowserModule,
@@ -25,7 +27,9 @@ import { DateInputsModule } from '@progress/kendo-angular-dateinputs';
     SecurityRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    DateInputsModule
+    DateInputsModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

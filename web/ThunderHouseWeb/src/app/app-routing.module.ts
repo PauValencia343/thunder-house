@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes, CanActivateFn } from '@angular/router';
 import { MainComponent } from './main/main/main.component';
 import { LoginComponent } from './security/login/login.component';
 import { RegisterComponent } from './security/register/register.component';
@@ -12,6 +12,8 @@ import { LogBookManagementComponent } from './modules/log-book-management/log-bo
 import { RoomPdfComponent } from './modules/room-management/room-pdf/room-pdf.component';
 import { RolesManagementComponent } from './modules/roles-management/roles-management.component';
 import { UserManagementComponent } from './modules/user-management/user-management.component';
+import { accessRoutesGuard } from './guards/access-routes.guard';
+import { RoomStatusComponent } from './modules/room-management/room-status/room-status.component';
 
 const routes: Routes = [
   {
@@ -20,7 +22,8 @@ const routes: Routes = [
   },
   {
     path: "login",
-    component: LoginComponent
+    component: LoginComponent,
+    canActivate:[accessRoutesGuard]
   },
   {
     path: "register",
@@ -57,6 +60,10 @@ const routes: Routes = [
   {
     path: "userManagement",
     component: UserManagementComponent
+  },
+  {
+    path: "roomStatusManagement",
+    component: RoomStatusComponent
   },
   {
     path: '**',

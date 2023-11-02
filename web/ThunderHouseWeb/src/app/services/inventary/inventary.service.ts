@@ -9,14 +9,14 @@ const URLLOCAL = 'http://localhost:8080/';
 })
 export class InventaryService {
 
-  constructor(private htpp:HttpClient) { }
+  constructor(private http: HttpClient) { }
 
   getAllInventary(){
-    return this.htpp.get(URLLOCAL+'api/catalogs/equipment?limit=10&page=1');
+    return this.http.get(URLLOCAL+'api/catalogs/equipment?limit=10&page=1');
   }
 
   getAllId(idInventary: number){
-    return this.htpp.get(URLLOCAL+'api/catalogs/equipment/'+idInventary)
+    return this.http.get(URLLOCAL+'api/catalogs/equipment/'+idInventary)
   }
 
   addInventory(nameEquipament:string, totalNumberPeople:number){
@@ -24,7 +24,7 @@ export class InventaryService {
       "equipment": nameEquipament,
       "total_number_people": totalNumberPeople
   }
-  return this.htpp.post(URLLOCAL+'api/catalogs/equipment',body);
+  return this.http.post(URLLOCAL+'api/catalogs/equipment',body);
   }
 
   updateInventory(idInventary: number,nameEquipament:string, totalNumberPeople:number){
@@ -33,10 +33,10 @@ export class InventaryService {
       "total_number_people": totalNumberPeople,
       "status": true
   }
-  return this.htpp.put(URLLOCAL+'api/catalogs/equipment/'+idInventary,body);
+  return this.http.put(URLLOCAL+'api/catalogs/equipment/'+idInventary,body);
   }
 
   deleteInventory(idInventary: number){
-    return this.htpp.delete(URLLOCAL+'api/catalogs/equipment/physical/'+idInventary);
+    return this.http.delete(URLLOCAL+'api/catalogs/equipment/physical/'+idInventary);
   }
 }

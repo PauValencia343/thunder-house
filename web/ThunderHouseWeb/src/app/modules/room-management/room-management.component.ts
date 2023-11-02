@@ -4,6 +4,9 @@ import { LoginService } from 'src/app/services/login.service';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import jsPDF from 'jspdf';
 import { RoomManagementService } from 'src/app/services/room-management.service';
+import Swal from 'sweetalert2';
+import { SuppliesService } from 'src/app/services/supplies/supplies.service';
+import { InventaryService } from 'src/app/services/inventary/inventary.service';
 
 
 
@@ -15,23 +18,205 @@ import { RoomManagementService } from 'src/app/services/room-management.service'
 
 })
 export class RoomManagementComponent {
-    arrayRooms:any[]=new Array();
+  arrayRooms: any[] = new Array();
+  roomStatusDialog: boolean = false;
+  arrayRoomStatus: any[] = new Array();
+  loading: boolean = false;
+  @ViewChild('filter') filter!: ElementRef;
+  roomTypeDialog: boolean = false;
+  dirty!: string;
+  busy!: string;
+  idRoomStatus: number = 0;
+  arrayRoomType: any[] = new Array();
+  idRoomType: number = 0;
+  nameTypeRoom: string = '';
+  supplies: any[] = new Array();
+  equipments: any[] = new Array();
+  arraySupplies: any[] = new Array();
+  arrayEquipments: any[] = new Array();
+  id_supplie:number=0;
+  total_supplies:number=0;
+  id_equipment: number=0;
+  total_equipments: number=0;
 
-    constructor(private customerService: LoginService, 
-                private productService: LoginService, 
-                private serviceRooms: RoomManagementService) 
-    {
-        this.getAllRooms();
-     }
+  constructor(private customerService: LoginService,
+    private productService: LoginService,
+    private serviceRooms: RoomManagementService,
+    private serviceRoomStatus: RoomManagementService,
+    private serviceSupplies: SuppliesService,
+    private serviceEquipments: InventaryService) {
+    this.getAllRooms();
+    this.getAll();
+    this.getAllRoomType();
+    this.getAllSupplies();
+    this.getAllEquipments();
+  }
 
-    getAllRooms(){
-        this.serviceRooms.getAllRooms().subscribe((rooms:any)=>{
-            this.arrayRooms=rooms.list;
-            console.log(this.arrayRooms)
-        }, (err)=>{
-            console.log(err)
-        });
+  getAllSupplies() {
+    this.serviceSupplies.getAllSupplie().subscribe((supplies: any) => {
+      this.arraySupplies = supplies.list;
+    }, (err) => {
+      console.log(err)
+    })
+  }
+  addSupplies() {
+    const existingSupplyIndex = this.supplies.findIndex(supply => supply.id_supplie === this.id_supplie);
+    const totalToAdd = Number(this.total_supplies); 
+  
+    if (existingSupplyIndex !== -1) {
+      this.supplies[existingSupplyIndex].total_supplies += totalToAdd;
+    } else {
+      this.supplies.push({
+        "id_supplie": this.id_supplie,
+        "total_supplies": totalToAdd
+      });
     }
+  }
+  
+
+  removeSupplies(index: number) {
+    this.supplies.splice(index, 1);
+  }
+  
+  getAllEquipments() {
+    this.serviceEquipments.getAllInventary().subscribe((equipments: any) => {
+      this.arrayEquipments = equipments.list;
+    }, (err) => {
+      console.log(err)
+    })
+  }
+
+  addEquipments() {
+    const existingEquipmentIndex = this.equipments.findIndex(equipment => equipment.id_equipment === this.id_equipment);
+    const totalToAdd = Number(this.total_equipments);
+  
+    if (existingEquipmentIndex !== -1) {
+      this.equipments[existingEquipmentIndex].total_equipments += totalToAdd;
+    } else {
+      this.equipments.push({
+        "id_equipment": this.id_equipment,
+        "total_equipments": totalToAdd
+      });
+    }
+  }
+  
+  
+  removeEquipments(index: number) {
+    this.equipments.splice(index, 1);
+  }
+
+  getAllRooms() {
+    this.serviceRooms.getAllRooms().subscribe((rooms: any) => {
+      this.arrayRooms = rooms.list;
+      console.log(this.arrayRooms)
+    }, (err) => {
+      console.log(err)
+    });
+  }
+
+  openDialogRoomStatus() {
+    this.roomStatusDialog = true;
+  }
+
+  openDialog() {
+    this.idRoomStatus = 0;
+    this.roomTypeDialog = true;
+  }
+  cancelRoomType() {
+    this.roomTypeDialog = false
+  }
+
+  getAll() {
+    this.loading = true;
+    this.serviceRoomStatus.getAllRoomsStatus().subscribe((roomStatus: any) => {
+      this.arrayRoomStatus = roomStatus.list;
+      this.loading = false;
+    }, (err) => {
+      this.loading = false;
+    })
+  }
+
+  addRoomStatus() {
+    let dirty = this.dirty === "yes" ? true : false;
+    let busy = this.busy === "yes" ? true : false;
+    if (this.idRoomStatus != 0) {
+      this.serviceRoomStatus.updateStatusRoom(this.idRoomStatus, dirty, busy).subscribe(() => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Successful',
+          text: 'Room Status update sucessful',
+          showConfirmButton: false
+        });
+        this.roomTypeDialog = false;
+        this.getAll();
+      }, (err) => {
+        console.log(err)
+      });
+    } else {
+      this.serviceRoomStatus.addStatusRoom(dirty, busy).subscribe(() => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Successful',
+          text: 'Room Status add sucessful',
+          showConfirmButton: false
+        });
+        this.roomTypeDialog = false;
+        this.getAll();
+      }, (err) => {
+        console.log(err);
+      });
+    }
+  }
+
+  detailRoomStatus(idRoom: number) {
+    this.idRoomStatus = idRoom;
+    this.serviceRoomStatus.getRoomStatus(idRoom).subscribe((roomStatus: any) => {
+      this.roomTypeDialog = true;
+      this.busy = roomStatus.roomStatus.busy == true ? 'yes' : 'no';
+      this.dirty = roomStatus.roomStatus.dirty == true ? 'yes' : 'no';
+    }, (err) => {
+      console.log(err);
+    })
+  }
+
+  deleteRoomStatus(idRoom: number) {
+    this.serviceRoomStatus.deleteStatusRoom(idRoom).subscribe(() => {
+      Swal.fire({
+        icon: 'success',
+        title: 'Successful',
+        text: 'Room Status delete sucessful',
+        showConfirmButton: false
+      });
+      this.getAll();
+    }, (err) => {
+      console.log(err);
+    });
+  }
+
+
+  getAllRoomType() {
+    this.serviceRooms.getAllRoomType().subscribe((roomType: any) => {
+      this.arrayRoomType = roomType.list;
+    }, (err) => {
+      console.log(err);
+    });
+  }
+
+  openDialogRoomType() {
+    this.roomTypeDialog = true;
+  }
+
+  addRoomType() {
+    if (this.idRoomType != 0) {
+
+    } else {
+      this.serviceRooms.addRoomType(this.nameTypeRoom, this.supplies, this.equipments).subscribe(() => {
+
+      }, (err) => {
+        console.log(err);
+      })
+    }
+  }
 
 
 
@@ -42,157 +227,155 @@ export class RoomManagementComponent {
 
   customers1: any[] = [];
 
-    customers2: any[] = [];
+  customers2: any[] = [];
 
-    customers3: any[] = [];
+  customers3: any[] = [];
 
-    selectedCustomers1: any[] = [];
+  selectedCustomers1: any[] = [];
 
-    selectedCustomer: any = {};
+  selectedCustomer: any = {};
 
-    representatives: any[] = [];
+  representatives: any[] = [];
 
-    statuses: any[] = [];
+  statuses: any[] = [];
 
-    products: any[] = [];
+  products: any[] = [];
 
-    rowGroupMetadata: any;
+  rowGroupMetadata: any;
 
-    expandedRows: any = {};
+  expandedRows: any = {};
 
-    activityValues: number[] = [0, 100];
+  activityValues: number[] = [0, 100];
 
-    isExpanded: boolean = false;
+  isExpanded: boolean = false;
 
-    idFrozen: boolean = false;
-
-    loading: boolean = true;
-
-    sizes :any= [];
-
-    pdfDialog:boolean=false;
-
-    @ViewChild('filter') filter!: ElementRef;
+  idFrozen: boolean = false;
 
 
-    ngOnInit() {
-        this.customerService.getCustomersLarge().then(customers => {
-            this.customers1 = customers;
-            this.loading = false;
+  sizes: any = [];
 
-            // @ts-ignore
-            this.customers1.forEach(customer => customer.date = new Date(customer.date));
-        });
-        this.customerService.getCustomersMedium().then(customers => this.customers2 = customers);
-        this.customerService.getCustomersLarge().then(customers => this.customers3 = customers);
-        this.productService.getProductsWithOrdersSmall().then(data => this.products = data);
+  pdfDialog: boolean = false;
 
-        this.representatives = [
-            { name: 'Amy Elsner', image: 'amyelsner.png' },
-            { name: 'Anna Fali', image: 'annafali.png' },
-            { name: 'Asiya Javayant', image: 'asiyajavayant.png' },
-            { name: 'Bernardo Dominic', image: 'bernardodominic.png' },
-            { name: 'Elwin Sharvill', image: 'elwinsharvill.png' },
-            { name: 'Ioni Bowcher', image: 'ionibowcher.png' },
-            { name: 'Ivan Magalhaes', image: 'ivanmagalhaes.png' },
-            { name: 'Onyama Limba', image: 'onyamalimba.png' },
-            { name: 'Stephen Shaw', image: 'stephenshaw.png' },
-            { name: 'XuXue Feng', image: 'xuxuefeng.png' }
-        ];
 
-        this.statuses = [
-            { label: 'Unqualified', value: 'unqualified' },
-            { label: 'Qualified', value: 'qualified' },
-            { label: 'New', value: 'new' },
-            { label: 'Negotiation', value: 'negotiation' },
-            { label: 'Renewal', value: 'renewal' },
-            { label: 'Proposal', value: 'proposal' }
-        ];
 
-        this.sizes = [
-            { name: 'Small', class: 'p-datatable-sm' },
-            { name: 'Normal', class: '' },
-            { name: 'Large',  class: 'p-datatable-lg' }
-        ];
-    }
+  ngOnInit() {
+    this.customerService.getCustomersLarge().then(customers => {
+      this.customers1 = customers;
+      this.loading = false;
 
-    onSort() {
-        this.updateRowGroupMetaData();
-    }
+      // @ts-ignore
+      this.customers1.forEach(customer => customer.date = new Date(customer.date));
+    });
+    this.customerService.getCustomersMedium().then(customers => this.customers2 = customers);
+    this.customerService.getCustomersLarge().then(customers => this.customers3 = customers);
+    this.productService.getProductsWithOrdersSmall().then(data => this.products = data);
 
-    updateRowGroupMetaData() {
-        this.rowGroupMetadata = {};
+    this.representatives = [
+      { name: 'Amy Elsner', image: 'amyelsner.png' },
+      { name: 'Anna Fali', image: 'annafali.png' },
+      { name: 'Asiya Javayant', image: 'asiyajavayant.png' },
+      { name: 'Bernardo Dominic', image: 'bernardodominic.png' },
+      { name: 'Elwin Sharvill', image: 'elwinsharvill.png' },
+      { name: 'Ioni Bowcher', image: 'ionibowcher.png' },
+      { name: 'Ivan Magalhaes', image: 'ivanmagalhaes.png' },
+      { name: 'Onyama Limba', image: 'onyamalimba.png' },
+      { name: 'Stephen Shaw', image: 'stephenshaw.png' },
+      { name: 'XuXue Feng', image: 'xuxuefeng.png' }
+    ];
 
-        if (this.customers3) {
-            for (let i = 0; i < this.customers3.length; i++) {
-                const rowData = this.customers3[i];
-                const representativeName = rowData?.representative?.name || '';
+    this.statuses = [
+      { label: 'Unqualified', value: 'unqualified' },
+      { label: 'Qualified', value: 'qualified' },
+      { label: 'New', value: 'new' },
+      { label: 'Negotiation', value: 'negotiation' },
+      { label: 'Renewal', value: 'renewal' },
+      { label: 'Proposal', value: 'proposal' }
+    ];
 
-                if (i === 0) {
-                    this.rowGroupMetadata[representativeName] = { index: 0, size: 1 };
-                }
-                else {
-                    const previousRowData = this.customers3[i - 1];
-                    const previousRowGroup = previousRowData?.representative?.name;
-                    if (representativeName === previousRowGroup) {
-                        this.rowGroupMetadata[representativeName].size++;
-                    }
-                    else {
-                        this.rowGroupMetadata[representativeName] = { index: i, size: 1 };
-                    }
-                }
-            }
-        }
-    }
-
-    expandAll() {
-        if (!this.isExpanded) {
-            this.products.forEach(product => product && product.name ? this.expandedRows[product.name] = true : '');
-
-        } else {
-            this.expandedRows = {};
-        }
-        this.isExpanded = !this.isExpanded;
-    }
-
-    formatCurrency(value: number) {
-        return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
-    }
-
-    onGlobalFilter(table: Table, event: Event) {
-        table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
-    }
-
-    clear(table: Table) {
-        table.clear();
-        this.filter.nativeElement.value = '';
-    }
-
-    getSeverity(status: any): string {
-        switch (status) {
-            case 'unqualified':
-                return 'danger';
-    
-            case 'qualified':
-                return 'success';
-    
-            case 'new':
-                return 'info';
-    
-            case 'negotiation':
-                return 'warning';
-    
-            case 'renewal':
-                return 'default'; // Provide a default value for unrecognized statuses.
-    
-            default:
-                return 'default'; // Also handle the default case in case of undefined or other unexpected values.
-        }
-    }
-    
-    
-  openDialogPDF(){
-    this.serviceRooms.exportPdfRooms$.emit(this.pdfDialog=true);
+    this.sizes = [
+      { name: 'Small', class: 'p-datatable-sm' },
+      { name: 'Normal', class: '' },
+      { name: 'Large', class: 'p-datatable-lg' }
+    ];
   }
-    
+
+  onSort() {
+    this.updateRowGroupMetaData();
+  }
+
+  updateRowGroupMetaData() {
+    this.rowGroupMetadata = {};
+
+    if (this.customers3) {
+      for (let i = 0; i < this.customers3.length; i++) {
+        const rowData = this.customers3[i];
+        const representativeName = rowData?.representative?.name || '';
+
+        if (i === 0) {
+          this.rowGroupMetadata[representativeName] = { index: 0, size: 1 };
+        }
+        else {
+          const previousRowData = this.customers3[i - 1];
+          const previousRowGroup = previousRowData?.representative?.name;
+          if (representativeName === previousRowGroup) {
+            this.rowGroupMetadata[representativeName].size++;
+          }
+          else {
+            this.rowGroupMetadata[representativeName] = { index: i, size: 1 };
+          }
+        }
+      }
+    }
+  }
+
+  expandAll() {
+    if (!this.isExpanded) {
+      this.products.forEach(product => product && product.name ? this.expandedRows[product.name] = true : '');
+
+    } else {
+      this.expandedRows = {};
+    }
+    this.isExpanded = !this.isExpanded;
+  }
+
+  formatCurrency(value: number) {
+    return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+  }
+
+  onGlobalFilter(table: Table, event: Event) {
+    table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
+  }
+
+  clear(table: Table) {
+    table.clear();
+    this.filter.nativeElement.value = '';
+  }
+
+  getSeverity(status: any): string {
+    switch (status) {
+      case 'unqualified':
+        return 'danger';
+
+      case 'qualified':
+        return 'success';
+
+      case 'new':
+        return 'info';
+
+      case 'negotiation':
+        return 'warning';
+
+      case 'renewal':
+        return 'default'; // Provide a default value for unrecognized statuses.
+
+      default:
+        return 'default'; // Also handle the default case in case of undefined or other unexpected values.
+    }
+  }
+
+
+  openDialogPDF() {
+    this.serviceRooms.exportPdfRooms$.emit(this.pdfDialog = true);
+  }
+
 }

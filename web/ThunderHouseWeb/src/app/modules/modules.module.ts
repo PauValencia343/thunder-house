@@ -14,6 +14,11 @@ import { LogBookManagementComponent } from './log-book-management/log-book-manag
 import { RoomPdfComponent } from './room-management/room-pdf/room-pdf.component';
 import { RolesManagementComponent } from './roles-management/roles-management.component';
 import { UserManagementComponent } from './user-management/user-management.component';
+import { HttpClientModule } from '@angular/common/http';
+import { ReactiveFormsModule } from '@angular/forms';
+import { RoomTypeComponent } from './room-management/room-type/room-type.component';
+import { RoomStatusComponent } from './room-management/room-status/room-status.component';
+import { PipeRoomsPipe } from './room-management/pipe-rooms.pipe';
 
 
 @NgModule({
@@ -28,19 +33,25 @@ import { UserManagementComponent } from './user-management/user-management.compo
     LogBookManagementComponent,
     RoomPdfComponent,
     RolesManagementComponent,
-    UserManagementComponent
+    UserManagementComponent,
+    RoomTypeComponent,
+    RoomStatusComponent,
+    PipeRoomsPipe
   ],
   imports: [
     CommonModule,
     ModulesRoutingModule,
     PrimengModule,
-    GridModule
+    GridModule,
+    HttpClientModule,
+    ReactiveFormsModule
     
   ],
   exports:[
     HomeComponent,
     NavbarComponent,
-    GridModule
+    GridModule,
+    HttpClientModule
   ]
 })
 export class ModulesModule { }

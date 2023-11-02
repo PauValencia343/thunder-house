@@ -17,5 +17,10 @@ describe('RegisterComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.querySelector('p')?.textContent).toContain('Test');
+
   });
+
+ 
 });
