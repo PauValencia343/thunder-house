@@ -24,6 +24,6 @@ export class CatRoomStatusEntity extends BaseEntity {
   @Column({ default: true })
   status: boolean = true;
 
-  @OneToMany(type => CatRoomEntity, catRoomEntity => catRoomEntity.fkCatRoomStatusEntity) catRoomStatusEntity!: CatRoomStatusEntity[];
-
+  @OneToMany(type => CatRoomEntity, catRoomEntity => catRoomEntity.cat_room_status)
+  cat_room_status!: CatRoomStatusEntity[];
 }

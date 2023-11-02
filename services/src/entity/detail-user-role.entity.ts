@@ -17,12 +17,12 @@ export class DetailUserRoleEntity extends BaseEntity {
   @PrimaryGeneratedColumn('increment')
   id_detail_user_role?: number;
 
-  @ManyToOne(type => CatUserEntity, (user: CatUserEntity) => user.userRoles)
+  @ManyToOne(type => CatUserEntity, (user: CatUserEntity) => user.detail_user_role)
   @JoinColumn({name: "fk_cat_user"})
-  users!: CatUserEntity;
+  cat_user!: CatUserEntity;
   
-  @ManyToOne(type => CatRoleEntity, (role: CatRoleEntity) => role.roleUsers)
+  @ManyToOne(type => CatRoleEntity, (role: CatRoleEntity) => role.detail_user_role)
   @JoinColumn({name: "fk_cat_role"})
-  roles!: CatRoleEntity;
+  cat_role!: CatRoleEntity;
 
 }

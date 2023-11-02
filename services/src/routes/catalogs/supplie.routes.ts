@@ -1,6 +1,6 @@
 
 import { Router } from "express";
-import { check, param } from "express-validator";
+import { check, param, query } from "express-validator";
 
 import {
   supplieGetAll,
@@ -26,6 +26,9 @@ const router = Router();
 router.get("/", [
     validateJWT,
     validateRoles,
+    query("limit", "field (limit) should be integer and greater than 0").isInt({ min: 1 }).optional().default(null),
+    query("page", "field (page) should be integer and greater than 0").isInt({ min: 1 }).optional().default(null),
+    query("pagination", "field (pagination) should be boolean").isBoolean().optional().default(false),
     validateFields,
   ],
   supplieGetAll,

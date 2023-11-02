@@ -17,12 +17,12 @@ export class DetailRoleFloorEntity extends BaseEntity {
   @PrimaryGeneratedColumn('increment')
   id_detail_role_floor?: number;
 
-  @ManyToOne(type => CatRoleEntity, (role: CatRoleEntity) => role.roleFloors)
+  @ManyToOne(type => CatRoleEntity, (role: CatRoleEntity) => role.detail_role_floor)
   @JoinColumn({name: "fk_cat_role"})
-  roles!: CatRoleEntity;
+  cat_role!: CatRoleEntity;
   
-  @ManyToOne(type => CatFloorEntity, (floor: CatFloorEntity) => floor.floorRoles)
+  @ManyToOne(type => CatFloorEntity, (floor: CatFloorEntity) => floor.detail_role_floor)
   @JoinColumn({name: "fk_cat_floor"})
-  floors!: CatFloorEntity;
+  cat_floor!: CatFloorEntity;
 
 }

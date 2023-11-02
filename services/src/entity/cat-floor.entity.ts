@@ -26,9 +26,9 @@ export class CatFloorEntity extends BaseEntity {
   @Column({ default: true })
   status: boolean = true;
 
-  @OneToMany(type => CatRoomEntity, catRoomEntity => catRoomEntity.fkCatFloorEntity) catFloorEntity!: CatFloorEntity[];
+  @OneToMany(type => CatRoomEntity, catRoomEntity => catRoomEntity.cat_floor)
+  cat_floor!: CatFloorEntity[];
 
-  @OneToMany(type => DetailRoleFloorEntity, (detailRoleFloor: DetailRoleFloorEntity) => detailRoleFloor.floors)
-  floorRoles!: DetailRoleFloorEntity[];
-
+  @OneToMany(type => DetailRoleFloorEntity, (detailRoleFloor: DetailRoleFloorEntity) => detailRoleFloor.cat_floor)
+  detail_role_floor!: DetailRoleFloorEntity[];
 }

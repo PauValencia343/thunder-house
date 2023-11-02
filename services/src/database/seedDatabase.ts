@@ -41,8 +41,8 @@ const generateUsers = async () => {
   userAdministrator.password = bcryptjs.hashSync(process.env.INITIAL_PASSWORD || '12345_abAB', bcryptjs.genSaltSync());
 
   const detailUserRoleEntity = new DetailUserRoleEntity();
-  detailUserRoleEntity.users = userAdministrator;
-  detailUserRoleEntity.roles = roleAdminisatrator;
+  detailUserRoleEntity.cat_user = userAdministrator;
+  detailUserRoleEntity.cat_role = roleAdminisatrator;
   
   await roleAdminisatrator.save();
   await userAdministrator.save();
@@ -57,8 +57,8 @@ const generateUsers = async () => {
     floorsEntities.push(catFloorEntity);
     // Administrator Floors
     const detailRoleFloorEntityAdministrator = new DetailRoleFloorEntity();
-    detailRoleFloorEntityAdministrator.floors = catFloorEntity;
-    detailRoleFloorEntityAdministrator.roles = roleAdminisatrator;
+    detailRoleFloorEntityAdministrator.cat_floor = catFloorEntity;
+    detailRoleFloorEntityAdministrator.cat_role = roleAdminisatrator;
     await detailRoleFloorEntityAdministrator.save();
 
     // Floors Users
@@ -71,15 +71,15 @@ const generateUsers = async () => {
     userFloorManager.password = bcryptjs.hashSync(`fLo0rM${i}`, bcryptjs.genSaltSync());
 
     const detailUserRoleEntityFloorManager = new DetailUserRoleEntity();
-    detailUserRoleEntityFloorManager.users = userFloorManager;
-    detailUserRoleEntityFloorManager.roles = roleFloorManager;
+    detailUserRoleEntityFloorManager.cat_user = userFloorManager;
+    detailUserRoleEntityFloorManager.cat_role = roleFloorManager;
     
     await roleFloorManager.save();
     await userFloorManager.save();
     await detailUserRoleEntityFloorManager.save();
     const detailRoleFloorEntityFloorManager = new DetailRoleFloorEntity();
-    detailRoleFloorEntityFloorManager.floors = catFloorEntity;
-    detailRoleFloorEntityFloorManager.roles = roleFloorManager;
+    detailRoleFloorEntityFloorManager.cat_floor = catFloorEntity;
+    detailRoleFloorEntityFloorManager.cat_role = roleFloorManager;
     await detailRoleFloorEntityFloorManager.save();
   }
 
@@ -118,8 +118,8 @@ const generateUsers = async () => {
       if (roomType.equipments[i].equipmentTotal > 0) {
         const newDetailEquipmentRoomTypeEntity = new DetailEquipmentRoomTypeEntity();
         newDetailEquipmentRoomTypeEntity.total_equipments = roomType.equipments[i].equipmentTotal;
-        newDetailEquipmentRoomTypeEntity.equipments = equipmentEntities[i];
-        newDetailEquipmentRoomTypeEntity.roomTypes = newCatRoomTypeEntity;
+        newDetailEquipmentRoomTypeEntity.cat_equipment = equipmentEntities[i];
+        newDetailEquipmentRoomTypeEntity.cat_room_type = newCatRoomTypeEntity;
         await newDetailEquipmentRoomTypeEntity.save();
       }
     }
@@ -127,8 +127,8 @@ const generateUsers = async () => {
       if (roomType.supplies[i].supplieTotal > 0) {
         const newDetailSupplieRoomTypeEntity = new DetailSupplieRoomTypeEntity();
         newDetailSupplieRoomTypeEntity.total_supplies = roomType.supplies[i].supplieTotal;
-        newDetailSupplieRoomTypeEntity.supplies = supplieEntities[i];
-        newDetailSupplieRoomTypeEntity.roomTypes = newCatRoomTypeEntity;
+        newDetailSupplieRoomTypeEntity.cat_supplie = supplieEntities[i];
+        newDetailSupplieRoomTypeEntity.cat_room_type = newCatRoomTypeEntity;
         await newDetailSupplieRoomTypeEntity.save();
       }
     }
@@ -138,9 +138,9 @@ const generateUsers = async () => {
   for (let i = 0; i < floorsEntities.length; i++) {
     const newCatRoomEntity = new CatRoomEntity();
     newCatRoomEntity.number = i + 1;
-    newCatRoomEntity.fkCatFloorEntity = floorsEntities[i];
-    newCatRoomEntity.fkCatRoomStatusEntity = roomStatusEntities[2];
-    newCatRoomEntity.fkCatRoomTypeEntity = roomTypeEntities[2];
+    newCatRoomEntity.cat_floor = floorsEntities[i];
+    newCatRoomEntity.cat_room_status = roomStatusEntities[2];
+    newCatRoomEntity.cat_room_type = roomTypeEntities[2];
     await newCatRoomEntity.save();
   }
   // const roomsByFloor: number = 10;

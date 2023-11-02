@@ -1,6 +1,6 @@
 
 import { Router } from "express";
-import { check, param } from "express-validator";
+import { check, param, query } from "express-validator";
 
 import {
   roleGetAll,
@@ -24,14 +24,23 @@ import { validateRoles } from "../../middlewares/validate-roles";
 const router = Router();
 
 // GET route for fetching role data
-router.get("/", roleGetAll);
+router.get("/", [
+    validateJWT,
+    validateRoles,
+    query("limit", "field (limit) should be integer and greater than 0").isInt({ min: 1 }).optional().default(null),
+    query("page", "field (page) should be integer and greater than 0").isInt({ min: 1 }).optional().default(null),
+    query("pagination", "field (pagination) should be boolean").isBoolean().optional().default(false),
+    validateFields,
+  ],
+  roleGetAll,
+);
 
 router.get("/:id_cat_role", [
     validateJWT,
     validateRoles,
     validateFields,
     param("id_cat_role", "field (id_cat_role) can not be empty").not().isEmpty(),
-    param("id_cat_role", "field (id_cat_role) should be integer").isInt({ min: 1 }),
+    param("id_cat_role", "field (id_cat_role) should be integer and greater than 0").isInt({ min: 1 }),
     param("id_cat_role").custom(roleExistsById()),
     validateFields,
   ],
@@ -44,7 +53,7 @@ router.put("/:id_cat_role", [
     validateRoles,
     validateFields,
     param("id_cat_role", "field (id_cat_role) can not be empty").not().isEmpty(),
-    param("id_cat_role", "field (id_cat_role) should be integer").isInt({ min: 1 }),
+    param("id_cat_role", "field (id_cat_role) should be integer and greater than 0").isInt({ min: 1 }),
     param("id_cat_role").custom(roleExistsById(false)),
     check("role", "field (role) is required").not().isEmpty(),
     check("status", "field (status) is required").not().isEmpty(),
@@ -77,7 +86,7 @@ router.delete("/:id_cat_role", [
     validateRoles,
     validateFields,
     param("id_cat_role", "field (id_cat_role) can not be empty").not().isEmpty(),
-    param("id_cat_role", "field (id_cat_role) should be integer").isInt({ min: 1 }),
+    param("id_cat_role", "field (id_cat_role) should be integer and greater than 0").isInt({ min: 1 }),
     param("id_cat_role").custom(roleExistsById()),
     validateFields,
   ],
@@ -89,7 +98,7 @@ router.delete("/physical/:id_cat_role", [
     validateRoles,
     validateFields,
     param("id_cat_role", "field (id_cat_role) can not be empty").not().isEmpty(),
-    param("id_cat_role", "field (id_cat_role) should be integer").isInt({ min: 1 }),
+    param("id_cat_role", "field (id_cat_role) should be integer and greater than 0").isInt({ min: 1 }),
     param("id_cat_role").custom(roleExistsById()),
     validateFields,
   ],

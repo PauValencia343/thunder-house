@@ -20,35 +20,40 @@ export const roomStatusGet = async (req: Request, res: Response) => {
       roomStatus: roomStatusFound,
     });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      error: 'Internal server error',
-    });
+    console.error("Internal server error:", error);
+    res.status(500).json({ msg: "Internal server error" });
   }
 };
 
 export const roomStatusGetAll = async (req: Request, res: Response) => {
-  const { limit = 10, page = 1 } = req.query;
-  const parsedPage = parseInt(page as string, 10);
-  const parsedLimit = parseInt(limit as string, 10);
-  const skip = (parsedPage - 1) * parsedLimit;
+  const { limit = 10, page = 1, pagination } = req.query;
   try {
-    const list: CatRoomStatusEntity[] = await CatRoomStatusEntity.find({
-      skip,
-      take: parsedLimit,
-      where: {
-        status: true,
-      },
-    });
+    let roomStatusList: CatRoomStatusEntity[] = [];
+    if (pagination) {
+      const parsedPage = parseInt(page as string, 10);
+      const parsedLimit = parseInt(limit as string, 10);
+      const skip = (parsedPage - 1) * parsedLimit;
+      roomStatusList = await CatRoomStatusEntity.find({
+        skip,
+        take: parsedLimit,
+        where: {
+          status: true,
+        },
+      });
+    } else {
+      roomStatusList = await CatRoomStatusEntity.find({
+        where: {
+          status: true,
+        },
+      });
+    }
     return res.status(200).json({
-      list,
-      count: list.length,
+      list: roomStatusList,
+      count: roomStatusList.length,
     });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      error: 'Internal server error',
-    });
+    console.error("Internal server error:", error);
+    res.status(500).json({ msg: "Internal server error" });
   }
 };
 
@@ -73,7 +78,7 @@ export const roomStatusPut = async (req: Request, res: Response) => {
       roomStatus: roomStatusFound,
     });
   } catch (error) {
-    console.error("Error updating roomStatus:", error);
+    console.error("Internal server error:", error);
     res.status(500).json({ msg: "Internal server error" });
   }
 };
@@ -92,9 +97,8 @@ export const roomStatusPost = async (req: Request, res: Response) => {
       roomStatus: newRoomStatus,
     });
   } catch (error) {
-    return res.status(500).json({
-      error: "An error occurred while creating the roomStatus.",
-    });
+    console.error("Internal server error:", error);
+    res.status(500).json({ msg: "Internal server error" });
   }
 };
 
@@ -112,8 +116,8 @@ export const roomStatusDelete = async (req: Request, res: Response) => {
       roomStatus: roomStatusFound
     });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: "Internal Server Error" });
+    console.error("Internal server error:", error);
+    res.status(500).json({ msg: "Internal server error" });
   }
 };
 
@@ -126,7 +130,7 @@ export const roomStatusDeletePhysical = async (req: Request, res: Response) => {
       },
     });
     const foundCatRoomEntity = await CatRoomEntity.findBy({
-      fkCatRoomTypeEntity: !roomStatusFound
+      cat_room_type: !roomStatusFound
     });
     for (const item of foundCatRoomEntity) {
       await item.remove();
@@ -136,8 +140,7 @@ export const roomStatusDeletePhysical = async (req: Request, res: Response) => {
       roomStatus: roomStatusFound
     });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: "Internal Server Error" });
+    console.error("Internal server error:", error);
+    res.status(500).json({ msg: "Internal server error" });
   }
 };
-

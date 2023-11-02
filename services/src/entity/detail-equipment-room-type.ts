@@ -21,12 +21,12 @@ export class DetailEquipmentRoomTypeEntity extends BaseEntity {
   @Column()
   total_equipments!: number;
 
-  @ManyToOne(type => CatEquipmentEntity, (equipment: CatEquipmentEntity) => equipment.equipmentRoomTypes)
+  @ManyToOne(type => CatEquipmentEntity, (equipment: CatEquipmentEntity) => equipment.detail_equipment_room_type)
   @JoinColumn({name: "fk_cat_equipment"})
-  equipments!: CatEquipmentEntity;
+  cat_equipment!: CatEquipmentEntity;
   
-  @ManyToOne(type => CatRoomTypeEntity, (roomType: CatRoomTypeEntity) => roomType.roomTypeEquipments)
+  @ManyToOne(type => CatRoomTypeEntity, (roomType: CatRoomTypeEntity) => roomType.detail_equipment_room_type)
   @JoinColumn({name: "fk_cat_room_type"})
-  roomTypes!: CatRoomTypeEntity;
+  cat_room_type!: CatRoomTypeEntity;
 
 }

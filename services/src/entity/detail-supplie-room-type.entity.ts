@@ -21,12 +21,12 @@ export class DetailSupplieRoomTypeEntity extends BaseEntity {
   @Column()
   total_supplies!: number;
 
-  @ManyToOne(type => CatSupplieEntity, (supplie: CatSupplieEntity) => supplie.supplieRoomTypes)
+  @ManyToOne(type => CatSupplieEntity, (supplie: CatSupplieEntity) => supplie.detail_supplie_room_type)
   @JoinColumn({name: "fk_cat_supplie"})
-  supplies!: CatSupplieEntity;
+  cat_supplie!: CatSupplieEntity;
   
-  @ManyToOne(type => CatRoomTypeEntity, (roomType: CatRoomTypeEntity) => roomType.roomTypeSupplies)
+  @ManyToOne(type => CatRoomTypeEntity, (roomType: CatRoomTypeEntity) => roomType.detail_supplie_room_type)
   @JoinColumn({name: "fk_cat_room_type"})
-  roomTypes!: CatRoomTypeEntity;
+  cat_room_type!: CatRoomTypeEntity;
 
 }

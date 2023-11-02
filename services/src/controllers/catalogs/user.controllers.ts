@@ -5,7 +5,6 @@ import {
   CatRoleEntity,
   CatUserEntity,
   DetailUserRoleEntity,
-  UserInterface,
 } from "../../entity";
 import { generatePassword } from "../../helpers";
 
@@ -13,13 +12,8 @@ import { generatePassword } from "../../helpers";
 export const userGet = async (req: Request, res: Response) => {
   try {
     const { id_cat_user } = req.params;
-    const userFound = await CatUserEntity.findOne({
-      where: {
-        id_cat_user: parseInt(id_cat_user),
-        status: true,
-      },
-    });
-
+    
+    const userFound = await findExistingUser(parseInt(id_cat_user));
     const user: any = { ...userFound };
     delete user.password;
     
@@ -27,59 +21,34 @@ export const userGet = async (req: Request, res: Response) => {
       user,
     });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      error: 'Internal server error',
-    });
+    console.error("Internal server error:", error);
+    res.status(500).json({ msg: "Internal server error" });
   }
 };
-// export const userGetAll = async (req: Request, res: Response) => {
-//   const { limit = 10, page = 1 } = req.query;
-//   const parsedPage = parseInt(page as string, 10);
-//   const parsedLimit = parseInt(limit as string, 10);
-//   const skip = (parsedPage - 1) * parsedLimit;
-//   try {
-//     const list = await AppDataSource
-//       .createQueryBuilder()
-//       .select()
-//       .from(CatFloorEntity, "cf")
-//       .innerJoin(DetailRoleFloorEntity, "drf", "cf.id_cat_floor = drf.fk_cat_floor")
-//       .innerJoin(CatRoleEntity, "cr", "drf.fk_cat_role = cr.id_cat_role")
-//       .innerJoin(DetailUserRoleEntity, "dur", "cr.id_cat_role = dur.fk_cat_role")
-//       .innerJoin(CatUserEntity, "cu", "dur.fk_cat_user = cu.id_cat_user")
-//       .limit(parsedLimit)
-//       .offset(skip)
-//       .execute();
-//     const listResult: any[] = list.map((user: any) => {
-//       const { password, ...rest } = user;
-//       return rest;
-//     });
-//     return res.status(200).json({
-//       list: listResult,
-//       count: listResult.length,
-//     });
-//   } catch (error) {
-//     console.error(error);
-//     return res.status(500).json({
-//       error: 'Internal server error',
-//     });
-//   }
-// };
 
 export const userGetAll = async (req: Request, res: Response) => {
-  const { limit = 10, page = 1 } = req.query;
-  const parsedPage = parseInt(page as string, 10);
-  const parsedLimit = parseInt(limit as string, 10);
-  const skip = (parsedPage - 1) * parsedLimit;
+  const { limit = 10, page = 1, pagination } = req.query;
   try {
-    const list = await CatUserEntity.find({
-      skip,
-      take: parsedLimit,
-      where: {
-        status: true,
-      },
-    });
-    const listResult: any[] = list.map((user) => {
+    let usersList: CatUserEntity[] = [];
+    if (pagination) {
+      const parsedPage = parseInt(page as string, 10);
+      const parsedLimit = parseInt(limit as string, 10);
+      const skip = (parsedPage - 1) * parsedLimit;
+      usersList = await CatUserEntity.createQueryBuilder('user')
+        .leftJoinAndSelect('user.detail_user_role', 'detail_user_role')
+        .leftJoinAndSelect('detail_user_role.cat_role', 'cat_role')
+        .limit(parsedLimit)
+        .offset(skip)
+        .where('user.status = :status', { status: true })
+        .getMany();
+    } else {
+      usersList = await CatUserEntity.createQueryBuilder('user')
+        .leftJoinAndSelect('user.detail_user_role', 'detail_user_role')
+        .leftJoinAndSelect('detail_user_role.cat_role', 'cat_role')
+        .where('user.status = :status', { status: true })
+        .getMany();
+    }
+    const listResult: any[] = usersList.map((user: CatUserEntity) => {
       const { password, ...rest } = user;
       return rest;
     });
@@ -88,10 +57,8 @@ export const userGetAll = async (req: Request, res: Response) => {
       count: listResult.length,
     });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      error: 'Internal server error',
-    });
+    console.error("Internal server error:", error);
+    res.status(500).json({ msg: "Internal server error" });
   }
 };
 
@@ -111,19 +78,19 @@ export const userPut = async (req: Request, res: Response) => {
     status: boolean,
   } = req.body;
   try {
-    const userFound = await CatUserEntity.findOne({
+    const userUpdating = await CatUserEntity.findOne({
       where: {
         id_cat_user: parseInt(id_cat_user),
       },
     });
     
-    userFound!.password = generatePassword(password);
-    userFound!.email = email;
-    userFound!.user_name = user_name;
-    userFound!.status = status;
-    userFound!.save();
+    userUpdating!.password = generatePassword(password);
+    userUpdating!.email = email;
+    userUpdating!.user_name = user_name;
+    userUpdating!.status = status;
+    userUpdating!.save();
     const foundDetailUserRoleEntity = await DetailUserRoleEntity.findBy({
-      users: !userFound
+      cat_user: !userUpdating
     });
     for (const item of foundDetailUserRoleEntity) {
       await item.remove();
@@ -136,10 +103,12 @@ export const userPut = async (req: Request, res: Response) => {
           status: true,
         },
       });
-      newDetailUserRoleEntity.roles = roleFound!;
-      newDetailUserRoleEntity.users = userFound!;
+      newDetailUserRoleEntity.cat_role = roleFound!;
+      newDetailUserRoleEntity.cat_user = userUpdating!;
       await newDetailUserRoleEntity.save();
     }
+
+    const userFound = await findExistingUser(userUpdating!.id_cat_user!);
 
     const user: any = { ...userFound };
     delete user.password;
@@ -148,7 +117,7 @@ export const userPut = async (req: Request, res: Response) => {
       user,
     });
   } catch (error) {
-    console.error("Error updating user:", error);
+    console.error("Internal server error:", error);
     res.status(500).json({ msg: "Internal server error" });
   }
 };
@@ -166,7 +135,7 @@ export const userPost = async (req: Request, res: Response) => {
     roles: {id_role: string}[],
   } = req.body;
   try {
-    const newUser = new CatUserEntity();
+    const newUser: CatUserEntity = new CatUserEntity();
     newUser.email = email;
     newUser.user_name = user_name;
     newUser.password = generatePassword(password);
@@ -179,20 +148,19 @@ export const userPost = async (req: Request, res: Response) => {
           status: true,
         },
       });
-      newDetailUserRoleEntity.roles = roleFound!;
-      newDetailUserRoleEntity.users = newUser;
+      newDetailUserRoleEntity.cat_role = roleFound!;
+      newDetailUserRoleEntity.cat_user = newUser;
       await newDetailUserRoleEntity.save();
     }
-    const user: any = { ...newUser };
+    const userFound = await findExistingUser(newUser.id_cat_user!);
+    const user: any = { ...userFound };
     delete user.password;
-    
     return res.status(200).json({
       user,
     });
   } catch (error) {
-    return res.status(500).json({
-      error: "An error occurred while creating the user.",
-    });
+    console.error("Internal server error:", error);
+    res.status(500).json({ msg: "Internal server error" });
   }
 };
 
@@ -216,12 +184,12 @@ export const userDelete = async (req: Request, res: Response) => {
     delete user.password;
     
     return res.status(200).json({
-      user,
+      msg: 'Logically deleted user',
       // authenticatedUser,
     });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: "Internal Server Error" });
+    console.error("Internal server error:", error);
+    res.status(500).json({ msg: "Internal server error" });
   }
 };
 
@@ -234,7 +202,7 @@ export const userDeletePhysical = async (req: Request, res: Response) => {
       },
     });
     const foundDetailUserRoleEntity = await DetailUserRoleEntity.findBy({
-      users: !userFound
+      cat_user: !userFound
     });
     for (const item of foundDetailUserRoleEntity) {
       await item.remove();
@@ -248,7 +216,17 @@ export const userDeletePhysical = async (req: Request, res: Response) => {
       user,
     });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: "Internal Server Error" });
+    console.error("Internal server error:", error);
+    res.status(500).json({ msg: "Internal server error" });
   }
+};
+
+
+const findExistingUser = async (id_cat_user: number): Promise<CatUserEntity> => {
+  const userFound: CatUserEntity | null = await CatUserEntity.createQueryBuilder('user')
+    .leftJoinAndSelect('user.detail_user_role', 'detail_user_role')
+    .leftJoinAndSelect('detail_user_role.cat_role', 'cat_role')
+    .where('user.id_cat_user = :id_cat_user AND user.status = :status', { id_cat_user, status: true })
+    .getOne();
+  return userFound!;
 };

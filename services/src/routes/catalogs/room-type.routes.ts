@@ -1,6 +1,6 @@
 
 import { Router } from "express";
-import { check, param } from "express-validator";
+import { check, param, query } from "express-validator";
 
 import {
   roomTypeGetAll,
@@ -28,6 +28,9 @@ const router = Router();
 router.get("/", [
     validateJWT,
     validateRoles,
+    query("limit", "field (limit) should be integer and greater than 0").isInt({ min: 1 }).optional().default(null),
+    query("page", "field (page) should be integer and greater than 0").isInt({ min: 1 }).optional().default(null),
+    query("pagination", "field (pagination) should be boolean").isBoolean().optional().default(false),
     validateFields,
   ],
   roomTypeGetAll,
@@ -38,7 +41,7 @@ router.get("/:id_cat_room_type", [
     validateRoles,
     validateFields,
     param("id_cat_room_type", "field (id_cat_room_type) can not be empty").not().isEmpty(),
-    param("id_cat_room_type", "field (id_cat_room_type) should be integer").isInt({ min: 1 }),
+    param("id_cat_room_type", "field (id_cat_room_type) should be integer and greater than 0").isInt({ min: 1 }),
     param("id_cat_room_type").custom(roomTypeExistsById()),
     validateFields,
   ],
@@ -51,7 +54,7 @@ router.put("/:id_cat_room_type", [
     validateRoles,
     validateFields,
     param("id_cat_room_type", "field (id_cat_room_type) can not be empty").not().isEmpty(),
-    param("id_cat_room_type", "field (id_cat_room_type) should be integer").isInt({ min: 1 }),
+    param("id_cat_room_type", "field (id_cat_room_type) should be integer and greater than 0").isInt({ min: 1 }),
     param("id_cat_room_type").custom(roomTypeExistsById(false)),
     check("room_type", "field (room_type) is required").not().isEmpty(),
     check("supplies", "field (supplies) is required").not().isEmpty(),
@@ -90,7 +93,7 @@ router.delete("/:id_cat_room_type", [
     validateRoles,
     validateFields,
     param("id_cat_room_type", "field (id_cat_room_type) can not be empty").not().isEmpty(),
-    param("id_cat_room_type", "field (id_cat_room_type) should be integer").isInt({ min: 1 }),
+    param("id_cat_room_type", "field (id_cat_room_type) should be integer and greater than 0").isInt({ min: 1 }),
     param("id_cat_room_type").custom(roomTypeExistsById()),
     validateFields,
   ],
@@ -103,7 +106,7 @@ router.delete("/physical/:id_cat_room_type", [
     validateRoles,
     validateFields,
     param("id_cat_room_type", "field (id_cat_room_type) can not be empty").not().isEmpty(),
-    param("id_cat_room_type", "field (id_cat_room_type) should be integer").isInt({ min: 1 }),
+    param("id_cat_room_type", "field (id_cat_room_type) should be integer and greater than 0").isInt({ min: 1 }),
     param("id_cat_room_type").custom(roomTypeExistsById()),
     validateFields,
   ],

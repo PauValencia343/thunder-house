@@ -1,6 +1,6 @@
 
 import { Router } from "express";
-import { check, param } from "express-validator";
+import { check, param, query } from "express-validator";
 
 import {
   userGetAll,
@@ -29,6 +29,9 @@ const router = Router();
 router.get("/", [
     validateJWT,
     validateRoles,
+    query("limit", "field (limit) should be integer and greater than 0").isInt({ min: 1 }).optional().default(null),
+    query("page", "field (page) should be integer and greater than 0").isInt({ min: 1 }).optional().default(null),
+    query("pagination", "field (pagination) should be boolean").isBoolean().optional().default(false),
     validateFields,
   ],
   userGetAll,
@@ -39,7 +42,7 @@ router.get("/:id_cat_user", [
     validateRoles,
     validateFields,
     param("id_cat_user", "field (id_cat_user) can not be empty").not().isEmpty(),
-    param("id_cat_user", "field (id_cat_user) should be integer").isInt({ min: 1 }),
+    param("id_cat_user", "field (id_cat_user) should be integer and greater than 0").isInt({ min: 1 }),
     param("id_cat_user").custom(userExistsById()),
     validateFields,
   ],
@@ -52,7 +55,7 @@ router.put("/:id_cat_user", [
     validateRoles,
     validateFields,
     param("id_cat_user", "field (id_cat_user) can not be empty").not().isEmpty(),
-    param("id_cat_user", "field (id_cat_user) should be integer").isInt({ min: 1 }),
+    param("id_cat_user", "field (id_cat_user) should be integer and greater than 0").isInt({ min: 1 }),
     param("id_cat_user").custom(userExistsById(false)),
     check("email", "field (email) is required").not().isEmpty(),
     check("email").isEmail(),
@@ -102,7 +105,7 @@ router.delete("/:id_cat_user", [
     validateRoles,
     validateFields,
     param("id_cat_user", "field (id_cat_user) can not be empty").not().isEmpty(),
-    param("id_cat_user", "field (id_cat_user) should be integer").isInt({ min: 1 }),
+    param("id_cat_user", "field (id_cat_user) should be integer and greater than 0").isInt({ min: 1 }),
     param("id_cat_user").custom(userExistsById()),
     validateFields,
   ],
@@ -115,7 +118,7 @@ router.delete("/physical/:id_cat_user", [
     validateRoles,
     validateFields,
     param("id_cat_user", "field (id_cat_user) can not be empty").not().isEmpty(),
-    param("id_cat_user", "field (id_cat_user) should be integer").isInt({ min: 1 }),
+    param("id_cat_user", "field (id_cat_user) should be integer and greater than 0").isInt({ min: 1 }),
     param("id_cat_user").custom(userExistsById()),
     validateFields,
   ],

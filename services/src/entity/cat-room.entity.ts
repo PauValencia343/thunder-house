@@ -30,14 +30,14 @@ export class CatRoomEntity extends BaseEntity {
 
   @ManyToOne(type => CatFloorEntity, catFloorEntity => catFloorEntity.id_cat_floor)
   @JoinColumn({name: "fk_cat_floor"})
-  fkCatFloorEntity!: CatFloorEntity;
+  cat_floor!: CatFloorEntity;
   
   @ManyToOne(type => CatRoomStatusEntity, catRoomStatusEntity => catRoomStatusEntity.id_cat_room_status)
   @JoinColumn({name: "fk_cat_room_status"})
-  fkCatRoomStatusEntity!: CatRoomStatusEntity;
+  cat_room_status!: CatRoomStatusEntity;
   
   @ManyToOne(type => CatRoomTypeEntity, catRoomTypeEntity => catRoomTypeEntity.id_cat_room_type)
   @JoinColumn({name: "fk_cat_room_type"})
-  fkCatRoomTypeEntity!: CatRoomTypeEntity;
+  cat_room_type!: CatRoomTypeEntity;
 
 }

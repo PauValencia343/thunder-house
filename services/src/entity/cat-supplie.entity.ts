@@ -22,7 +22,6 @@ export class CatSupplieEntity extends BaseEntity {
   @Column({ default: true })
   status: boolean = true;
 
-  @OneToMany(type => DetailSupplieRoomTypeEntity, (detailSupplieRoomTypeEntity: DetailSupplieRoomTypeEntity) => detailSupplieRoomTypeEntity.supplies)
-  supplieRoomTypes!: DetailSupplieRoomTypeEntity[];
-
+  @OneToMany(type => DetailSupplieRoomTypeEntity, (detailSupplieRoomTypeEntity: DetailSupplieRoomTypeEntity) => detailSupplieRoomTypeEntity.cat_supplie)
+  detail_supplie_room_type!: DetailSupplieRoomTypeEntity[];
 }

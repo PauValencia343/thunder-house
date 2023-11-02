@@ -19,35 +19,40 @@ export const supplieGet = async (req: Request, res: Response) => {
       supplie: supplieFound,
     });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      error: 'Internal server error',
-    });
+    console.error("Internal server error:", error);
+    res.status(500).json({ msg: "Internal server error" });
   }
 };
 
 export const supplieGetAll = async (req: Request, res: Response) => {
-  const { limit = 10, page = 1 } = req.query;
-  const parsedPage = parseInt(page as string, 10);
-  const parsedLimit = parseInt(limit as string, 10);
-  const skip = (parsedPage - 1) * parsedLimit;
+  const { limit = 10, page = 1, pagination } = req.query;
   try {
-    const list: CatSupplieEntity[] = await CatSupplieEntity.find({
-      skip,
-      take: parsedLimit,
-      where: {
-        status: true,
-      },
-    });
+    let suppliesList: CatSupplieEntity[] = [];
+    if (pagination) {
+      const parsedPage = parseInt(page as string, 10);
+      const parsedLimit = parseInt(limit as string, 10);
+      const skip = (parsedPage - 1) * parsedLimit;
+      suppliesList = await CatSupplieEntity.find({
+        skip,
+        take: parsedLimit,
+        where: {
+          status: true,
+        },
+      });
+    } else {
+      suppliesList = await CatSupplieEntity.find({
+        where: {
+          status: true,
+        },
+      });
+    }
     return res.status(200).json({
-      list,
-      count: list.length,
+      list: suppliesList,
+      count: suppliesList.length,
     });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      error: 'Internal server error',
-    });
+    console.error("Internal server error:", error);
+    res.status(500).json({ msg: "Internal server error" });
   }
 };
 
@@ -70,7 +75,7 @@ export const suppliePut = async (req: Request, res: Response) => {
       supplie: supplieFound,
     });
   } catch (error) {
-    console.error("Error updating supplie:", error);
+    console.error("Internal server error:", error);
     res.status(500).json({ msg: "Internal server error" });
   }
 };
@@ -85,9 +90,8 @@ export const suppliePost = async (req: Request, res: Response) => {
       supplie: newSupplie,
     });
   } catch (error) {
-    return res.status(500).json({
-      error: "An error occurred while creating the supplie.",
-    });
+    console.error("Internal server error:", error);
+    res.status(500).json({ msg: "Internal server error" });
   }
 };
 
@@ -105,8 +109,8 @@ export const supplieDelete = async (req: Request, res: Response) => {
       supplie: supplieFound
     });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: "Internal Server Error" });
+    console.error("Internal server error:", error);
+    res.status(500).json({ msg: "Internal server error" });
   }
 };
 
@@ -119,7 +123,7 @@ export const supplieDeletePhysical = async (req: Request, res: Response) => {
       },
     });
     const foundDetailSupplieRoomTypeEntity = await DetailSupplieRoomTypeEntity.findBy({
-      supplies: !supplieFound
+      cat_supplie: !supplieFound
     });
     for (const item of foundDetailSupplieRoomTypeEntity) {
       await item.remove();
@@ -129,7 +133,7 @@ export const supplieDeletePhysical = async (req: Request, res: Response) => {
       supplie: supplieFound
     });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: "Internal Server Error" });
+    console.error("Internal server error:", error);
+    res.status(500).json({ msg: "Internal server error" });
   }
 };

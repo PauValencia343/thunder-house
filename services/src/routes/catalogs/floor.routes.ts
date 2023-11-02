@@ -1,6 +1,6 @@
 
 import { Router } from "express";
-import { check, param } from "express-validator";
+import { check, param, query } from "express-validator";
 
 import {
   floorGetAll,
@@ -26,6 +26,9 @@ const router = Router();
 router.get("/", [
     validateJWT,
     validateRoles,
+    query("limit", "field (limit) should be integer and greater than 0").isInt({ min: 1 }).optional().default(null),
+    query("page", "field (page) should be integer and greater than 0").isInt({ min: 1 }).optional().default(null),
+    query("pagination", "field (pagination) should be boolean").isBoolean().optional().default(false),
     validateFields,
   ],
   floorGetAll,
@@ -36,7 +39,7 @@ router.get("/:id_cat_floor", [
     validateRoles,
     validateFields,
     param("id_cat_floor", "field (id_cat_floor) can not be empty").not().isEmpty(),
-    param("id_cat_floor", "field (id_cat_floor) should be integer").isInt({ min: 1 }),
+    param("id_cat_floor", "field (id_cat_floor) should be integer and greater than 0").isInt({ min: 1 }),
     param("id_cat_floor").custom(floorExistsById()),
     validateFields,
   ],
@@ -49,10 +52,10 @@ router.put("/:id_cat_floor", [
     validateRoles,
     validateFields,
     param("id_cat_floor", "field (id_cat_floor) can not be empty").not().isEmpty(),
-    param("id_cat_floor", "field (id_cat_floor) should be integer").isInt({ min: 1 }),
+    param("id_cat_floor", "field (id_cat_floor) should be integer and greater than 0").isInt({ min: 1 }),
     param("id_cat_floor").custom(floorExistsById(false)),
     check("number", "field (number) is required").not().isEmpty(),
-    check("number", "field (number) should be integer").isInt({ min: 1 }),
+    check("number", "field (number) should be integer and greater than 0").isInt({ min: 1 }),
     check("number", "field (number) should be greater than 0").isInt({ min: 1}),
     check("name", "field (name) is required").optional(),
     check("name").default(null),
@@ -69,7 +72,7 @@ router.post("/", [
     validateRoles,
     validateFields,
     check("number", "field (number) is required").not().isEmpty(),
-    check("number", "field (number) should be integer").isInt({ min: 1 }),
+    check("number", "field (number) should be integer and greater than 0").isInt({ min: 1 }),
     check("name", "field (name) is required").optional(),
     check("name").default(null),
     validateFields,
@@ -83,7 +86,7 @@ router.delete("/:id_cat_floor", [
     validateRoles,
     validateFields,
     param("id_cat_floor", "field (id_cat_floor) can not be empty").not().isEmpty(),
-    param("id_cat_floor", "field (id_cat_floor) should be integer").isInt({ min: 1 }),
+    param("id_cat_floor", "field (id_cat_floor) should be integer and greater than 0").isInt({ min: 1 }),
     param("id_cat_floor").custom(floorExistsById()),
     validateFields,
   ],
@@ -95,7 +98,7 @@ router.delete("/physical/:id_cat_floor", [
     validateRoles,
     validateFields,
     param("id_cat_floor", "field (id_cat_floor) can not be empty").not().isEmpty(),
-    param("id_cat_floor", "field (id_cat_floor) should be integer").isInt({ min: 1 }),
+    param("id_cat_floor", "field (id_cat_floor) should be integer and greater than 0").isInt({ min: 1 }),
     param("id_cat_floor").custom(floorExistsById()),
     validateFields,
   ],
