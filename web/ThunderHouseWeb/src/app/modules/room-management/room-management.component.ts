@@ -7,6 +7,7 @@ import { RoomManagementService } from 'src/app/services/room-management.service'
 import Swal from 'sweetalert2';
 import { SuppliesService } from 'src/app/services/supplies/supplies.service';
 import { InventaryService } from 'src/app/services/inventary/inventary.service';
+import { FloorsService } from 'src/app/services/floors/floors.service';
 
 
 
@@ -34,22 +35,33 @@ export class RoomManagementComponent {
   equipments: any[] = new Array();
   arraySupplies: any[] = new Array();
   arrayEquipments: any[] = new Array();
-  id_supplie:number=0;
-  total_supplies:number=0;
-  id_equipment: number=0;
-  total_equipments: number=0;
+  id_supplie: number = 0;
+  total_supplies: number = 0;
+  id_equipment: number = 0;
+  total_equipments: number = 0;
+  room_type: number = 0;
+  roomDialog: boolean = false;
+  arrayFloor: any[] = new Array();
+  idRoom: number = 0;
+  number!: number;
+  name: string = "";
+  fk_cat_floor!: number;
+  fk_cat_room_status!: number;
+  fk_cat_room_type!: number;
 
   constructor(private customerService: LoginService,
     private productService: LoginService,
     private serviceRooms: RoomManagementService,
     private serviceRoomStatus: RoomManagementService,
     private serviceSupplies: SuppliesService,
-    private serviceEquipments: InventaryService) {
+    private serviceEquipments: InventaryService,
+    private serviceFloor: FloorsService) {
     this.getAllRooms();
     this.getAll();
     this.getAllRoomType();
     this.getAllSupplies();
     this.getAllEquipments();
+    this.getAllFloor()
   }
 
   getAllSupplies() {
@@ -61,8 +73,8 @@ export class RoomManagementComponent {
   }
   addSupplies() {
     const existingSupplyIndex = this.supplies.findIndex(supply => supply.id_supplie === this.id_supplie);
-    const totalToAdd = Number(this.total_supplies); 
-  
+    const totalToAdd = Number(this.total_supplies);
+
     if (existingSupplyIndex !== -1) {
       this.supplies[existingSupplyIndex].total_supplies += totalToAdd;
     } else {
@@ -72,12 +84,12 @@ export class RoomManagementComponent {
       });
     }
   }
-  
+
 
   removeSupplies(index: number) {
     this.supplies.splice(index, 1);
   }
-  
+
   getAllEquipments() {
     this.serviceEquipments.getAllInventary().subscribe((equipments: any) => {
       this.arrayEquipments = equipments.list;
@@ -89,7 +101,6 @@ export class RoomManagementComponent {
   addEquipments() {
     const existingEquipmentIndex = this.equipments.findIndex(equipment => equipment.id_equipment === this.id_equipment);
     const totalToAdd = Number(this.total_equipments);
-  
     if (existingEquipmentIndex !== -1) {
       this.equipments[existingEquipmentIndex].total_equipments += totalToAdd;
     } else {
@@ -99,8 +110,8 @@ export class RoomManagementComponent {
       });
     }
   }
-  
-  
+
+
   removeEquipments(index: number) {
     this.equipments.splice(index, 1);
   }
@@ -171,7 +182,6 @@ export class RoomManagementComponent {
   detailRoomStatus(idRoom: number) {
     this.idRoomStatus = idRoom;
     this.serviceRoomStatus.getRoomStatus(idRoom).subscribe((roomStatus: any) => {
-      this.roomTypeDialog = true;
       this.busy = roomStatus.roomStatus.busy == true ? 'yes' : 'no';
       this.dirty = roomStatus.roomStatus.dirty == true ? 'yes' : 'no';
     }, (err) => {
@@ -208,19 +218,139 @@ export class RoomManagementComponent {
 
   addRoomType() {
     if (this.idRoomType != 0) {
-
+      this.serviceRooms.updateRoomType(this.idRoomType, this.nameTypeRoom, this.supplies, this.equipments).subscribe(() => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Successful',
+          text: 'Room Type update sucessful',
+          showConfirmButton: false
+        });
+        this.getAllRoomType()
+      }, (err) => {
+        console.log(err);
+      });
     } else {
       this.serviceRooms.addRoomType(this.nameTypeRoom, this.supplies, this.equipments).subscribe(() => {
-
+        Swal.fire({
+          icon: 'success',
+          title: 'Successful',
+          text: 'Room Type add sucessful',
+          showConfirmButton: false
+        });
+        this.getAllRoomType();
       }, (err) => {
         console.log(err);
       })
     }
   }
 
+  detailRoomType(idRoom: number) {
+    this.idRoomType = idRoom;
+    this.openDialogRoomType()
+    this.serviceRooms.getRoomType(idRoom).subscribe((room: any) => {
+      this.nameTypeRoom = room.roomType.room_type;
+      const equipmentDetails = room.roomType.detail_equipment_room_type.map((item:any) => {
+        return {
+          "id_equipment": item.cat_equipment.id_cat_equipment,
+          "total_equipments": item.total_equipments
+        };
+      });
+      this.equipments = equipmentDetails;
 
+      const supplieDetails = room.roomType.detail_supplie_room_type.map((item:any) => {
+        return {
+          "id_supplie": item.cat_supplie.id_cat_supplie,
+          "total_supplies": item.total_supplies
+        };
+      });
+      this.supplies = supplieDetails;
 
+    }, (err) => {
+      console.log(err);
+    })
+  }
 
+  deleteRoomType(idRoom: number) {
+    this.serviceRooms.deleteRoomType(idRoom).subscribe(() => {
+      Swal.fire({
+        icon: 'success',
+        title: 'Successful',
+        text: 'Room Type delete sucessful',
+        showConfirmButton: false
+      });
+      this.getAllRoomType()
+    }, (err) => {
+      console.log(err);
+    });
+  }
+
+  openDialogAddRoom() {
+    this.roomDialog = true;
+  }
+
+  getAllFloor() {
+    this.serviceFloor.getAllFloors().subscribe((floor: any) => {
+      this.arrayFloor = floor.list;
+    }, (err) => {
+      console.log(err)
+    });
+  }
+
+  addRoom() {
+    if (this.idRoom != 0) {
+      this.serviceRooms.updateRoom(this.idRoom, this.number, this.name, this.fk_cat_floor, this.fk_cat_room_status, this.fk_cat_room_type).subscribe(() => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Successful',
+          text: 'Room update sucessful',
+          showConfirmButton: false
+        });
+        this.getAllRooms();
+      }, (err) => {
+        console.log(err);
+      })
+    } else {
+      this.serviceRooms.addRoom(this.number, this.name, this.fk_cat_floor, this.fk_cat_room_status, this.fk_cat_room_type).subscribe(() => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Successful',
+          text: 'Room add sucessful',
+          showConfirmButton: false
+        });
+        this.getAllRooms();
+      }, (err) => {
+        console.log(err);
+      })
+    }
+  }
+
+  detailRoom(idRoom: number) {
+    this.openDialogAddRoom();
+    this.idRoom=idRoom;
+    this.serviceRooms.getRoom(idRoom).subscribe((room: any) => {
+      this.number = room.room.number;
+      this.name = room.room.name;
+      this.fk_cat_floor = room.room.cat_floor.id_cat_floor;
+      this.fk_cat_room_status = room.room.cat_room_status.id_cat_room_status;
+      this.fk_cat_room_type = room.room.cat_room_type.id_cat_room_type;
+    }, (err) => {
+      console.log(err);
+    })
+  }
+
+  deleteRoom(idRoom: number) {
+    this.serviceRooms.deleteRoom(idRoom).subscribe(() => {
+      Swal.fire({
+        icon: 'success',
+        title: 'Successful',
+        text: 'Room delete sucessful',
+        showConfirmButton: false
+      });
+      this.getAllRooms();
+    }, (err) => {
+      console.log(err);
+    })
+  }
 
 
 

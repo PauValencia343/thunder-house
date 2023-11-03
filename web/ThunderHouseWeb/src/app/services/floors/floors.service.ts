@@ -21,7 +21,7 @@ export class FloorsService {
   addFloor(numberFloor: number, nameFloor: string) {
     let body = {
       "number": numberFloor,
-      "nameFloor": nameFloor
+      "name": nameFloor
   };
     return this.http.post(URLLOCAL + "api/catalogs/floor", body);
   }
@@ -29,7 +29,7 @@ export class FloorsService {
   updateFloor(idFloor:number, numberFloor: number, nameFloor: string) {
     let body={
       "number": numberFloor,
-      "nameFloor": nameFloor,
+      "name": nameFloor,
       "status":true
   }
     return this.http.put(URLLOCAL + "api/catalogs/floor/"+idFloor, body);

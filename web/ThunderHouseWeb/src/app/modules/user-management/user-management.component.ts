@@ -96,18 +96,17 @@ export class UserManagementComponent {
   openNew() {
     this.userDialog = true;
     this.idUser = 0;
-    this.email = "";
-    this.user_name = "";
-    this.password = "";
-    this.idRole = [];
+   
   }
 
   openDialogRol() {
     this.rolDialog = true;
+    this.idRol=0;
   }
 
   openDialogFloor() {
     this.floorDialog = true;
+    this.idFloor=0;
   }
 
   cancelUser() {
@@ -116,7 +115,8 @@ export class UserManagementComponent {
 
   saveUser() {
     if (this.idUser != 0) {
-      this.serviceUser.updateUser(this.idUser, this.email, this.user_name, 'Luis1$', [5]).subscribe((resUser) => {
+      const arrayIdRoles = this.selectedRoles.map(id => id.code);
+      this.serviceUser.updateUser(this.idUser, this.email, this.user_name,'12_:abCD',arrayIdRoles).subscribe((resUser) => {
         console.log('ESTO ES EL ACTUALIZAR', resUser);
         Swal.fire({
           icon: 'success',
@@ -154,10 +154,9 @@ export class UserManagementComponent {
       const objUser = userId.user;
       this.email = objUser.email;
       this.user_name = objUser.user_name;
-      //const rol = this.roles.find(rol => rol.name === 'Administrador');
-      // if (rol) {
-      //   this.selectedRoles = [rol];
-      // }
+      const codesToFind = objUser.detail_user_role.map((item:any) => item.cat_role.id_cat_role);
+      this.selectedRoles = this.roles.filter(rol => codesToFind.includes(rol.code));
+
     });
   }
 
@@ -176,7 +175,8 @@ export class UserManagementComponent {
 
   saveRol() {
     if (this.idRol != 0) {
-      this.serviceRoles.updateRole(this.idRol, this.nameRol, [5]).subscribe((rol)=>{
+      const arrayIdFloor = this.selectedFloors.map(id => id.code);
+      this.serviceRoles.updateRole(this.idRol, this.nameRol,arrayIdFloor).subscribe((rol)=>{
         Swal.fire({
           icon: 'success',
           title: 'Successful',
@@ -212,6 +212,10 @@ export class UserManagementComponent {
       const rol=rolId.role;
       this.nameRol=rol.role;
       this.idRol=rol.id_cat_role;
+      const codesToFind = rol.detail_role_floor.map((item:any) => item.cat_floor.id_cat_floor);
+      this.selectedFloors = this.floor.filter(floor => codesToFind.includes(floor.code));
+      console.log('PISOS BD',codesToFind)
+      console.log('OTROS PISOS', this.selectedFloors)
     },(err)=>{
       console.log(err);
     });

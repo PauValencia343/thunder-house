@@ -22,10 +22,10 @@ export class NavbarComponent {
         name:'Rooms',
         route:'roomManagement'
       },
-      {
-        name:'Reception',
-        route:'receptionManagement'
-      },
+      // {
+      //   name:'Reception',
+      //   route:'receptionManagement'
+      // },
       {
         name:'Inventory',
         route:'inventoryManagement'
@@ -34,18 +34,18 @@ export class NavbarComponent {
         name:'Users',
         route:'userManagement'
       },
+      {
+        name:'Supplie',
+        route:'supplieManagement'
+      },
       // {
-      //   name:'Laundry',
-      //   route:'th'
+      //   name:'Luggage',
+      //   route:'leggageManagement'
       // },
-      {
-        name:'Luggage',
-        route:'leggageManagement'
-      },
-      {
-        name:'Logbook',
-        route:'logbookManagement'
-      },
+      // {
+      //   name:'Logbook',
+      //   route:'logbookManagement'
+      // },
     ]
     
   }

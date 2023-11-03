@@ -19,6 +19,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RoomTypeComponent } from './room-management/room-type/room-type.component';
 import { RoomStatusComponent } from './room-management/room-status/room-status.component';
 import { PipeRoomsPipe } from './room-management/pipe-rooms.pipe';
+import { SupplieManagementComponent } from './supplie-management/supplie-management/supplie-management.component';
 
 
 @NgModule({
@@ -36,7 +37,8 @@ import { PipeRoomsPipe } from './room-management/pipe-rooms.pipe';
     UserManagementComponent,
     RoomTypeComponent,
     RoomStatusComponent,
-    PipeRoomsPipe
+    PipeRoomsPipe,
+    SupplieManagementComponent
   ],
   imports: [
     CommonModule,

@@ -14,6 +14,7 @@ import { RolesManagementComponent } from './modules/roles-management/roles-manag
 import { UserManagementComponent } from './modules/user-management/user-management.component';
 import { accessRoutesGuard } from './guards/access-routes.guard';
 import { RoomStatusComponent } from './modules/room-management/room-status/room-status.component';
+import { SupplieManagementComponent } from './modules/supplie-management/supplie-management/supplie-management.component';
 
 const routes: Routes = [
   {
@@ -64,6 +65,10 @@ const routes: Routes = [
   {
     path: "roomStatusManagement",
     component: RoomStatusComponent
+  },
+  {
+    path: "supplieManagement",
+    component: SupplieManagementComponent
   },
   {
     path: '**',
