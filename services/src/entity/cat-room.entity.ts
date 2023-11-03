@@ -6,11 +6,13 @@ import {
   BaseEntity,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 
 import { CatFloorEntity } from './cat-floor.entity';
 import { CatRoomStatusEntity } from './cat-room-status.entity';
 import { CatRoomTypeEntity } from './cat-room-type.entity';
+import { DetailReservationRoomEntity } from './detail-reservation-room.entity';
 
 
 @Entity({ name: 'cat_room', schema: 'public' })
@@ -40,4 +42,6 @@ export class CatRoomEntity extends BaseEntity {
   @JoinColumn({name: "fk_cat_room_type"})
   cat_room_type!: CatRoomTypeEntity;
 
+  @OneToMany(type => DetailReservationRoomEntity, (detailReservationRoomEntity: DetailReservationRoomEntity) => detailReservationRoomEntity.cat_room)
+  detail_reservation_room!: DetailReservationRoomEntity[];
 }

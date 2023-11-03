@@ -4,8 +4,10 @@ import bcryptjs from "bcryptjs";
 
 import AppDataSource from "./config";
 import {
+  CatEmployeeEntity,
   CatEquipmentEntity,
   CatFloorEntity,
+  CatPersonEntity,
   CatRoleEntity,
   CatRoomEntity,
   CatRoomStatusEntity,
@@ -22,7 +24,7 @@ import {
   roomStatusInitInformation,
   roomTypeInitInformation,
   supplieInitInformation
-} from "./initData";
+} from "./init-data";
 
 const seedDatabase = async () => {
   await truncateTables();
@@ -47,6 +49,26 @@ const generateUsers = async () => {
   await roleAdminisatrator.save();
   await userAdministrator.save();
   await detailUserRoleEntity.save();
+
+  
+  const newCatEmployeeEntity = new CatEmployeeEntity();
+  newCatEmployeeEntity.cat_user = userAdministrator;
+  await newCatEmployeeEntity.save();
+  const newCatPersonEntity = new CatPersonEntity();
+  newCatPersonEntity.name = 'name';
+  newCatPersonEntity.surname_father = 'surname_father';
+  newCatPersonEntity.surname_mother = 'surname_mother';
+  newCatPersonEntity.phone_contact = 'phone_contact';
+  newCatPersonEntity.email_contact = 'email_contact';
+  newCatPersonEntity!.birth = new Date('2000-12-31');
+  newCatPersonEntity.gender = 'gender';
+  newCatPersonEntity.street_address = 'street_address';
+  newCatPersonEntity.city = 'city';
+  newCatPersonEntity.state_province = 'state_province';
+  newCatPersonEntity.zip_code = 'zip_code';
+  newCatPersonEntity.country = 'country';
+  newCatPersonEntity.cat_employee = newCatEmployeeEntity;
+  await newCatPersonEntity.save();
 
   const floorsEntities = [];
   for (let i = 1; i <= totalFloors; i++) {
@@ -143,6 +165,8 @@ const generateUsers = async () => {
     newCatRoomEntity.cat_room_type = roomTypeEntities[2];
     await newCatRoomEntity.save();
   }
+
+  
   // const roomsByFloor: number = 10;
   // for (let i = 1; i < 4; i++) {
   //   for (let i = 1; i < roomsByFloor; i++) {

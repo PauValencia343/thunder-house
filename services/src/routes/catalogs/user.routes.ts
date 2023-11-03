@@ -62,11 +62,9 @@ router.put("/:id_cat_user", [
     // check('email').custom(isUniqueUser('email', true)),
     check("user_name", "field (user_name) is required").not().isEmpty(),
     // check('user_name').custom(isUniqueUser('user_name', true)),
-    check("password", "field (password) is required").not().isEmpty(),
-    check("password", "Password must be at least 6 characters long").isLength({
+    check("password", "Password must be at least 6 characters long").optional().default(null).isLength({
       min: 6,
     }),
-    check("password").default(null),
     check("status", "field (status) is required").not().isEmpty(),
     check("status", "field (status) should be boolean").isBoolean(),
     check("roles", "field (roles) is required").not().isEmpty(),

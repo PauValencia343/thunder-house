@@ -9,13 +9,9 @@ import { generateJWT } from "../helpers/generate-jwt";
 export const login = async (req: Request, res: Response) => {
   const { credential, password } = req.body;
   try {
-    const user = await CatUserEntity.findOne({
-      where: [
-        { user_name: credential },
-        { email: credential },
-      ]
-    });
-    // TODO Validate { status: true },
+    const user: CatUserEntity | null = await CatUserEntity.createQueryBuilder('user')
+    .where('(user.user_name = :credential OR user.email = :credential) AND user.status = :status', { credential, status: true })
+    .getOne();
     if (!user) {
       return res.status(400).json({
         msg: "user_name or password is incorrect - email",

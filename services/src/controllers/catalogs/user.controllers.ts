@@ -164,7 +164,6 @@ export const userPost = async (req: Request, res: Response) => {
   }
 };
 
-
 export const userDelete = async (req: Request, res: Response) => {
   const { id_cat_user } = req.params;
   try {
@@ -173,19 +172,12 @@ export const userDelete = async (req: Request, res: Response) => {
         id_cat_user: parseInt(id_cat_user),
       },
     });
-    if (!userFound) {
-      return res.status(404).json({ error: "User not found" });
-    }
-    userFound.status = false;
-    await userFound.save();
-    // const authenticatedUser = req.user;
-    
+    userFound!.status = false;
+    await userFound!.save();
     const user: any = { ...userFound };
     delete user.password;
-    
     return res.status(200).json({
       msg: 'Logically deleted user',
-      // authenticatedUser,
     });
   } catch (error) {
     console.error("Internal server error:", error);
@@ -222,7 +214,7 @@ export const userDeletePhysical = async (req: Request, res: Response) => {
 };
 
 
-const findExistingUser = async (id_cat_user: number): Promise<CatUserEntity> => {
+export const findExistingUser = async (id_cat_user: number): Promise<CatUserEntity> => {
   const userFound: CatUserEntity | null = await CatUserEntity.createQueryBuilder('user')
     .leftJoinAndSelect('user.detail_user_role', 'detail_user_role')
     .leftJoinAndSelect('detail_user_role.cat_role', 'cat_role')

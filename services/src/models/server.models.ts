@@ -5,6 +5,9 @@ import fileUpload from "express-fileupload";
 
 import argv from '../config/yargs';
 import {
+  ReservationCatalogRoute,
+  ClientCatalogRoute,
+  EmployeeCatalogRoute,
   EquipmentCatalogRoute,
   UserCatalogRoute,
   RoleCatalogRoute,
@@ -17,13 +20,16 @@ import {
   RoomActionRoute,
 } from '../routes';
 import AppDataSource from "../database/config";
-import seedDatabase from "../database/seedDatabase";
+import seedDatabase from "../database/seed-database";
 
 
 class Server {
   private app: Application;
   private port: number;
   private pathsCatalogs: {
+    reservationCatalog: string;
+    clientCatalog: string;
+    employeeCatalog: string;
     userCatalog: string;
     roleCatalog: string;
     equipmentCatalog: string;
@@ -45,6 +51,9 @@ class Server {
     this.app = express();
     this.port = Number(process.env.PORT) || 8080;
     this.pathsCatalogs = {
+      reservationCatalog: "/api/catalogs/reservation",
+      clientCatalog: "/api/catalogs/client",
+      employeeCatalog: "/api/catalogs/employee",
       userCatalog: "/api/catalogs/user",
       roleCatalog: "/api/catalogs/role",
       equipmentCatalog: "/api/catalogs/equipment",
@@ -99,6 +108,9 @@ class Server {
   }
 
   routes() {
+    this.app.use(this.pathsCatalogs.reservationCatalog, ReservationCatalogRoute);
+    this.app.use(this.pathsCatalogs.clientCatalog, ClientCatalogRoute);
+    this.app.use(this.pathsCatalogs.employeeCatalog, EmployeeCatalogRoute);
     this.app.use(this.pathsCatalogs.userCatalog, UserCatalogRoute);
     this.app.use(this.pathsCatalogs.roleCatalog, RoleCatalogRoute);
     this.app.use(this.pathsCatalogs.equipmentCatalog, EquipmentCatalogRoute);
