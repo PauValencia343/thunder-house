@@ -19,35 +19,40 @@ export const equipmentGet = async (req: Request, res: Response) => {
       equipment: equipmentFound,
     });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      error: 'Internal server error',
-    });
+    console.error("Internal server error:", error);
+    res.status(500).json({ msg: "Internal server error" });
   }
 };
 
 export const equipmentGetAll = async (req: Request, res: Response) => {
-  const { limit = 10, page = 1 } = req.query;
-  const parsedPage = parseInt(page as string, 10);
-  const parsedLimit = parseInt(limit as string, 10);
-  const skip = (parsedPage - 1) * parsedLimit;
+  const { limit = 10, page = 1, pagination } = req.query;
   try {
-    const list: CatEquipmentEntity[] = await CatEquipmentEntity.find({
-      skip,
-      take: parsedLimit,
-      where: {
-        status: true,
-      },
-    });
+    let equipmentsList: CatEquipmentEntity[] = [];
+    if (pagination) {
+      const parsedPage = parseInt(page as string, 10);
+      const parsedLimit = parseInt(limit as string, 10);
+      const skip = (parsedPage - 1) * parsedLimit;
+      equipmentsList = await CatEquipmentEntity.find({
+        skip,
+        take: parsedLimit,
+        where: {
+          status: true,
+        },
+      });
+    } else {
+      equipmentsList = await CatEquipmentEntity.find({
+        where: {
+          status: true,
+        },
+      });
+    }
     return res.status(200).json({
-      list,
-      count: list.length,
+      list: equipmentsList,
+      count: equipmentsList.length,
     });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      error: 'Internal server error',
-    });
+    console.error("Internal server error:", error);
+    res.status(500).json({ msg: "Internal server error" });
   }
 };
 
@@ -70,7 +75,7 @@ export const equipmentPut = async (req: Request, res: Response) => {
       equipment: equipmentFound,
     });
   } catch (error) {
-    console.error("Error updating equipment:", error);
+    console.error("Internal server error:", error);
     res.status(500).json({ msg: "Internal server error" });
   }
 };
@@ -86,9 +91,8 @@ export const equipmentPost = async (req: Request, res: Response) => {
       equipment: newEquipment,
     });
   } catch (error) {
-    return res.status(500).json({
-      error: "An error occurred while creating the equipment.",
-    });
+    console.error("Internal server error:", error);
+    res.status(500).json({ msg: "Internal server error" });
   }
 };
 
@@ -106,8 +110,8 @@ export const equipmentDelete = async (req: Request, res: Response) => {
       equipment: equipmentFound
     });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: "Internal Server Error" });
+    console.error("Internal server error:", error);
+    res.status(500).json({ msg: "Internal server error" });
   }
 };
 
@@ -120,7 +124,7 @@ export const equipmentDeletePhysical = async (req: Request, res: Response) => {
       },
     });
     const foundDetailEquipmentRoomTypeEntity = await DetailEquipmentRoomTypeEntity.findBy({
-      equipments: !equipmentFound
+      cat_equipment: !equipmentFound
     });
     for (const item of foundDetailEquipmentRoomTypeEntity) {
       await item.remove();
@@ -130,7 +134,7 @@ export const equipmentDeletePhysical = async (req: Request, res: Response) => {
       equipment: equipmentFound
     });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: "Internal Server Error" });
+    console.error("Internal server error:", error);
+    res.status(500).json({ msg: "Internal server error" });
   }
 };

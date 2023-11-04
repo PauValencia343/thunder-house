@@ -5,6 +5,9 @@ import fileUpload from "express-fileupload";
 
 import argv from '../config/yargs';
 import {
+  ReservationCatalogRoute,
+  ClientCatalogRoute,
+  EmployeeCatalogRoute,
   EquipmentCatalogRoute,
   UserCatalogRoute,
   RoleCatalogRoute,
@@ -17,13 +20,16 @@ import {
   RoomActionRoute,
 } from '../routes';
 import AppDataSource from "../database/config";
-import seedDatabase from "../database/seedDatabase";
+import seedDatabase from "../database/seed-database";
 
 
 class Server {
   private app: Application;
   private port: number;
   private pathsCatalogs: {
+    reservationCatalog: string;
+    clientCatalog: string;
+    employeeCatalog: string;
     userCatalog: string;
     roleCatalog: string;
     equipmentCatalog: string;
@@ -32,16 +38,22 @@ class Server {
     roomStatusCatalog: string;
     roomCatalog: string;
     floorCatalog: string;
-    authCatalog: string;
-    searchCatalog: string;
   };
   private pathsActions: {
     roomAction: string;
+    searchCatalog: string;
   };
+  private pathsSecurity: {
+    authSecurity: string;
+  };
+
   constructor() {
     this.app = express();
     this.port = Number(process.env.PORT) || 8080;
     this.pathsCatalogs = {
+      reservationCatalog: "/api/catalogs/reservation",
+      clientCatalog: "/api/catalogs/client",
+      employeeCatalog: "/api/catalogs/employee",
       userCatalog: "/api/catalogs/user",
       roleCatalog: "/api/catalogs/role",
       equipmentCatalog: "/api/catalogs/equipment",
@@ -50,11 +62,13 @@ class Server {
       roomStatusCatalog: "/api/catalogs/room-status",
       roomCatalog: "/api/catalogs/room",
       floorCatalog: "/api/catalogs/floor",
-      authCatalog: "/api/catalogs/auth",
-      searchCatalog: "/api/actions/search",
     };
     this.pathsActions = {
       roomAction: "/api/actions/room",
+      searchCatalog: "/api/actions/search",
+    };
+    this.pathsSecurity = {
+      authSecurity: "/api/security/auth",
     };
     // Connect to the database
     this.connectDB();
@@ -94,7 +108,9 @@ class Server {
   }
 
   routes() {
-    // Configure routes for user, auth
+    this.app.use(this.pathsCatalogs.reservationCatalog, ReservationCatalogRoute);
+    this.app.use(this.pathsCatalogs.clientCatalog, ClientCatalogRoute);
+    this.app.use(this.pathsCatalogs.employeeCatalog, EmployeeCatalogRoute);
     this.app.use(this.pathsCatalogs.userCatalog, UserCatalogRoute);
     this.app.use(this.pathsCatalogs.roleCatalog, RoleCatalogRoute);
     this.app.use(this.pathsCatalogs.equipmentCatalog, EquipmentCatalogRoute);
@@ -103,8 +119,10 @@ class Server {
     this.app.use(this.pathsCatalogs.roomStatusCatalog, RoomStatusCatalogRoute);
     this.app.use(this.pathsCatalogs.roomCatalog, RoomCatalogRoute);
     this.app.use(this.pathsCatalogs.floorCatalog, FloorCatalogRoute);
-    this.app.use(this.pathsCatalogs.authCatalog, AuthCatalogRoute);
+
     this.app.use(this.pathsActions.roomAction, RoomActionRoute);
+    
+    this.app.use(this.pathsSecurity.authSecurity, AuthCatalogRoute);
   }
   
   listen() {

@@ -23,16 +23,9 @@ export class CatRoleEntity extends BaseEntity {
   @Column({ default: true })
   status: boolean = true;
 
-  @OneToMany(type => DetailUserRoleEntity, (detailUserRole: DetailUserRoleEntity) => detailUserRole.roles)
-  roleUsers!: DetailUserRoleEntity[];
+  @OneToMany(type => DetailUserRoleEntity, (detailUserRole: DetailUserRoleEntity) => detailUserRole.cat_role)
+  detail_user_role!: DetailUserRoleEntity[];
 
-  @OneToMany(type => DetailRoleFloorEntity, (detailRoleFloor: DetailRoleFloorEntity) => detailRoleFloor.roles)
-  roleFloors!: DetailRoleFloorEntity[];
-
-  assignStatus(status: boolean){
-    if (status !== null) {
-      this.status = status;
-    }
-  }
-  
+  @OneToMany(type => DetailRoleFloorEntity, (detailRoleFloor: DetailRoleFloorEntity) => detailRoleFloor.cat_role)
+  detail_role_floor!: DetailRoleFloorEntity[];
 }

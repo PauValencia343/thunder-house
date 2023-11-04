@@ -24,12 +24,13 @@ export class CatRoomTypeEntity extends BaseEntity {
   @Column({ default: true })
   status: boolean = true;
   
-  @OneToMany(type => CatRoomEntity, catRoomEntity => catRoomEntity.fkCatRoomTypeEntity) catRoomTypeEntity!: CatRoomTypeEntity[];
+  @OneToMany(type => CatRoomEntity, catRoomEntity => catRoomEntity.cat_room_type)
+  cat_room_type!: CatRoomTypeEntity[];
 
-  @OneToMany(type => DetailEquipmentRoomTypeEntity, (detailEquipmentRoomTypeEntity: DetailEquipmentRoomTypeEntity) => detailEquipmentRoomTypeEntity.roomTypes)
-  roomTypeEquipments!: DetailEquipmentRoomTypeEntity[];
+  @OneToMany(type => DetailEquipmentRoomTypeEntity, (detailEquipmentRoomTypeEntity: DetailEquipmentRoomTypeEntity) => detailEquipmentRoomTypeEntity.cat_room_type)
+  detail_equipment_room_type!: DetailEquipmentRoomTypeEntity[];
   
-  @OneToMany(type => DetailSupplieRoomTypeEntity, (detailSupplieRoomTypeEntity: DetailSupplieRoomTypeEntity) => detailSupplieRoomTypeEntity.roomTypes)
-  roomTypeSupplies!: DetailSupplieRoomTypeEntity[];
+  @OneToMany(type => DetailSupplieRoomTypeEntity, (detailSupplieRoomTypeEntity: DetailSupplieRoomTypeEntity) => detailSupplieRoomTypeEntity.cat_room_type)
+  detail_supplie_room_type!: DetailSupplieRoomTypeEntity[];
 
 }

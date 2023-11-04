@@ -19,35 +19,40 @@ export const floorGet = async (req: Request, res: Response) => {
       floor: floorFound,
     });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      error: 'Internal server error',
-    });
+    console.error("Internal server error:", error);
+    res.status(500).json({ msg: "Internal server error" });
   }
 };
 
 export const floorGetAll = async (req: Request, res: Response) => {
-  const { limit = 10, page = 1 } = req.query;
-  const parsedPage = parseInt(page as string, 10);
-  const parsedLimit = parseInt(limit as string, 10);
-  const skip = (parsedPage - 1) * parsedLimit;
+  const { limit = 10, page = 1, pagination } = req.query;
   try {
-    const list: CatFloorEntity[] = await CatFloorEntity.find({
-      skip,
-      take: parsedLimit,
-      where: {
-        status: true,
-      },
-    });
+    let floorsList: CatFloorEntity[] = [];
+    if (pagination) {
+      const parsedPage = parseInt(page as string, 10);
+      const parsedLimit = parseInt(limit as string, 10);
+      const skip = (parsedPage - 1) * parsedLimit;
+      floorsList = await CatFloorEntity.find({
+        skip,
+        take: parsedLimit,
+        where: {
+          status: true,
+        },
+      });
+    } else {
+      floorsList = await CatFloorEntity.find({
+        where: {
+          status: true,
+        },
+      });
+    }
     return res.status(200).json({
-      list,
-      count: list.length,
+      list: floorsList,
+      count: floorsList.length,
     });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      error: 'Internal server error',
-    });
+    console.error("Internal server error:", error);
+    res.status(500).json({ msg: "Internal server error" });
   }
 };
 
@@ -72,7 +77,7 @@ export const floorPut = async (req: Request, res: Response) => {
       floor: floorFound,
     });
   } catch (error) {
-    console.error("Error updating floor:", error);
+    console.error("Internal server error:", error);
     res.status(500).json({ msg: "Internal server error" });
   }
 };
@@ -88,9 +93,8 @@ export const floorPost = async (req: Request, res: Response) => {
       floor: newFloor,
     });
   } catch (error) {
-    return res.status(500).json({
-      error: "An error occurred while creating the floor.",
-    });
+    console.error("Internal server error:", error);
+    res.status(500).json({ msg: "Internal server error" });
   }
 };
 
@@ -108,8 +112,8 @@ export const floorDelete = async (req: Request, res: Response) => {
       floor: floorFound
     });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: "Internal Server Error" });
+    console.error("Internal server error:", error);
+    res.status(500).json({ msg: "Internal server error" });
   }
 };
 
@@ -122,13 +126,13 @@ export const floorDeletePhysical = async (req: Request, res: Response) => {
       },
     });
     const foundDetailRoleFloorEntity = await DetailRoleFloorEntity.findBy({
-      floors: !floorFound
+      cat_floor: !floorFound
     });
     for (const item of foundDetailRoleFloorEntity) {
       await item.remove();
     }
     const foundCatRoomEntity = await CatRoomEntity.findBy({
-      fkCatFloorEntity: !floorFound
+      cat_floor: !floorFound
     });
     for (const item of foundCatRoomEntity) {
       await item.remove();
@@ -138,7 +142,7 @@ export const floorDeletePhysical = async (req: Request, res: Response) => {
       floor: floorFound
     });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: "Internal Server Error" });
+    console.error("Internal server error:", error);
+    res.status(500).json({ msg: "Internal server error" });
   }
 };

@@ -28,13 +28,13 @@ export const changeRoomStatus = async (req: Request, res: Response) => {
         status: true,
       },
     });
-    roomFound!.fkCatRoomStatusEntity = roomStatusFound!;
+    roomFound!.cat_room_status = roomStatusFound!;
     await roomFound!.save();
     return res.status(200).json({
       room: roomFound,
     });
   } catch (error) {
-    console.error("Error changing room status:", error);
+    console.error("Internal server error:", error);
     res.status(500).json({ msg: "Internal server error" });
   }
 };
@@ -45,7 +45,7 @@ export const getRoomsByFloor = async (req: Request, res: Response) => {
   try {
     const roomsFound = await CatRoomEntity.findBy({
       status: true,
-      fkCatFloorEntity: {
+      cat_floor: {
         id_cat_floor: parseInt(id_cat_floor),
         status: true,
       },
@@ -54,7 +54,7 @@ export const getRoomsByFloor = async (req: Request, res: Response) => {
       rooms: roomsFound,
     });
   } catch (error) {
-    console.error("Error changing room status:", error);
+    console.error("Internal server error:", error);
     res.status(500).json({ msg: "Internal server error" });
   }
 };
