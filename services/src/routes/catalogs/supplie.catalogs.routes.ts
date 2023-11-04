@@ -22,6 +22,7 @@ import { validateRoles } from "../../middlewares/validate-roles";
 
 const router = Router();
 
+
 // GET route for fetching supplie data
 router.get("/", [
     validateJWT,

@@ -2,6 +2,7 @@
 import express, { Application } from "express";
 import cors from "cors";
 import fileUpload from "express-fileupload";
+import * as entities from "../entity/index";
 
 import argv from '../config/yargs';
 import {
@@ -21,6 +22,7 @@ import {
 } from '../routes';
 import AppDataSource from "../database/config";
 import seedDatabase from "../database/seed-database";
+import { DataSource } from "typeorm";
 
 
 class Server {
@@ -70,11 +72,13 @@ class Server {
     this.pathsSecurity = {
       authSecurity: "/api/security/auth",
     };
-    // Connect to the database
-    this.connectDB();
     this.middlewares();
     this.routes();
   }
+  
+  get getApp() {
+    return this.app;
+  };
 
   async connectDB() {
     try {
@@ -85,6 +89,26 @@ class Server {
           await seedDatabase();
         })();
       }
+    } catch (error) {
+      console.error("Unable to connect to the database:", error);
+    }
+  }
+
+  async connectDBTest() {
+    try {
+      const AppDataSourceTest = new DataSource({
+        type: 'mysql',
+        host: 'localhost',
+        port: 3306,
+        username: 'root',
+        password: 'admin',
+        database: 'db_thunder_house',
+        synchronize: true,
+        // logging: true,
+        entities,
+      });
+      await AppDataSourceTest.initialize();
+      console.log("Connected to the database successfully");
     } catch (error) {
       console.error("Unable to connect to the database:", error);
     }

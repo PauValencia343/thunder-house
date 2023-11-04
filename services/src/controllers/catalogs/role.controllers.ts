@@ -5,6 +5,7 @@ import {
   CatFloorEntity,
   CatRoleEntity, DetailRoleFloorEntity, DetailUserRoleEntity,
 } from "../../entity";
+import { Equal, FindOperator } from "typeorm";
 
 
 export const roleGet = async (req: Request, res: Response) => {
@@ -72,8 +73,10 @@ export const rolePut = async (req: Request, res: Response) => {
     roleUpdating!.role = role;
     roleUpdating!.status = status;
     await roleUpdating!.save();
-    const foundDetailRoleFloorEntity = await DetailRoleFloorEntity.findBy({
-      cat_role: !roleUpdating
+    const foundDetailRoleFloorEntity = await DetailRoleFloorEntity.find({
+      where: {
+        cat_role: Equal(roleUpdating!.id_cat_role)
+      }
     });
     for (const item of foundDetailRoleFloorEntity) {
       await item.remove();

@@ -4,6 +4,7 @@ import { Request, Response } from "express";
 import {
   CatEquipmentEntity, DetailEquipmentRoomTypeEntity,
 } from "../../entity";
+import { Equal } from "typeorm";
 
 
 export const equipmentGet = async (req: Request, res: Response) => {
@@ -123,8 +124,10 @@ export const equipmentDeletePhysical = async (req: Request, res: Response) => {
         id_cat_equipment: parseInt(id_cat_equipment),
       },
     });
-    const foundDetailEquipmentRoomTypeEntity = await DetailEquipmentRoomTypeEntity.findBy({
-      cat_equipment: !equipmentFound
+    const foundDetailEquipmentRoomTypeEntity = await DetailEquipmentRoomTypeEntity.find({
+      where: {
+        cat_equipment: Equal(equipmentFound!.id_cat_equipment)
+      }
     });
     for (const item of foundDetailEquipmentRoomTypeEntity) {
       await item.remove();

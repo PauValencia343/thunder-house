@@ -10,6 +10,7 @@ import {
   DetailSupplieRoomTypeEntity,
 } from "../../entity";
 import AppDataSource from "../../database/config";
+import { Equal } from "typeorm";
 
 
 export const roomTypeGet = async (req: Request, res: Response) => {
@@ -80,11 +81,15 @@ export const roomTypePut = async (req: Request, res: Response) => {
         id_cat_room_type: parseInt(id_cat_room_type),
       },
     });
-    const foundDetailSupplieRoomTypeEntity = await DetailSupplieRoomTypeEntity.findBy({
-      cat_room_type: !roomTypeUpdating
+    const foundDetailSupplieRoomTypeEntity = await DetailSupplieRoomTypeEntity.find({
+      where: {
+        cat_room_type: Equal(id_cat_room_type)
+      }
     });
-    const foundDetailEquipmentRoomTypeEntity = await DetailEquipmentRoomTypeEntity.findBy({
-      cat_room_type: !roomTypeUpdating
+    const foundDetailEquipmentRoomTypeEntity = await DetailEquipmentRoomTypeEntity.find({
+      where: {
+        cat_room_type: Equal(id_cat_room_type)
+      }
     });
     for (const item of foundDetailSupplieRoomTypeEntity) {
       await item.remove();

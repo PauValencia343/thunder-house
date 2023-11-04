@@ -13,7 +13,7 @@ export const AppDataSource = new DataSource({
   database: process.env.NAME_DATABASE,
   synchronize: true,
   // logging: true,
-  entities
+  entities,
 });
 
 export default AppDataSource;

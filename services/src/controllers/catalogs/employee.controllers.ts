@@ -9,6 +9,7 @@ import {
   DetailUserRoleEntity,
 } from "../../entity";
 import { generatePassword } from "../../helpers";
+import { Equal } from "typeorm";
 
 
 export const employeeGet = async (req: Request, res: Response) => {
@@ -136,8 +137,10 @@ export const employeePut = async (req: Request, res: Response) => {
     userUpdating!.user_name = user_name;
     userUpdating!.status = status_user;
     userUpdating!.save();
-    const foundDetailUserRoleEntity = await DetailUserRoleEntity.findBy({
-      cat_user: !userUpdating
+    const foundDetailUserRoleEntity = await DetailUserRoleEntity.find({
+      where: {
+        cat_user: Equal(userUpdating!.id_cat_user)
+      }
     });
     for (const item of foundDetailUserRoleEntity) {
       await item.remove();
