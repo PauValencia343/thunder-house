@@ -79,7 +79,7 @@ export class RoomManagementComponent {
       this.supplies[existingSupplyIndex].total_supplies += totalToAdd;
     } else {
       this.supplies.push({
-        "id_supplie": this.id_supplie,
+        "id_supplie": Number(this.id_supplie),
         "total_supplies": totalToAdd
       });
     }
@@ -105,7 +105,7 @@ export class RoomManagementComponent {
       this.equipments[existingEquipmentIndex].total_equipments += totalToAdd;
     } else {
       this.equipments.push({
-        "id_equipment": this.id_equipment,
+        "id_equipment": Number(this.id_equipment),
         "total_equipments": totalToAdd
       });
     }

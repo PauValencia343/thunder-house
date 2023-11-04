@@ -49,6 +49,7 @@ export class EmployeeService {
     gender: string, street_address: string, city: string,
     state_province: string, zip_code: string, country: string, email: string, user_name: string, password: string, idRole: any[]) {
     let body = {
+      "person_status": true,
       "name": name,
       "surname_father": surname_father,
       "surname_mother": surname_mother,
@@ -61,6 +62,7 @@ export class EmployeeService {
       "state_province": state_province,
       "zip_code": zip_code,
       "country": country,
+      "user_status": true,
       "email": email,
       "user_name": user_name,
       "password": password,

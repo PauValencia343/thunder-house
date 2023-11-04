@@ -18,8 +18,10 @@ import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RoomTypeComponent } from './room-management/room-type/room-type.component';
 import { RoomStatusComponent } from './room-management/room-status/room-status.component';
-import { PipeRoomsPipe } from './room-management/pipe-rooms.pipe';
+import { PipeRoomsPipe, PipeRoomsPipeEquipments } from './room-management/pipe-rooms.pipe';
 import { SupplieManagementComponent } from './supplie-management/supplie-management/supplie-management.component';
+import { EmployeeManagementComponent } from './employee-management/employee-management/employee-management.component';
+import { ClientManagementComponent } from './client-management/client-management/client-management.component';
 
 
 @NgModule({
@@ -38,7 +40,10 @@ import { SupplieManagementComponent } from './supplie-management/supplie-managem
     RoomTypeComponent,
     RoomStatusComponent,
     PipeRoomsPipe,
-    SupplieManagementComponent
+    PipeRoomsPipeEquipments,
+    SupplieManagementComponent,
+    EmployeeManagementComponent,
+    ClientManagementComponent
   ],
   imports: [
     CommonModule,

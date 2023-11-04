@@ -11,3 +11,15 @@ export class PipeRoomsPipe implements PipeTransform {
   }
 
 }
+
+@Pipe({
+  name: 'pipeRoomsEquipaments'
+})
+export class PipeRoomsPipeEquipments implements PipeTransform {
+
+  transform(id: number, data: any[]): string {
+    const item = data.find(item => item.id_cat_equipment === id);
+    return item ? item.equipment : 'No encontrado equipamiento';
+  }
+
+}

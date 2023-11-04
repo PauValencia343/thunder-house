@@ -19,13 +19,17 @@ export class NavbarComponent {
         route:'thunderhouse'
       },
       {
+        name:'Employees',
+        route:'employeManagement'
+      },
+      {
+        name:'Clients',
+        route:'clientsManagement'
+      },
+      {
         name:'Rooms',
         route:'roomManagement'
       },
-      // {
-      //   name:'Reception',
-      //   route:'receptionManagement'
-      // },
       {
         name:'Inventory',
         route:'inventoryManagement'

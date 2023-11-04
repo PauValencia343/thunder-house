@@ -256,7 +256,7 @@
             <tbody>
               <tr *ngFor="let supplie of supplies; let index = index">
                 <th scope="row">{{index + 1}}</th>
-                <td>{{supplie.id_supplie  }}</td>
+                <td>{{supplie.id_supplie | pipeRooms: arraySupplies}}</td>
                 <td>{{supplie.total_supplies}}</td>
                 <td> <button pButton (click)="removeSupplies(index)" pRipple icon="pi pi-times" class="p-button-rounded p-button-outlined p-button-danger"
                   ></button></td>
@@ -296,7 +296,7 @@
           <tbody>
             <tr *ngFor="let equipment of equipments; let index = index">
               <th scope="row">{{index + 1}}</th>
-              <td>{{equipment.id_equipment}}</td>
+              <td>{{equipment.id_equipment | pipeRoomsEquipaments: arrayEquipments}}</td>
               <td>{{equipment.total_equipments}}</td>
               <td> <button pButton pRipple (click)="removeEquipments(index)" icon="pi pi-times" class="p-button-rounded p-button-outlined p-button-danger"
                 ></button></td>

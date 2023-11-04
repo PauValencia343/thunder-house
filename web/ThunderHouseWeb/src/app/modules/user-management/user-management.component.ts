@@ -184,8 +184,7 @@ export class UserManagementComponent {
           showConfirmButton: false
         });
       this.getRoles();
-      this.nameRol="";
-      this.selectedFloors=[];
+     
       }, (err)=>{
         console.log(err);
       });
@@ -199,8 +198,6 @@ export class UserManagementComponent {
           showConfirmButton: false
         });
       this.getRoles();
-      this.nameRol="";
-      this.selectedFloors=[];
       }, (err) => {
         console.log(err);
       });
