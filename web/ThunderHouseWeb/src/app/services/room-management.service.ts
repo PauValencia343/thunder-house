@@ -73,7 +73,7 @@ export class RoomManagementService {
  }
 
  deleteRoomType(idRoom:number){
-  return this.http.delete(URLLOCAL+'api/catalogs/room-type/physical/'+idRoom);
+  return this.http.delete(URLLOCAL+'api/catalogs/room-type/'+idRoom);
  }
 
 

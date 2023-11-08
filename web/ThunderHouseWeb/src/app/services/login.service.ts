@@ -18,7 +18,7 @@ export class LoginService {
       credential,
       password
     }
-    return this.http.post(URLLOCAL + "api/catalogs/auth/login", body);
+    return this.http.post(URLLOCAL + "api/security/auth/login", body);
   }
 
   getCustomersSmall() {

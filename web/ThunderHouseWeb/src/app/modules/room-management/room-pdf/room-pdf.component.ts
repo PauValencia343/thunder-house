@@ -4,6 +4,10 @@ import { LoginService } from 'src/app/services/login.service';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import jsPDF from 'jspdf';
 import { RoomManagementService } from 'src/app/services/room-management.service';
+import Swal from 'sweetalert2';
+import { SuppliesService } from 'src/app/services/supplies/supplies.service';
+import { InventaryService } from 'src/app/services/inventary/inventary.service';
+import { FloorsService } from 'src/app/services/floors/floors.service';
 
 @Component({
   selector: 'app-room-pdf',
@@ -11,6 +15,342 @@ import { RoomManagementService } from 'src/app/services/room-management.service'
   styleUrls: ['./room-pdf.component.css']
 })
 export class RoomPdfComponent {
+
+    arrayRooms: any[] = new Array();
+  roomStatusDialog: boolean = false;
+  arrayRoomStatus: any[] = new Array();
+  loading: boolean = false;
+  @ViewChild('filter') filter!: ElementRef;
+  roomTypeDialog: boolean = false;
+  dirty!: string;
+  busy!: string;
+  idRoomStatus: number = 0;
+  arrayRoomType: any[] = new Array();
+  idRoomType: number = 0;
+  nameTypeRoom: string = '';
+  supplies: any[] = new Array();
+  equipments: any[] = new Array();
+  arraySupplies: any[] = new Array();
+  arrayEquipments: any[] = new Array();
+  id_supplie: number = 0;
+  total_supplies: number = 0;
+  id_equipment: number = 0;
+  total_equipments: number = 0;
+  room_type: number = 0;
+  roomDialog: boolean = false;
+  arrayFloor: any[] = new Array();
+  idRoom: number = 0;
+  number!: number;
+  name: string = "";
+  fk_cat_floor!: number;
+  fk_cat_room_status!: number;
+  fk_cat_room_type!: number;
+
+
+
+  constructor(
+    private serviceRoomStatus: RoomManagementService,
+    private serviceSupplies: SuppliesService,
+    private serviceEquipments: InventaryService,
+    private serviceFloor: FloorsService,
+    private customerService: LoginService, 
+    private productService: LoginService,
+    private serviceRooms: RoomManagementService) {
+    this.getAllRooms();
+    this.getAll();
+    this.getAllRoomType();
+    this.getAllSupplies();
+    this.getAllEquipments();
+    this.getAllFloor()
+  }
+
+  getAllSupplies() {
+    this.serviceSupplies.getAllSupplie().subscribe((supplies: any) => {
+      this.arraySupplies = supplies.list;
+    }, (err) => {
+      console.log(err)
+    })
+  }
+  addSupplies() {
+    const existingSupplyIndex = this.supplies.findIndex(supply => supply.id_supplie === this.id_supplie);
+    const totalToAdd = Number(this.total_supplies);
+
+    if (existingSupplyIndex !== -1) {
+      this.supplies[existingSupplyIndex].total_supplies += totalToAdd;
+    } else {
+      this.supplies.push({
+        "id_supplie": Number(this.id_supplie),
+        "total_supplies": totalToAdd
+      });
+    }
+  }
+
+
+  removeSupplies(index: number) {
+    this.supplies.splice(index, 1);
+  }
+
+  getAllEquipments() {
+    this.serviceEquipments.getAllInventary().subscribe((equipments: any) => {
+      this.arrayEquipments = equipments.list;
+    }, (err) => {
+      console.log(err)
+    })
+  }
+
+  addEquipments() {
+    const existingEquipmentIndex = this.equipments.findIndex(equipment => equipment.id_equipment === this.id_equipment);
+    const totalToAdd = Number(this.total_equipments);
+    if (existingEquipmentIndex !== -1) {
+      this.equipments[existingEquipmentIndex].total_equipments += totalToAdd;
+    } else {
+      this.equipments.push({
+        "id_equipment": Number(this.id_equipment),
+        "total_equipments": totalToAdd
+      });
+    }
+  }
+
+
+  removeEquipments(index: number) {
+    this.equipments.splice(index, 1);
+  }
+
+  getAllRooms() {
+    this.serviceRooms.getAllRooms().subscribe((rooms: any) => {
+      this.arrayRooms = rooms.list;
+      console.log(this.arrayRooms)
+    }, (err) => {
+      console.log(err)
+    });
+  }
+
+  openDialogRoomStatus() {
+    this.roomStatusDialog = true;
+  }
+
+  openDialog() {
+    this.idRoomStatus = 0;
+    this.roomTypeDialog = true;
+  }
+  cancelRoomType() {
+    this.roomTypeDialog = false
+  }
+
+  getAll() {
+    this.loading = true;
+    this.serviceRoomStatus.getAllRoomsStatus().subscribe((roomStatus: any) => {
+      this.arrayRoomStatus = roomStatus.list;
+      this.loading = false;
+    }, (err) => {
+      this.loading = false;
+    })
+  }
+
+  addRoomStatus() {
+    let dirty = this.dirty === "yes" ? true : false;
+    let busy = this.busy === "yes" ? true : false;
+    if (this.idRoomStatus != 0) {
+      this.serviceRoomStatus.updateStatusRoom(this.idRoomStatus, dirty, busy).subscribe(() => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Successful',
+          text: 'Room Status update sucessful',
+          showConfirmButton: false
+        });
+        this.roomTypeDialog = false;
+        this.getAll();
+      }, (err) => {
+        console.log(err)
+      });
+    } else {
+      this.serviceRoomStatus.addStatusRoom(dirty, busy).subscribe(() => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Successful',
+          text: 'Room Status add sucessful',
+          showConfirmButton: false
+        });
+        this.roomTypeDialog = false;
+        this.getAll();
+      }, (err) => {
+        console.log(err);
+      });
+    }
+  }
+
+  detailRoomStatus(idRoom: number) {
+    this.idRoomStatus = idRoom;
+    this.serviceRoomStatus.getRoomStatus(idRoom).subscribe((roomStatus: any) => {
+      this.busy = roomStatus.roomStatus.busy == true ? 'yes' : 'no';
+      this.dirty = roomStatus.roomStatus.dirty == true ? 'yes' : 'no';
+    }, (err) => {
+      console.log(err);
+    })
+  }
+
+  deleteRoomStatus(idRoom: number) {
+    this.serviceRoomStatus.deleteStatusRoom(idRoom).subscribe(() => {
+      Swal.fire({
+        icon: 'success',
+        title: 'Successful',
+        text: 'Room Status delete sucessful',
+        showConfirmButton: false
+      });
+      this.getAll();
+    }, (err) => {
+      console.log(err);
+    });
+  }
+
+
+  getAllRoomType() {
+    this.serviceRooms.getAllRoomType().subscribe((roomType: any) => {
+      this.arrayRoomType = roomType.list;
+    }, (err) => {
+      console.log(err);
+    });
+  }
+
+  openDialogRoomType() {
+    this.roomTypeDialog = true;
+  }
+
+  addRoomType() {
+    if (this.idRoomType != 0) {
+      this.serviceRooms.updateRoomType(this.idRoomType, this.nameTypeRoom, this.supplies, this.equipments).subscribe(() => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Successful',
+          text: 'Room Type update sucessful',
+          showConfirmButton: false
+        });
+        this.getAllRoomType()
+      }, (err) => {
+        console.log(err);
+      });
+    } else {
+      this.serviceRooms.addRoomType(this.nameTypeRoom, this.supplies, this.equipments).subscribe(() => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Successful',
+          text: 'Room Type add sucessful',
+          showConfirmButton: false
+        });
+        this.getAllRoomType();
+      }, (err) => {
+        console.log(err);
+      })
+    }
+  }
+
+  detailRoomType(idRoom: number) {
+    this.idRoomType = idRoom;
+    this.openDialogRoomType()
+    this.serviceRooms.getRoomType(idRoom).subscribe((room: any) => {
+      this.nameTypeRoom = room.roomType.room_type;
+      const equipmentDetails = room.roomType.detail_equipment_room_type.map((item:any) => {
+        return {
+          "id_equipment": item.cat_equipment.id_cat_equipment,
+          "total_equipments": item.total_equipments
+        };
+      });
+      this.equipments = equipmentDetails;
+
+      const supplieDetails = room.roomType.detail_supplie_room_type.map((item:any) => {
+        return {
+          "id_supplie": item.cat_supplie.id_cat_supplie,
+          "total_supplies": item.total_supplies
+        };
+      });
+      this.supplies = supplieDetails;
+
+    }, (err) => {
+      console.log(err);
+    })
+  }
+
+  deleteRoomType(idRoom: number) {
+    this.serviceRooms.deleteRoomType(idRoom).subscribe(() => {
+      Swal.fire({
+        icon: 'success',
+        title: 'Successful',
+        text: 'Room Type delete sucessful',
+        showConfirmButton: false
+      });
+      this.getAllRoomType()
+    }, (err) => {
+      console.log(err);
+    });
+  }
+
+  openDialogAddRoom() {
+    this.roomDialog = true;
+  }
+
+  getAllFloor() {
+    this.serviceFloor.getAllFloors().subscribe((floor: any) => {
+      this.arrayFloor = floor.list;
+    }, (err) => {
+      console.log(err)
+    });
+  }
+
+  addRoom() {
+    if (this.idRoom != 0) {
+      this.serviceRooms.updateRoom(this.idRoom, this.number, this.name, this.fk_cat_floor, this.fk_cat_room_status, this.fk_cat_room_type).subscribe(() => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Successful',
+          text: 'Room update sucessful',
+          showConfirmButton: false
+        });
+        this.getAllRooms();
+      }, (err) => {
+        console.log(err);
+      })
+    } else {
+      this.serviceRooms.addRoom(this.number, this.name, this.fk_cat_floor, this.fk_cat_room_status, this.fk_cat_room_type).subscribe(() => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Successful',
+          text: 'Room add sucessful',
+          showConfirmButton: false
+        });
+        this.getAllRooms();
+      }, (err) => {
+        console.log(err);
+      })
+    }
+  }
+
+  detailRoom(idRoom: number) {
+    this.openDialogAddRoom();
+    this.idRoom=idRoom;
+    this.serviceRooms.getRoom(idRoom).subscribe((room: any) => {
+      this.number = room.room.number;
+      this.name = room.room.name;
+      this.fk_cat_floor = room.room.cat_floor.id_cat_floor;
+      this.fk_cat_room_status = room.room.cat_room_status.id_cat_room_status;
+      this.fk_cat_room_type = room.room.cat_room_type.id_cat_room_type;
+    }, (err) => {
+      console.log(err);
+    })
+  }
+
+  deleteRoom(idRoom: number) {
+    this.serviceRooms.deleteRoom(idRoom).subscribe(() => {
+      Swal.fire({
+        icon: 'success',
+        title: 'Successful',
+        text: 'Room delete sucessful',
+        showConfirmButton: false
+      });
+      this.getAllRooms();
+    }, (err) => {
+      console.log(err);
+    })
+  }
   customers1: any[] = [];
 
     customers2: any[] = [];
@@ -37,15 +377,12 @@ export class RoomPdfComponent {
 
     idFrozen: boolean = false;
 
-    loading: boolean = true;
 
     sizes :any= [];
 
     pdfDialog:boolean=false;
 
-    @ViewChild('filter') filter!: ElementRef;
 
-    constructor(private customerService: LoginService, private productService: LoginService,private serviceRooms: RoomManagementService) { }
 
     ngOnInit() {
         this.customerService.getCustomersLarge().then(customers => {

@@ -133,7 +133,13 @@
             </div>
             <div class="col-4">
                 <label for="gender">Gender</label>
-                <input type="text" [(ngModel)]="gender" class="mt-2" pInputText id="gender" required autofocus />
+                <select class="form-select" [(ngModel)]="gender" aria-label="Default select example">
+                    <option selected>Select option</option>
+                    <option value="Hombre">Hombre</option>
+                    <option value="Mujer">Mujer</option>
+                    <option value="Otros">Otros</option>
+                  </select>
+                <!-- <input type="text" [(ngModel)]="gender" class="mt-2" pInputText id="gender" required autofocus /> -->
             </div>
             <div class="col-4">
                 <label for="street_address">Street Address</label>

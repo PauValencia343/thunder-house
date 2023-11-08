@@ -168,6 +168,7 @@ export class UserManagementComponent {
         text: 'User delete sucessful',
         showConfirmButton: false
       });
+      this.getAllUsers();
     }, (err) => {
       console.log(err)
     });
