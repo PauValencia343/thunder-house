@@ -212,6 +212,6 @@ const findExistingRoom = async (id_cat_room: number): Promise<CatRoomEntity> => 
       status: true,
       id_cat_room,
     }
-  })
+  });
   return roomFound!;
 };

@@ -44,6 +44,7 @@ class Server {
   private pathsActions: {
     roomAction: string;
     searchCatalog: string;
+    reservationAction: string;
   };
   private pathsSecurity: {
     authSecurity: string;
@@ -67,6 +68,7 @@ class Server {
     };
     this.pathsActions = {
       roomAction: "/api/actions/room",
+      reservationAction: "/api/actions/reservation",
       searchCatalog: "/api/actions/search",
     };
     this.pathsSecurity = {
@@ -145,6 +147,7 @@ class Server {
     this.app.use(this.pathsCatalogs.floorCatalog, FloorCatalogRoute);
 
     this.app.use(this.pathsActions.roomAction, RoomActionRoute);
+    this.app.use(this.pathsActions.reservationAction, RoomActionRoute);
     
     this.app.use(this.pathsSecurity.authSecurity, AuthCatalogRoute);
   }
