@@ -97,9 +97,8 @@ export const isValidArraySupplies = async (arr: {
     await Promise.all(promises);
     return true;
   } catch (error: any) {
-      throw new Error(error.message);
+    throw new Error(error.message);
   }
-  return true;
 }
 
 export const isValidArrayFloors = async (arr: {
@@ -128,7 +127,7 @@ export const isValidArrayRoles = async (arr: {
   }
   const promises = arr.map(item => roleExistsById(false)(item.id_role));
   try {
-    const a = await Promise.all(promises);
+    await Promise.all(promises);
     return true;
   } catch (error: any) {
       throw new Error(error.message);

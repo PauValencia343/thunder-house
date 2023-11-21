@@ -23,7 +23,6 @@ import { validateRoles } from "../../middlewares/validate-roles";
 const router = Router();
 
 
-// GET route for fetching supplie data
 router.get("/", [
     validateJWT,
     validateRoles,
@@ -39,21 +38,18 @@ router.get("/:id_cat_supplie", [
     validateJWT,
     validateRoles,
     validateFields,
-    param("id_cat_supplie", "field (id_cat_supplie) can not be empty").not().isEmpty(),
-    param("id_cat_supplie", "field (id_cat_supplie) should be integer and greater than 0").isInt({ min: 1 }),
+    param("id_cat_supplie", "field (id_cat_supplie) can not be empty, should be integer, and greater than 0").not().isEmpty().isInt({ min: 1 }),
     param("id_cat_supplie").custom(supplieExistsById()),
     validateFields,
   ],
   supplieGet,
 );
 
-// PUT route for updating a supplie's data by ID
 router.put("/:id_cat_supplie", [
     validateJWT,
     validateRoles,
     validateFields,
-    param("id_cat_supplie", "field (id_cat_supplie) can not be empty").not().isEmpty(),
-    param("id_cat_supplie", "field (id_cat_supplie) should be integer and greater than 0").isInt({ min: 1 }),
+    param("id_cat_supplie", "field (id_cat_supplie) can not be empty, should be integer, and greater than 0").not().isEmpty().isInt({ min: 1 }),
     param("id_cat_supplie").custom(supplieExistsById(false)),
     check("supplie", "field (supplie) is required").not().isEmpty(),
     check("status", "field (status) is required").not().isEmpty(),
@@ -63,7 +59,6 @@ router.put("/:id_cat_supplie", [
   suppliePut,
 );
 
-// POST route for creating a new supplie
 router.post("/", [
     validateJWT,
     validateRoles,
@@ -74,26 +69,22 @@ router.post("/", [
   suppliePost,
 );
 
-// DELETE route for deleting a supplie by ID
 router.delete("/:id_cat_supplie", [
     validateJWT,
     validateRoles,
     validateFields,
-    param("id_cat_supplie", "field (id_cat_supplie) can not be empty").not().isEmpty(),
-    param("id_cat_supplie", "field (id_cat_supplie) should be integer and greater than 0").isInt({ min: 1 }),
+    param("id_cat_supplie", "field (id_cat_supplie) can not be empty, should be integer, and greater than 0").not().isEmpty().isInt({ min: 1 }),
     param("id_cat_supplie").custom(supplieExistsById()),
     validateFields,
   ],
   supplieDelete,
 );
 
-// DELETE route for deleting a supplie by ID
 router.delete("/physical/:id_cat_supplie", [
     validateJWT,
     validateRoles,
     validateFields,
-    param("id_cat_supplie", "field (id_cat_supplie) can not be empty").not().isEmpty(),
-    param("id_cat_supplie", "field (id_cat_supplie) should be integer and greater than 0").isInt({ min: 1 }),
+    param("id_cat_supplie", "field (id_cat_supplie) can not be empty, should be integer, and greater than 0").not().isEmpty().isInt({ min: 1 }),
     param("id_cat_supplie").custom(supplieExistsById()),
     validateFields,
   ],

@@ -32,21 +32,21 @@ export class CatPersonEntity extends BaseEntity {
   @Column()
   email_contact!: string;
 
-  @Column({ type:'date' })
+  @Column({ type: 'date' })
   birth!: Date;
-  
+
   @Column()
   gender!: string;
 
   @Column()
   street_address!: string;
-  
+
   @Column()
   city!: string;
-  
+
   @Column()
   state_province!: string;
-  
+
   @Column()
   zip_code!: string;
 
@@ -55,7 +55,7 @@ export class CatPersonEntity extends BaseEntity {
 
   @Column({ default: true })
   status: boolean = true;
-  
+
   @ManyToOne(type => CatClientEntity, catClientEntity => catClientEntity.id_cat_client)
   @JoinColumn({name: "fk_cat_client"})
   cat_client?: CatClientEntity;

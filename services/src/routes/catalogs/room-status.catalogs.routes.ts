@@ -22,7 +22,6 @@ import { validateRoles } from "../../middlewares/validate-roles";
 
 const router = Router();
 
-// GET route for fetching roomStatus data
 router.get("/", [
     validateJWT,
     validateRoles,
@@ -38,21 +37,18 @@ router.get("/:id_cat_room_status", [
     validateJWT,
     validateRoles,
     validateFields,
-    param("id_cat_room_status", "field (id_cat_room_status) can not be empty").not().isEmpty(),
-    param("id_cat_room_status", "field (id_cat_room_status) should be integer and greater than 0").isInt({ min: 1 }),
+    param("id_cat_room_status", "field (id_cat_room_status) can not be empty, should be integer, and greater than 0").not().isEmpty().isInt({ min: 1 }),
     param("id_cat_room_status").custom(roomStatusExistsById()),
     validateFields,
   ],
   roomStatusGet,
 );
 
-// PUT route for updating a roomStatus's data by ID
 router.put("/:id_cat_room_status", [
     validateJWT,
     validateRoles,
     validateFields,
-    param("id_cat_room_status", "field (id_cat_room_status) can not be empty").not().isEmpty(),
-    param("id_cat_room_status", "field (id_cat_room_status) should be integer and greater than 0").isInt({ min: 1 }),
+    param("id_cat_room_status", "field (id_cat_room_status) can not be empty, should be integer, and greater than 0").not().isEmpty().isInt({ min: 1 }),
     param("id_cat_room_status").custom(roomStatusExistsById(false)),
     check("dirty", "field (dirty) is required").not().isEmpty(),
     check("dirty", "field (dirty) should be boolean").isBoolean(),
@@ -65,7 +61,6 @@ router.put("/:id_cat_room_status", [
   roomStatusPut,
 );
 
-// POST route for creating a new roomStatus
 router.post("/", [
     validateJWT,
     validateRoles,
@@ -79,26 +74,22 @@ router.post("/", [
   roomStatusPost,
 );
 
-// DELETE route for deleting a roomStatus by ID
 router.delete("/:id_cat_room_status", [
     validateJWT,
     validateRoles,
     validateFields,
-    param("id_cat_room_status", "field (id_cat_room_status) can not be empty").not().isEmpty(),
-    param("id_cat_room_status", "field (id_cat_room_status) should be integer and greater than 0").isInt({ min: 1 }),
+    param("id_cat_room_status", "field (id_cat_room_status) can not be empty, should be integer, and greater than 0").not().isEmpty().isInt({ min: 1 }),
     param("id_cat_room_status").custom(roomStatusExistsById()),
     validateFields,
   ],
   roomStatusDelete,
 );
 
-// DELETE route for deleting a roomStatus by ID
 router.delete("/physical/:id_cat_room_status", [
     validateJWT,
     validateRoles,
     validateFields,
-    param("id_cat_room_status", "field (id_cat_room_status) can not be empty").not().isEmpty(),
-    param("id_cat_room_status", "field (id_cat_room_status) should be integer and greater than 0").isInt({ min: 1 }),
+    param("id_cat_room_status", "field (id_cat_room_status) can not be empty, should be integer, and greater than 0").not().isEmpty().isInt({ min: 1 }),
     param("id_cat_room_status").custom(roomStatusExistsById()),
     validateFields,
   ],

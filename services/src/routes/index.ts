@@ -11,4 +11,6 @@ export { default as RoomStatusCatalogRoute } from './catalogs/room-status.catalo
 export { default as RoomCatalogRoute } from './catalogs/room.catalogs.routes';
 export { default as FloorCatalogRoute } from './catalogs/floor.catalogs.routes';
 export { default as AuthCatalogRoute } from './auth.routes';
+
 export { default as RoomActionRoute } from './actions/room.actions.routes';
+export { default as ReservationActionRoute } from './actions/reservation.actions.routes';

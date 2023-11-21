@@ -19,11 +19,11 @@ import {
   clientExistsById,
 } from "../../helpers/db-validators";
 import { validateRoles } from "../../middlewares/validate-roles";
+import { validateRealDate } from "../../helpers";
 
 
 const router = Router();
 
-// GET route for fetching client data
 router.get("/", [
     validateJWT,
     validateRoles,
@@ -39,22 +39,19 @@ router.get("/:id_cat_client", [
     validateJWT,
     validateRoles,
     validateFields,
-    param("id_cat_client", "field (id_cat_client) can not be empty").not().isEmpty(),
-    param("id_cat_client", "field (id_cat_client) should be integer and greater than 0").isInt({ min: 1 }),
+    param("id_cat_client", "field (id_cat_client) can not be empty, should be integer, and greater than 0").not().isEmpty().isInt({ min: 1 }),
     param("id_cat_client").custom(clientExistsById()),
     validateFields,
   ],
   clientGet,
 );
 
-// PUT route for updating a client's data by ID
 router.put("/:id_cat_client", [
     validateJWT,
     validateRoles,
     validateFields,
     // client
-    param("id_cat_client", "field (id_cat_client) can not be empty").not().isEmpty(),
-    param("id_cat_client", "field (id_cat_client) should be integer and greater than 0").isInt({ min: 1 }),
+    param("id_cat_client", "field (id_cat_client) can not be empty, should be integer, and greater than 0").not().isEmpty().isInt({ min: 1 }),
     param("id_cat_client").custom(clientExistsById(false)),
     // person
     check("name", "field(name) is required").not().isEmpty(),
@@ -63,6 +60,7 @@ router.put("/:id_cat_client", [
     check("phone_contact", "field(phone_contact) is required").not().isEmpty(),
     check("email_contact", "field(email_contact) is required").not().isEmpty(),
     check("birth", "field(birth) is required").not().isEmpty(),
+    check("birth", "field(birth) is required with this format yyyy-mm-dd").not().isEmpty().isISO8601().custom(validateRealDate),
     check("gender", "field(gender) is required").not().isEmpty(),
     check("street_address", "field(street_address) is required").not().isEmpty(),
     check("city", "field(city) is required").not().isEmpty(),
@@ -89,7 +87,6 @@ router.put("/:id_cat_client", [
   clientPut,
 );
 
-// POST route for creating a new client
 router.post("/", [
     validateJWT,
     validateRoles,
@@ -101,6 +98,7 @@ router.post("/", [
     check("phone_contact", "field(phone_contact) is required").not().isEmpty(),
     check("email_contact", "field(email_contact) is required").not().isEmpty(),
     check("birth", "field(birth) is required").not().isEmpty(),
+    check("birth", "field(birth) is required with this format yyyy-mm-dd").not().isEmpty().isISO8601().custom(validateRealDate),
     check("gender", "field(gender) is required").not().isEmpty(),
     check("street_address", "field(street_address) is required").not().isEmpty(),
     check("city", "field(city) is required").not().isEmpty(),
@@ -122,13 +120,11 @@ router.post("/", [
   clientPost,
 );
 
-// DELETE route for deleting a client by ID
 router.delete("/:id_cat_client", [
     validateJWT,
     validateRoles,
     validateFields,
-    param("id_cat_client", "field (id_cat_client) can not be empty").not().isEmpty(),
-    param("id_cat_client", "field (id_cat_client) should be integer and greater than 0").isInt({ min: 1 }),
+    param("id_cat_client", "field (id_cat_client) can not be empty, should be integer, and greater than 0").not().isEmpty().isInt({ min: 1 }),
     param("id_cat_client").custom(clientExistsById()),
     validateFields,
   ],

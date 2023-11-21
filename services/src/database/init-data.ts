@@ -64,6 +64,7 @@ export const roomStatusInitInformation = [
 export const roomTypeInitInformation = [
   {
     room_type: 'Suit',
+    price: 2000,
     supplies: [
       {
         supplieTotal: 20,
@@ -101,6 +102,7 @@ export const roomTypeInitInformation = [
   },
   {
     room_type: 'Jr',
+    price: 500,
     supplies: [
       {
         supplieTotal: 16,
@@ -138,6 +140,7 @@ export const roomTypeInitInformation = [
   },
   {
     room_type: 'Simple',
+    price: 250,
     supplies: [
       {
         supplieTotal: 6,
@@ -175,6 +178,7 @@ export const roomTypeInitInformation = [
   },
   {
     room_type: 'Doble',
+    price: 1000,
     supplies: [
       {
         supplieTotal: 12,

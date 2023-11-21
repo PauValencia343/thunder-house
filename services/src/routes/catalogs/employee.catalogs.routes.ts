@@ -20,11 +20,11 @@ import {
   employeeExistsById,
 } from "../../helpers/db-validators";
 import { validateRoles } from "../../middlewares/validate-roles";
+import { validateRealDate } from "../../helpers";
 
 
 const router = Router();
 
-// GET route for fetching employee data
 router.get("/", [
     validateJWT,
     validateRoles,
@@ -40,22 +40,19 @@ router.get("/:id_cat_employee", [
     validateJWT,
     validateRoles,
     validateFields,
-    param("id_cat_employee", "field (id_cat_employee) can not be empty").not().isEmpty(),
-    param("id_cat_employee", "field (id_cat_employee) should be integer and greater than 0").isInt({ min: 1 }),
+    param("id_cat_employee", "field (id_cat_employee) can not be empty, should be integer, and greater than 0").not().isEmpty().isInt({ min: 1 }),
     param("id_cat_employee").custom(employeeExistsById()),
     validateFields,
   ],
   employeeGet,
 );
 
-// PUT route for updating a employee's data by ID
 router.put("/:id_cat_employee", [
     validateJWT,
     validateRoles,
     validateFields,
     // employee
-    param("id_cat_employee", "field (id_cat_employee) can not be empty").not().isEmpty(),
-    param("id_cat_employee", "field (id_cat_employee) should be integer and greater than 0").isInt({ min: 1 }),
+    param("id_cat_employee", "field (id_cat_employee) can not be empty, should be integer, and greater than 0").not().isEmpty().isInt({ min: 1 }),
     param("id_cat_employee").custom(employeeExistsById(false)),
     // person
     check("name", "field(name) is required").not().isEmpty(),
@@ -64,6 +61,7 @@ router.put("/:id_cat_employee", [
     check("phone_contact", "field(phone_contact) is required").not().isEmpty(),
     check("email_contact", "field(email_contact) is required").not().isEmpty(),
     check("birth", "field(birth) is required").not().isEmpty(),
+    check("birth", "field(birth) is required with this format yyyy-mm-dd").not().isEmpty().isISO8601().custom(validateRealDate),
     check("gender", "field(gender) is required").not().isEmpty(),
     check("street_address", "field(street_address) is required").not().isEmpty(),
     check("city", "field(city) is required").not().isEmpty(),
@@ -93,7 +91,6 @@ router.put("/:id_cat_employee", [
   employeePut,
 );
 
-// POST route for creating a new employee
 router.post("/", [
     validateJWT,
     validateRoles,
@@ -105,6 +102,7 @@ router.post("/", [
     check("phone_contact", "field(phone_contact) is required").not().isEmpty(),
     check("email_contact", "field(email_contact) is required").not().isEmpty(),
     check("birth", "field(birth) is required").not().isEmpty(),
+    check("birth", "field(birth) is required with this format yyyy-mm-dd").not().isEmpty().isISO8601().custom(validateRealDate),
     check("gender", "field(gender) is required").not().isEmpty(),
     check("street_address", "field(street_address) is required").not().isEmpty(),
     check("city", "field(city) is required").not().isEmpty(),
@@ -129,13 +127,11 @@ router.post("/", [
   employeePost,
 );
 
-// DELETE route for deleting a employee by ID
 router.delete("/:id_cat_employee", [
     validateJWT,
     validateRoles,
     validateFields,
-    param("id_cat_employee", "field (id_cat_employee) can not be empty").not().isEmpty(),
-    param("id_cat_employee", "field (id_cat_employee) should be integer and greater than 0").isInt({ min: 1 }),
+    param("id_cat_employee", "field (id_cat_employee) can not be empty, should be integer, and greater than 0").not().isEmpty().isInt({ min: 1 }),
     param("id_cat_employee").custom(employeeExistsById()),
     validateFields,
   ],

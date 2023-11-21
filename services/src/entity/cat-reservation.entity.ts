@@ -17,9 +17,9 @@ export class CatReservationEntity extends BaseEntity {
 
   @PrimaryGeneratedColumn('increment')
   id_cat_reservation?: number;
-
-  @Column({ default: false })
-  isPaid: boolean = false;
+  
+  @Column()
+  is_from_platform_promotion!: boolean;
 
   @Column()
   group_leader!: string;
@@ -30,8 +30,11 @@ export class CatReservationEntity extends BaseEntity {
   @Column({ type: 'timestamp' })
   date_reservation: Date = new Date();
 
-  @Column({ default: 0 })
-  total: number = 0;
+  @Column()
+  subtotal!: number;
+
+  @Column()
+  total!: number;
   
   @Column({ default: true })
   status: boolean = true;

@@ -19,6 +19,7 @@ import {
   RoomCatalogRoute,
   FloorCatalogRoute,
   RoomActionRoute,
+  ReservationActionRoute,
 } from '../routes';
 import AppDataSource from "../database/config";
 import seedDatabase from "../database/seed-database";
@@ -106,7 +107,6 @@ class Server {
         password: 'admin',
         database: 'db_thunder_house',
         synchronize: true,
-        // logging: true,
         entities,
       });
       await AppDataSourceTest.initialize();
@@ -117,13 +117,9 @@ class Server {
   }
 
   middlewares() {
-    // Enable CORS
     this.app.use(cors());
-    // Parse request body as JSON
     this.app.use(express.json());
-    // Serve static files from the "public" directory
     this.app.use(express.static("public"));
-    // Enable file upload
     this.app.use(
       fileUpload({
         useTempFiles: true,
@@ -147,7 +143,7 @@ class Server {
     this.app.use(this.pathsCatalogs.floorCatalog, FloorCatalogRoute);
 
     this.app.use(this.pathsActions.roomAction, RoomActionRoute);
-    this.app.use(this.pathsActions.reservationAction, RoomActionRoute);
+    this.app.use(this.pathsActions.reservationAction, ReservationActionRoute);
     
     this.app.use(this.pathsSecurity.authSecurity, AuthCatalogRoute);
   }

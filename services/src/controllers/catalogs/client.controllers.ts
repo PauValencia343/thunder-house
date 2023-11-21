@@ -141,7 +141,7 @@ export const clientPut = async (req: Request, res: Response) => {
     personUpdating!.surname_mother = surname_mother;
     personUpdating!.phone_contact = phone_contact;
     personUpdating!.email_contact = email_contact;
-    personUpdating!.birth = new Date(birth);;
+    personUpdating!.birth = new Date(birth);
     personUpdating!.gender = gender;
     personUpdating!.street_address = street_address;
     personUpdating!.city = city;
@@ -223,7 +223,7 @@ export const clientPost = async (req: Request, res: Response) => {
     newPerson.surname_mother = surname_mother;
     newPerson.phone_contact = phone_contact;
     newPerson.email_contact = email_contact;
-    newPerson!.birth = new Date(birth);;
+    newPerson!.birth = new Date(birth);
     newPerson.gender = gender;
     newPerson.street_address = street_address;
     newPerson.city = city;

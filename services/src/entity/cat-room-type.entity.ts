@@ -21,6 +21,9 @@ export class CatRoomTypeEntity extends BaseEntity {
   @Column()
   room_type!: string;
 
+  @Column("decimal", { precision: 10, scale: 2 })
+  price!: number;
+
   @Column({ default: true })
   status: boolean = true;
   

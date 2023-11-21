@@ -35,112 +35,78 @@ npm run start
 ```
 
 
-Pase gratis x carro x habitación
-Solo reserva dias completos
-  Reserva
-  1000
-  lunes    15:00 - martes     12:00
-  1000
-  martes   15:00 - miercoles  12:00
-Cada habitación con su limite máximo (380 extra por persona)
-Checkout: Hora de salida a las 12 am Son todas las habitaciones y el husped tiene que salir, si pasa de la hora se cobra extra que es media renta.
-Máximo dos o tres horas (pierde la reservacion y queda limpia y libre)
-Contemplar descuentos por grupo
-Resguardo de equipaje
-Hoja de registro: Datos persona y desperfecto
-
-
-Habitaciones por rol
-Usuarios por rol
-Estatus de la habitación
-  Desocupada limpia
-  Rentada limpia (Snow - reservada y pagada por el cliente)
-  Ocupada limpia (Cheking)
-  Ocupada sucia
-  Desocupada sucia (Checkout)
 
 
 
-Kit de amenidades:
-  - Shampoo
-  - Crema
-  - Jabón
-  - 2 Botellas de agua
-  - Acondicionador
-
-Suit
-  - 7 - 8 personas
-  - 3 camas matrimoniales
-  - 1 sofa cama
-Jr
-  - 5 - 6 personas
-  - 2 camas matrimoniales
-  - 1 sofa cama
-Matrimoniales
-  - 2 - 4 personas
-  - 2 camas matromoniales
-Simples
-  - 1 - 2 personas
-  - 1 cama matrimonial
-
-Encargado de habitaciones
-10 + personas 10% de descuento
 
 
-Desayuno x 155 x día x persona
-Comida y cena no lo administra el sistema
+Se agregaron los datos de
+start_date
+end_start
+is_from_platform_promotion
+has_breakfast
 
-Inventario por lotes
-Las habitaciones aumentan el precio un 40% de viernes y sábado
-Las habitaciones disminuyen el precio un 30% si se reserva por alguna plataforma (Boking/Spedia/Travel)
+Ubicado en la carpeta de
+catalogs>reservation>add-reservation
+catalogs>reservation>put-reservation
 
-Reservacion
-  Credencial de lector
-  ?Numero de placas
-  ?Credencial de segundo encargado
-  Datos personales
-  Total personas
-  Almacenamiento de equipaje anticipado
 
-Productos administrados:
-  Toallas
-  Sabanas
-  Almohadas
+Se agrego el precio de habitacion en tipo de habitacion
+price
+
+Ubicado en la carpeta de
+catalogs>room-type>add-room-type
+catalogs>room-type>put-room-type
+
+
+
+
+
+
+
+
+
+
+1. Registro de reservacion
+isFromPlatformPromotion
+- Reserva hecha desde plataforma de promoción (variará el precio con este campo)
+- Con nopmbre del lider
+- Con nopmbre del sublider
+- Id del cliente
+- Se envia el detalle de reservaciones (por habitacion):
+- - Con fechas (inicio y fin)
+- - Cantidad de personas
+- - Id de habitacion
+- - Se indica si se tiene desayuno incluido
+
+2. Arribo de huespedes (todos los siguientes campos corresponden a cada habitacion reservada):
+- Se contabiliza el total de personas que llegaron (si difiere con el total de personas que llegaron se sumará al total)
+- Se notifica que se ha entregado el pase de estacionamiento
+- (Opcionalmente) Se indica cuantos pases extras de estacionamiento se entregaron - se sumará al total
+- Se entrega la llave de habitacion
+- Se notifica si se ha dejado el equipaje en resguardo
+- Se entrega a la habitacion los suministros
+
+3. Desalojo de huespedes (todos los siguientes campos corresponden a cada habitacion reservada):
+- Se notifica que se ha retornado el pase de estacionamiento (en caso de perdida se sumará al total)
+- (Opcionalmente) Se indica cuantos pases extras de estacionamiento se retornaron (en caso de perdida se sumará al total)
+- Se retorna la llave de habitacion (en caso de perdida se sumará al total)
+- Se valora si existen daños y se agregan al total
+
+
+
+
+
+
+
+
+
+
+
+///////////////
+Update detail reservation
+Validate jwt
+make view for get free rooms, total size, and price
+make view for Hoja de registro (detail reservation)
+lotes
 200 pesos por daño a cada producto
-90 pesos por llave extraviada
-
-roles
-- administrator
-- recepcionista
-- adminsitrador de llaves por piso
-- limpiador
-
-
-
-Habitaciones por rol
-Usuarios por rol
-Estatus de la habitación
-  Desocupada limpia
-  Rentada limpia (Snow - reservada y pagada por el cliente)
-  Ocupada limpia (Cheking)
-  Ocupada sucia
-  Desocupada sucia (Checkout)
-
-
-
-producto
-empleado
-
-cliente
-  uuid
-  nombre
-reservacion
-  uuid
-  fechas
-  pagos
-  jefeGrupo
-  subJefeGrupo
-  estatus
-detalle_reservacion_habitacion
-
-

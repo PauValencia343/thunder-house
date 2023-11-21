@@ -22,7 +22,6 @@ import { validateRoles } from "../../middlewares/validate-roles";
 
 const router = Router();
 
-// GET route for fetching floor data
 router.get("/", [
     validateJWT,
     validateRoles,
@@ -46,7 +45,6 @@ router.get("/:id_cat_floor", [
   floorGet,
 );
 
-// PUT route for updating a floor's data by ID
 router.put("/:id_cat_floor", [
     validateJWT,
     validateRoles,
@@ -66,7 +64,6 @@ router.put("/:id_cat_floor", [
   floorPut,
 );
 
-// POST route for creating a new floor
 router.post("/", [
     validateJWT,
     validateRoles,
@@ -80,7 +77,6 @@ router.post("/", [
   floorPost,
 );
 
-// DELETE route for deleting a floor by ID
 router.delete("/:id_cat_floor", [
     validateJWT,
     validateRoles,

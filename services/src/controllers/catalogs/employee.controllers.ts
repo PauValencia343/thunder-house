@@ -166,7 +166,7 @@ export const employeePut = async (req: Request, res: Response) => {
     personUpdating!.surname_mother = surname_mother;
     personUpdating!.phone_contact = phone_contact;
     personUpdating!.email_contact = email_contact;
-    personUpdating!.birth = new Date(birth);;
+    personUpdating!.birth = new Date(birth);
     personUpdating!.gender = gender;
     personUpdating!.street_address = street_address;
     personUpdating!.city = city;

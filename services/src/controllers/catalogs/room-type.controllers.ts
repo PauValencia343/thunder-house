@@ -66,11 +66,13 @@ export const roomTypePut = async (req: Request, res: Response) => {
   const { id_cat_room_type } = req.params;
   const {
     room_type,
+    price,
     status,
     supplies,
     equipments,
   }: {
     room_type: string;
+    price: number;
     status: boolean;
     supplies: { id_supplie: string; total_supplies: number }[];
     equipments: { id_equipment: string; total_equipments: number }[];
@@ -99,6 +101,7 @@ export const roomTypePut = async (req: Request, res: Response) => {
     }
 
     roomTypeUpdating!.room_type = room_type;
+    roomTypeUpdating!.price = price;
     roomTypeUpdating!.status = status;
 
     for (const supplie of supplies) {
@@ -145,16 +148,19 @@ export const roomTypePut = async (req: Request, res: Response) => {
 export const roomTypePost = async (req: Request, res: Response) => {
   const {
     room_type,
+    price,
     supplies,
     equipments,
   }: {
     room_type: string;
+    price: number,
     supplies: { id_supplie: string; total_supplies: number }[];
     equipments: { id_equipment: string; total_equipments: number }[];
   } = req.body;
   try {
     const newRoomType = new CatRoomTypeEntity();
     newRoomType.room_type = room_type;
+    newRoomType.price = price;
     await newRoomType.save();
     for (const supplie of supplies) {
       const newDetailSupplieRoomTypeEntity = new DetailSupplieRoomTypeEntity();

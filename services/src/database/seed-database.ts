@@ -4,6 +4,7 @@ import bcryptjs from "bcryptjs";
 
 import AppDataSource from "./config";
 import {
+  CatClientEntity,
   CatEmployeeEntity,
   CatEquipmentEntity,
   CatFloorEntity,
@@ -135,6 +136,7 @@ const generateUsers = async () => {
   for (const roomType of roomTypeInitInformation) {
     const newCatRoomTypeEntity = new CatRoomTypeEntity();
     newCatRoomTypeEntity.room_type = roomType.room_type;
+    newCatRoomTypeEntity.price = roomType.price;
     await newCatRoomTypeEntity.save();
     for (let i = 0; i < roomType.equipments.length; i++) {
       if (roomType.equipments[i].equipmentTotal > 0) {
@@ -187,8 +189,11 @@ const generateUsers = async () => {
 }
 
 const truncateTables = async () => {
-  await executeTruncate(DetailUserRoleEntity)
-  await executeTruncate(DetailRoleFloorEntity)
+  await executeTruncate(CatPersonEntity);
+  await executeTruncate(CatClientEntity);
+  await executeTruncate(CatEmployeeEntity);
+  await executeTruncate(DetailUserRoleEntity);
+  await executeTruncate(DetailRoleFloorEntity);
   await executeTruncate(CatRoomEntity);
   await executeTruncate(CatRoleEntity)
   await executeTruncate(CatRoleEntity);

@@ -24,7 +24,6 @@ import { validateRoles } from "../../middlewares/validate-roles";
 
 const router = Router();
 
-// GET route for fetching roomType data
 router.get("/", [
     validateJWT,
     validateRoles,
@@ -40,23 +39,21 @@ router.get("/:id_cat_room_type", [
     validateJWT,
     validateRoles,
     validateFields,
-    param("id_cat_room_type", "field (id_cat_room_type) can not be empty").not().isEmpty(),
-    param("id_cat_room_type", "field (id_cat_room_type) should be integer and greater than 0").isInt({ min: 1 }),
+    param("id_cat_room_type", "field (id_cat_room_type) can not be empty, should be integer, and greater than 0").not().isEmpty().isInt({ min: 1 }),
     param("id_cat_room_type").custom(roomTypeExistsById()),
     validateFields,
   ],
   roomTypeGet,
 );
 
-// PUT route for updating a roomType's data by ID
 router.put("/:id_cat_room_type", [
     validateJWT,
     validateRoles,
     validateFields,
-    param("id_cat_room_type", "field (id_cat_room_type) can not be empty").not().isEmpty(),
-    param("id_cat_room_type", "field (id_cat_room_type) should be integer and greater than 0").isInt({ min: 1 }),
+    param("id_cat_room_type", "field (id_cat_room_type) can not be empty, should be integer, and greater than 0").not().isEmpty().isInt({ min: 1 }),
     param("id_cat_room_type").custom(roomTypeExistsById(false)),
     check("room_type", "field (room_type) is required").not().isEmpty(),
+    check("price", "field (price) is required and should be number").not().isEmpty().isNumeric(),
     check("supplies", "field (supplies) is required").not().isEmpty(),
     check("supplies", "field (supplies) should be array").isArray(),
     check("supplies").custom(isValidArraySupplies),
@@ -70,12 +67,12 @@ router.put("/:id_cat_room_type", [
   roomTypePut,
 );
 
-// POST route for creating a new roomType
 router.post("/", [
     validateJWT,
     validateRoles,
     validateFields,
     check("room_type", "field (room_type) is required").not().isEmpty(),
+    check("price", "field (price) is required and should be number").not().isEmpty().isNumeric(),
     check("supplies", "field (supplies) is required").not().isEmpty(),
     check("supplies", "field (supplies) should be array").isArray(),
     check("supplies").custom(isValidArraySupplies),
@@ -87,26 +84,22 @@ router.post("/", [
   roomTypePost,
 );
 
-// DELETE route for deleting a roomType by ID
 router.delete("/:id_cat_room_type", [
     validateJWT,
     validateRoles,
     validateFields,
-    param("id_cat_room_type", "field (id_cat_room_type) can not be empty").not().isEmpty(),
-    param("id_cat_room_type", "field (id_cat_room_type) should be integer and greater than 0").isInt({ min: 1 }),
+    param("id_cat_room_type", "field (id_cat_room_type) can not be empty, should be integer, and greater than 0").not().isEmpty().isInt({ min: 1 }),
     param("id_cat_room_type").custom(roomTypeExistsById()),
     validateFields,
   ],
   roomTypeDelete,
 );
 
-// DELETE route for deleting a roomType by ID
 router.delete("/physical/:id_cat_room_type", [
     validateJWT,
     validateRoles,
     validateFields,
-    param("id_cat_room_type", "field (id_cat_room_type) can not be empty").not().isEmpty(),
-    param("id_cat_room_type", "field (id_cat_room_type) should be integer and greater than 0").isInt({ min: 1 }),
+    param("id_cat_room_type", "field (id_cat_room_type) can not be empty, should be integer, and greater than 0").not().isEmpty().isInt({ min: 1 }),
     param("id_cat_room_type").custom(roomTypeExistsById()),
     validateFields,
   ],

@@ -25,7 +25,6 @@ import { validateRoles } from "../../middlewares/validate-roles";
 
 const router = Router();
 
-// GET route for fetching user data
 router.get("/", [
     validateJWT,
     validateRoles,
@@ -41,21 +40,18 @@ router.get("/:id_cat_user", [
     validateJWT,
     validateRoles,
     validateFields,
-    param("id_cat_user", "field (id_cat_user) can not be empty").not().isEmpty(),
-    param("id_cat_user", "field (id_cat_user) should be integer and greater than 0").isInt({ min: 1 }),
+    param("id_cat_user", "field (id_cat_user) can not be empty, should be integer, and greater than 0").not().isEmpty().isInt({ min: 1 }),
     param("id_cat_user").custom(userExistsById()),
     validateFields,
   ],
   userGet,
 );
 
-// PUT route for updating a user's data by ID
 router.put("/:id_cat_user", [
     validateJWT,
     validateRoles,
     validateFields,
-    param("id_cat_user", "field (id_cat_user) can not be empty").not().isEmpty(),
-    param("id_cat_user", "field (id_cat_user) should be integer and greater than 0").isInt({ min: 1 }),
+    param("id_cat_user", "field (id_cat_user) can not be empty, should be integer, and greater than 0").not().isEmpty().isInt({ min: 1 }),
     param("id_cat_user").custom(userExistsById(false)),
     check("email", "field (email) is required").not().isEmpty(),
     check("email").isEmail(),
@@ -75,7 +71,6 @@ router.put("/:id_cat_user", [
   userPut,
 );
 
-// POST route for creating a new user
 router.post("/", [
     validateJWT,
     validateRoles,
@@ -97,26 +92,22 @@ router.post("/", [
   userPost,
 );
 
-// DELETE route for deleting a user by ID
 router.delete("/:id_cat_user", [
     validateJWT,
     validateRoles,
     validateFields,
-    param("id_cat_user", "field (id_cat_user) can not be empty").not().isEmpty(),
-    param("id_cat_user", "field (id_cat_user) should be integer and greater than 0").isInt({ min: 1 }),
+    param("id_cat_user", "field (id_cat_user) can not be empty, should be integer, and greater than 0").not().isEmpty().isInt({ min: 1 }),
     param("id_cat_user").custom(userExistsById()),
     validateFields,
   ],
   userDelete,
 );
 
-// DELETE route for deleting a user by ID
 router.delete("/physical/:id_cat_user", [
     validateJWT,
     validateRoles,
     validateFields,
-    param("id_cat_user", "field (id_cat_user) can not be empty").not().isEmpty(),
-    param("id_cat_user", "field (id_cat_user) should be integer and greater than 0").isInt({ min: 1 }),
+    param("id_cat_user", "field (id_cat_user) can not be empty, should be integer, and greater than 0").not().isEmpty().isInt({ min: 1 }),
     param("id_cat_user").custom(userExistsById()),
     validateFields,
   ],
