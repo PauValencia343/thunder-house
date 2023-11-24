@@ -17,6 +17,7 @@ import { validateRoles } from "../../middlewares/validate-roles";
 import {
   changeRoomStatus,
   getFreeRooms,
+  getRoomsAvailability,
   getRoomsByFloor,
 } from "../../controllers/actions/room.actions.controllers";
 
@@ -48,13 +49,20 @@ router.get("/get-by-floor/:id_cat_floor", [
   getRoomsByFloor,
 );
 
-
-router.get("/get-free-rooms", [
+router.get("/get-availability-rooms", [
     validateJWT,
     validateRoles,
     validateFields,
   ],
-  getFreeRooms,
+  getRoomsAvailability,
+);
+
+router.get("/get-free-rooms", [
+  validateJWT,
+  validateRoles,
+  validateFields,
+],
+getFreeRooms,
 );
 
 export default router;

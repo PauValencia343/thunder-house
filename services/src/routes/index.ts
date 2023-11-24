@@ -1,5 +1,5 @@
 
-export { default as ReservationCatalogRoute } from './catalogs/reservation.catalogs.routes';
+export { default as ReservationCatalogRoute } from './catalogs/reservation/reservation.catalogs.routes';
 export { default as ClientCatalogRoute } from './catalogs/client.catalogs.routes';
 export { default as EmployeeCatalogRoute } from './catalogs/employee.catalogs.routes';
 export { default as UserCatalogRoute } from "./catalogs/user.catalogs.routes";
@@ -13,4 +13,4 @@ export { default as FloorCatalogRoute } from './catalogs/floor.catalogs.routes';
 export { default as AuthCatalogRoute } from './auth.routes';
 
 export { default as RoomActionRoute } from './actions/room.actions.routes';
-export { default as ReservationActionRoute } from './actions/reservation.actions.routes';
+export { default as ReservationActionRoute } from './actions/reservation/reservation.actions.routes';

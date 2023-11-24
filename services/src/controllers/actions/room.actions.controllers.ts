@@ -65,6 +65,44 @@ export const getRoomsByFloor = async (req: Request, res: Response) => {
   }
 };
 
+export const getRoomsAvailability = async (req: Request, res: Response) => {
+  try {
+    const roomsFound: CatRoomEntity[] | null = await CatRoomEntity.find({
+      relations: {
+        cat_floor: true,
+        cat_room_type: true,
+        cat_room_status: true,
+      },
+    });
+    let freeRooms = 0;
+    let busyRooms = 0;
+    let maintenanceRooms = 0;
+    roomsFound.forEach(room => {
+      const isBusy = room.cat_room_status.busy;
+      const isDirty = room.cat_room_status.dirty;
+      if (isDirty) {
+        maintenanceRooms++;
+        return;
+      }
+      if (isBusy) {
+        busyRooms++;
+        return;
+      }
+      freeRooms++;
+    });
+    return res.status(200).json({
+      totalRooms: roomsFound.length,
+      statistics: {
+        totalFreeRooms: freeRooms,
+        totalBusyRooms: busyRooms,
+        totalMaintenanceRooms: maintenanceRooms,
+      },
+    });
+  } catch (error) {
+    console.error("Internal server error:", error);
+    res.status(500).json({ msg: "Internal server error" });
+  }
+};
 
 export const getFreeRooms = async (req: Request, res: Response) => {
   try {

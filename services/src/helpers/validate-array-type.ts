@@ -1,4 +1,3 @@
-import validator from 'validator';
 import { roomExistsById } from '.';
 
 export const validateArrayRoomsReservationInsert = (value: []) => {
@@ -12,12 +11,12 @@ export const validateArrayRoomsReservationInsert = (value: []) => {
     if (!item.total_people_booked || typeof item.total_people_booked !== 'number' || item.total_people_booked <= 0) {
       throw new Error(`detail_reservation_room[${index}].total_people_booked should be integer and greater than 0`);
     }
-    if (!item.start_date || !validator.isISO8601(item.start_date)) {
-      throw new Error(`detail_reservation_room[${index}].start_date is required with this format yyyy-mm-dd`);
-    }
-    if (!item.end_date || !validator.isISO8601(item.end_date)) {
-      throw new Error(`detail_reservation_room[${index}].end_date is required with this format yyyy-mm-dd`);
-    }
+    // if (!item.start_date || !validator.isISO8601(item.start_date)) {
+    //   throw new Error(`detail_reservation_room[${index}].start_date is required with this format yyyy-mm-dd`);
+    // }
+    // if (!item.end_date || !validator.isISO8601(item.end_date)) {
+    //   throw new Error(`detail_reservation_room[${index}].end_date is required with this format yyyy-mm-dd`);
+    // }
     if (typeof item.has_breakfast !== 'boolean') {
       throw new Error(`detail_reservation_room[${index}].has_breakfast should be a boolean`);
     }
@@ -25,6 +24,7 @@ export const validateArrayRoomsReservationInsert = (value: []) => {
   return true;
 }
 
+///////////////////////////////
 export const validateArrayRoomsReservationArrive = (value: []) => {
   if (value.length === 0) {
     throw new Error(`The ArrayRooms can not be empty`);

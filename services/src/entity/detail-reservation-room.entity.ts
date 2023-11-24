@@ -18,19 +18,12 @@ export class DetailReservationRoomEntity extends BaseEntity {
   @PrimaryGeneratedColumn('increment')
   id_detail_reservation_room?: number;
 
-  // stay
-  @Column({ type: 'date' })
-  start_date!: Date;
-
-  @Column({ type: 'date' })
-  end_date!: Date;
-
   // total people
   @Column()
   total_people_booked!: number;
 
-  @Column({ default: null })
-  total_people_arrived?: number;
+  @Column({ type: 'int', nullable: true, default: () => 'NULL' })
+  total_people_arrived: number | null = null;
 
   // parking pass
   @Column({ default: false })
@@ -43,11 +36,11 @@ export class DetailReservationRoomEntity extends BaseEntity {
   parking_pass_forgot: boolean = false;
 
   // extra parking pass
-  @Column({ default: null })
-  extra_parking_pass?: number;
+  @Column({ type: 'int', nullable: true, default: () => 'NULL' })
+  extra_parking_pass: number | null = null;
 
-  @Column({ default: null })
-  extra_parking_pass_returned?: number;
+  @Column({ type: 'int', nullable: true, default: () => 'NULL' })
+  extra_parking_pass_returned: number | null = null;
 
   // key
   @Column({ default: false })
@@ -66,18 +59,14 @@ export class DetailReservationRoomEntity extends BaseEntity {
   // supplies
   @Column({ default: false })
   supplies_delivered: boolean = false;
-
-  // breakfast
-  @Column()
-  has_breakfast!: boolean;
   
   // observations
-  @Column({ nullable: true })
-  observations?: string;
+  @Column({ type: 'text', nullable: true, default: () => 'NULL' })
+  observations: string | null = null;
   
   // extra charges
-  @Column("decimal", { precision: 10, scale: 2, nullable: true })
-  extra_charges?: number;
+  @Column("decimal", { precision: 10, scale: 2, nullable: true, default: () => 'NULL' })
+  extra_charges: number | null = null;
 
   @ManyToOne(type => CatReservationEntity, (reservation: CatReservationEntity) => reservation.detail_reservation_room)
   @JoinColumn({name: "fk_cat_reservation"})

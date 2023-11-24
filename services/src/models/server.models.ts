@@ -1,6 +1,7 @@
-
+import https from "https";
 import express, { Application } from "express";
 import cors from "cors";
+import * as fs from 'fs';
 import fileUpload from "express-fileupload";
 import * as entities from "../entity/index";
 
@@ -24,6 +25,7 @@ import {
 import AppDataSource from "../database/config";
 import seedDatabase from "../database/seed-database";
 import { DataSource } from "typeorm";
+import path from "path";
 
 
 class Server {

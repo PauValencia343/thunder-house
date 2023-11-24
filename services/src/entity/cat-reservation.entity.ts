@@ -30,14 +30,25 @@ export class CatReservationEntity extends BaseEntity {
   @Column({ type: 'timestamp' })
   date_reservation: Date = new Date();
 
+  // breakfast
   @Column()
-  subtotal!: number;
-
-  @Column()
-  total!: number;
+  has_breakfast!: boolean;
   
-  @Column({ default: true })
-  status: boolean = true;
+  // stay
+  @Column({ type: 'date' })
+  start_date!: Date;
+
+  @Column({ type: 'date' })
+  end_date!: Date;
+
+  @Column({ default: 0, nullable: false })
+  subtotal: number = 0;
+
+  @Column({ default: 0, nullable: false })
+  total: number = 0;
+
+  @Column({ type: 'int' })
+  status_progress: number = 0;
 
   @ManyToOne(type => CatClientEntity, catClientEntity => catClientEntity.id_cat_client)
   @JoinColumn({name: "fk_cat_client"})

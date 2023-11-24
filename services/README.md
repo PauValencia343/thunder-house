@@ -68,13 +68,11 @@ catalogs>room-type>put-room-type
 
 
 1. Registro de reservacion
-isFromPlatformPromotion
 - Reserva hecha desde plataforma de promoción (variará el precio con este campo)
 - Con nopmbre del lider
 - Con nopmbre del sublider
 - Id del cliente
 - Se envia el detalle de reservaciones (por habitacion):
-- - Con fechas (inicio y fin)
 - - Cantidad de personas
 - - Id de habitacion
 - - Se indica si se tiene desayuno incluido
@@ -106,7 +104,11 @@ isFromPlatformPromotion
 ///////////////
 Update detail reservation
 Validate jwt
+make view for get free  busy and other rooms
 make view for get free rooms, total size, and price
 make view for Hoja de registro (detail reservation)
 lotes
 200 pesos por daño a cada producto
+obtener habitaciones por disponibilidad
+obtener habitaciones por total de personas soportadas
+actualizar reservaciones

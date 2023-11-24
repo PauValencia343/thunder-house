@@ -378,23 +378,16 @@ export const clientExistsById = (checkEnable: boolean = true) => {
   };
 };
 
-export const reservationExistsById = (checkEnable: boolean = true) => {
-  return async (id_cat_reservation: number) => {
-    try {
-      const reservationFound = await CatReservationEntity.findOneBy({
-        id_cat_reservation,
-      });
-      if (!reservationFound) {
-        throw new Error(`The Reservation ID ${id_cat_reservation} does not exist in the database`);
-      }
-      if (checkEnable) {
-        if (reservationFound!.status === false) {
-          throw new Error(`The Reservation ID ${id_cat_reservation} is disabled`);
-        }
-      }
-      return true;
-    } catch (error) {
-      throw error;
+export const reservationExistsById = async (id_cat_reservation: number) => {
+  try {
+    const reservationFound = await CatReservationEntity.findOneBy({
+      id_cat_reservation,
+    });
+    if (!reservationFound) {
+      throw new Error(`The Reservation ID ${id_cat_reservation} does not exist in the database`);
     }
-  };
+    return true;
+  } catch (error) {
+    throw error;
+  }
 };

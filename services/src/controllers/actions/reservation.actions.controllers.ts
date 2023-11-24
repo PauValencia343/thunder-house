@@ -58,6 +58,7 @@ export const registerArrive = async (req: Request, res: Response) => {
       },
     });
     reservationFound!.subtotal += totalExtra;
+    reservationFound!.status_progress = 2;
     reservationFound!.save();
     return res.status(200).json({
       reservation: reservationFound,
@@ -81,8 +82,8 @@ export const registerOutput = async (req: Request, res: Response) => {
       parking_pass_forgot: boolean,
       key_returned: boolean,
       key_forgot: boolean,
-      observations: string,
-      extra_charges: number,
+      observations: string | null,
+      extra_charges: number | null,
     }[]
   } = req.body;
   try {
@@ -124,6 +125,7 @@ export const registerOutput = async (req: Request, res: Response) => {
       },
     });
     reservationFound!.subtotal += totalExtra;
+    reservationFound!.status_progress = 3;
     reservationFound!.save();
     return res.status(200).json({
       reservation: reservationFound,

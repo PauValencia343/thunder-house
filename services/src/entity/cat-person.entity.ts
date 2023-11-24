@@ -56,9 +56,9 @@ export class CatPersonEntity extends BaseEntity {
   @Column({ default: true })
   status: boolean = true;
 
-  @ManyToOne(type => CatClientEntity, catClientEntity => catClientEntity.id_cat_client)
+  @ManyToOne(type => CatClientEntity, catClientEntity => catClientEntity.cat_person)
   @JoinColumn({name: "fk_cat_client"})
-  cat_client?: CatClientEntity;
+  cat_client!: CatClientEntity;
 
   @ManyToOne(type => CatEmployeeEntity, catEmployeeEntity => catEmployeeEntity.id_cat_employee)
   @JoinColumn({name: "fk_cat_employee"})
