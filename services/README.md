@@ -24,12 +24,25 @@ USE db_thunder_house;
 cd services
 ```
 
-3. If this is the first time you are running the project or you have updates, run the following command.
+3. Configure the enviroment file:
+
+  - Replace the information in the file `.env.example` for you enviroment information.
+  - Replace the file name from `.env.example` to `.env`
+
+4. If this is the first time you are running the project or you have updates, run the following command.
 ```
 npm run create
 ```
 
-4. If you have run the project before and just want to run the server again, run the following command.
+  Note: If you have errors for connectiont try this:
+  ```
+  ALTER USER '<your_user>'@'localhost' IDENTIFIED WITH mysql_native_password BY '<your_password>';
+  flush privileges;
+  ```
+  You can use the command from the step 5 after this.
+
+
+5. If you have run the project before and just want to run the server again, run the following command.
 ```
 npm run start
 ```
@@ -40,7 +53,7 @@ npm run start
 
 
 
-Se agregaron los datos de
+<!-- Se agregaron los datos de
 start_date
 end_start
 is_from_platform_promotion
@@ -93,22 +106,16 @@ catalogs>room-type>put-room-type
 
 
 
-
-
-
-
-
-
-
-
 ///////////////
-Update detail reservation
-Validate jwt
-make view for get free  busy and other rooms
+Validate jwt -->
+
+
+
+
+<!-- Update detail reservation
 make view for get free rooms, total size, and price
 make view for Hoja de registro (detail reservation)
 lotes
 200 pesos por daño a cada producto
-obtener habitaciones por disponibilidad
-obtener habitaciones por total de personas soportadas
-actualizar reservaciones
+actualizar reservaciones -->
+

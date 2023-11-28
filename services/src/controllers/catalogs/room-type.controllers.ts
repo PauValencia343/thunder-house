@@ -11,14 +11,18 @@ import {
 } from "../../entity";
 import AppDataSource from "../../database/config";
 import { Equal } from "typeorm";
+import { adjustValueBasedOnDay } from "../../calculous/get-price-by-day";
 
 
 export const roomTypeGet = async (req: Request, res: Response) => {
   try {
     const { id_cat_room_type } = req.params;
     const roomTypeFound = await findExistingRoomType(parseInt(id_cat_room_type));
+    
+    const adjustedPrice = adjustValueBasedOnDay(roomTypeFound.price);
+    const adjustedRoomTypeFound = { ...roomTypeFound, price: adjustedPrice };
     return res.status(200).json({
-      roomType: roomTypeFound,
+      roomType: adjustedRoomTypeFound,
     });
   } catch (error) {
     console.error("Internal server error:", error);
@@ -52,9 +56,13 @@ export const roomTypeGetAll = async (req: Request, res: Response) => {
         .where('roomType.status = :status', { status: true })
         .getMany();
     }
+    const adjustedRoomTypesList = roomTypesList.map(roomType => {
+      const adjustedPrice = adjustValueBasedOnDay(roomType.price);
+      return { ...roomType, price: adjustedPrice };
+    });
     return res.status(200).json({
-      list: roomTypesList,
-      count: roomTypesList.length,
+      list: adjustedRoomTypesList,
+      count: adjustedRoomTypesList.length,
     });
   } catch (error) {
     console.error("Internal server error:", error);

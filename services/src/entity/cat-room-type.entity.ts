@@ -28,7 +28,7 @@ export class CatRoomTypeEntity extends BaseEntity {
   status: boolean = true;
   
   @OneToMany(type => CatRoomEntity, catRoomEntity => catRoomEntity.cat_room_type)
-  cat_room_type!: CatRoomTypeEntity[];
+  cat_room!: CatRoomEntity[];
 
   @OneToMany(type => DetailEquipmentRoomTypeEntity, (detailEquipmentRoomTypeEntity: DetailEquipmentRoomTypeEntity) => detailEquipmentRoomTypeEntity.cat_room_type)
   detail_equipment_room_type!: DetailEquipmentRoomTypeEntity[];

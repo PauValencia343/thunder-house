@@ -80,8 +80,8 @@ export const reservationInitInformation = [
   },
   {
     names: ["Mateo García Ortega","Victoria Flores Sánchez"],
-    start_date: "2023-11-29",
-    end_date: "2023-12-04",
+    start_date: "2023-10-29",
+    end_date: "2023-10-30",
     has_breakfast: true,
     detail_reservation_room: [
       {

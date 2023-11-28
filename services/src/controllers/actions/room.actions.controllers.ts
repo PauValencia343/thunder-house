@@ -2,9 +2,14 @@
 import { Request, Response } from "express";
 
 import { 
+  CatReservationEntity,
   CatRoomEntity,
   CatRoomStatusEntity,
+  CatRoomTypeEntity,
+  DetailReservationRoomEntity,
 } from "../../entity";
+import AppDataSource from "../../database/config";
+import { Brackets } from "typeorm";
 
 
 export const changeRoomStatus = async (req: Request, res: Response) => {
@@ -104,25 +109,42 @@ export const getRoomsAvailability = async (req: Request, res: Response) => {
   }
 };
 
-export const getFreeRooms = async (req: Request, res: Response) => {
+export const getBusyRooms = async (req: Request, res: Response) => {
   try {
-    const roomsFound: CatRoomEntity[] | null = await CatRoomEntity.createQueryBuilder('cat_room')
-      .leftJoinAndSelect('cat_room.cat_floor', 'cat_floor')
-      .leftJoinAndSelect('cat_room.cat_room_status', 'cat_room_status')
-      .leftJoinAndSelect('cat_room.cat_room_type', 'cat_room_type')
-      .leftJoinAndSelect('cat_room_type.detail_equipment_room_type', 'detail_equipment_room_type')
-      .leftJoinAndSelect('detail_equipment_room_type.cat_equipment', 'cat_equipment')
-      .leftJoinAndSelect('cat_room_type.detail_supplie_room_type', 'detail_supplie_room_type')
-      .leftJoinAndSelect('detail_supplie_room_type.cat_supplie', 'cat_supplie')
-      .where(`
-      cat_room.status = :status
-      AND cat_floor.status = :status
-      AND cat_room_status.status = :status
-      AND cat_room_type.status = :status
-      `, { status: true })
-      .getMany();
+    const {
+      id_cat_room_type,
+      start_date,
+      end_date,
+    } = req.query;
+    const result = await AppDataSource
+      .createQueryBuilder()
+      .select('cr.id_cat_room', 'id_cat_room')
+      .addSelect('crt.id_cat_room_type', 'id_cat_room_type')
+      .addSelect('crs.start_date', 'start_date')
+      .addSelect('crs.end_date', 'end_date')
+      .from(CatRoomEntity, 'cr')
+      .leftJoin(DetailReservationRoomEntity, 'drr', 'cr.id_cat_room = drr.fk_cat_room')
+      .leftJoin(CatReservationEntity, 'crs', 'drr.fk_cat_reservation = crs.id_cat_reservation AND (' +
+        'crs.start_date BETWEEN :start_date AND :end_date OR ' +
+        'crs.end_date BETWEEN :start_date AND :end_date OR ' +
+        ':start_date BETWEEN crs.start_date AND crs.end_date OR ' +
+        ':end_date BETWEEN crs.start_date AND crs.end_date)', 
+        { start_date, end_date })
+      .innerJoin(CatRoomTypeEntity, 'crt', 'cr.fk_cat_room_type = crt.id_cat_room_type')
+      .where('crt.id_cat_room_type = :id_cat_room_type', { id_cat_room_type })
+      .getRawMany();
+
+    const formattedResult = result.map(room => ({
+      id_cat_room: room.id_cat_room,
+      id_cat_room_type: room.id_cat_room_type,
+      busy_dates: room.start_date && room.end_date ? {
+        start_date: room.start_date.toISOString().split('T')[0],
+        end_date: room.end_date.toISOString().split('T')[0]
+      } : null
+    }));
+
     return res.status(200).json({
-      rooms: roomsFound,
+      rooms: formattedResult
     });
   } catch (error) {
     console.error("Internal server error:", error);
@@ -130,3 +152,40 @@ export const getFreeRooms = async (req: Request, res: Response) => {
   }
 };
 
+export const getBusyDatesByDate = async (req: Request, res: Response) => {
+  try {
+    const {
+      start_date,
+      end_date,
+    } = req.query;
+    const result = await AppDataSource
+      .createQueryBuilder()
+      .select('cr.id_cat_room', 'id_cat_room')
+      .addSelect('crt.id_cat_room_type', 'id_cat_room_type')
+      .addSelect('crs.start_date', 'start_date')
+      .addSelect('crs.end_date', 'end_date')
+      .from(CatRoomEntity, 'cr')
+      .leftJoin(DetailReservationRoomEntity, 'drr', 'cr.id_cat_room = drr.fk_cat_room')
+      .leftJoin(CatReservationEntity, 'crs', 'drr.fk_cat_reservation = crs.id_cat_reservation AND (' +
+        'crs.start_date BETWEEN :start_date AND :end_date OR ' +
+        'crs.end_date BETWEEN :start_date AND :end_date OR ' +
+        ':start_date BETWEEN crs.start_date AND crs.end_date OR ' +
+        ':end_date BETWEEN crs.start_date AND crs.end_date)', 
+        { start_date, end_date })
+      .innerJoin(CatRoomTypeEntity, 'crt', 'cr.fk_cat_room_type = crt.id_cat_room_type')
+      .getRawMany();
+
+    const filteredResult = result.filter(room => room.start_date === null && room.end_date === null)
+      .map(room => ({
+        id_cat_room: room.id_cat_room,
+        id_cat_room_type: room.id_cat_room_type
+      }));
+
+    return res.status(200).json({
+      rooms: filteredResult
+    });
+  } catch (error) {
+    console.error("Internal server error:", error);
+    res.status(500).json({ msg: "Internal server error" });
+  }
+};
