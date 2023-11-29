@@ -12,20 +12,19 @@ import {
 } from "../../controllers/catalogs/role.controllers";
 import {
   validateFields,
-  validateJWT,
 } from "../../middlewares";
 import {
   isValidArrayFloors,
   roleExistsById,
 } from "../../helpers/db-validators";
-import { validateRoles } from "../../middlewares/validate-roles";
+import { arrayValidatorAccess } from "../../middlewares/validattions-access-list";
 
 
 const router = Router();
 
-router.get("/", [
-    validateJWT,
-    validateRoles,
+router.get("/", 
+  arrayValidatorAccess,
+  [
     query("limit", "field (limit) should be integer and greater than 0").isInt({ min: 1 }).optional().default(null),
     query("page", "field (page) should be integer and greater than 0").isInt({ min: 1 }).optional().default(null),
     query("pagination", "field (pagination) should be boolean").isBoolean().optional().default(false),
@@ -34,10 +33,9 @@ router.get("/", [
   roleGetAll,
 );
 
-router.get("/:id_cat_role", [
-    validateJWT,
-    validateRoles,
-    validateFields,
+router.get("/:id_cat_role", 
+  arrayValidatorAccess,
+  [
     param("id_cat_role", "field (id_cat_role) can not be empty, should be integer, and greater than 0").not().isEmpty().isInt({ min: 1 }),
     param("id_cat_role").custom(roleExistsById()),
     validateFields,
@@ -45,10 +43,9 @@ router.get("/:id_cat_role", [
   roleGet,
 );
 
-router.put("/:id_cat_role", [
-    validateJWT,
-    validateRoles,
-    validateFields,
+router.put("/:id_cat_role", 
+  arrayValidatorAccess,
+  [
     param("id_cat_role", "field (id_cat_role) can not be empty, should be integer, and greater than 0").not().isEmpty().isInt({ min: 1 }),
     param("id_cat_role").custom(roleExistsById(false)),
     check("role", "field (role) is required").not().isEmpty(),
@@ -62,10 +59,9 @@ router.put("/:id_cat_role", [
   rolePut,
 );
 
-router.post("/", [
-    validateJWT,
-    validateRoles,
-    validateFields,
+router.post("/", 
+  arrayValidatorAccess,
+  [
     check("role", "field (role) is required").not().isEmpty(),
     check("floors", "field (floors) is required").not().isEmpty(),
     check("floors", "field (floors) should be array").isArray(),
@@ -75,10 +71,9 @@ router.post("/", [
   rolePost,
 );
 
-router.delete("/:id_cat_role", [
-    validateJWT,
-    validateRoles,
-    validateFields,
+router.delete("/:id_cat_role", 
+  arrayValidatorAccess,
+  [
     param("id_cat_role", "field (id_cat_role) can not be empty, should be integer, and greater than 0").not().isEmpty().isInt({ min: 1 }),
     param("id_cat_role").custom(roleExistsById()),
     validateFields,
@@ -86,10 +81,9 @@ router.delete("/:id_cat_role", [
   roleDelete,
 );
 
-router.delete("/physical/:id_cat_role", [
-    validateJWT,
-    validateRoles,
-    validateFields,
+router.delete("/physical/:id_cat_role", 
+  arrayValidatorAccess,
+  [
     param("id_cat_role", "field (id_cat_role) can not be empty, should be integer, and greater than 0").not().isEmpty().isInt({ min: 1 }),
     param("id_cat_role").custom(roleExistsById()),
     validateFields,

@@ -2,7 +2,8 @@
 import { Request, Response } from "express";
 
 import {
-  CatSupplieEntity, DetailSupplieRoomTypeEntity,
+  CatSupplieEntity,
+  DetailSupplieRoomTypeEntity,
 } from "../../entity";
 import { Equal } from "typeorm";
 

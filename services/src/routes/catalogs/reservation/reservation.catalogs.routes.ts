@@ -1,6 +1,6 @@
 
 import { Router } from "express";
-import { check, checkSchema, param, query } from "express-validator";
+import { check, param, query } from "express-validator";
 
 import {
   reservationGetAll,
@@ -10,29 +10,23 @@ import {
 } from "../../../controllers/catalogs/reservation.controllers";
 import {
   validateFields,
-  validateJWT,
 } from "../../../middlewares";
 import {
   clientExistsById,
-  isValidArrayRoles,
   reservationExistsById,
 } from "../../../helpers/db-validators";
-import { validateRoles } from "../../../middlewares/validate-roles";
-import { validateRealDate } from "../../../helpers";
-import {
-  validateExistingArrayRooms,
-} from "../../../helpers/validate-array-type";
 import { arrayValidatorAccess } from "../../../middlewares/validattions-access-list";
 import {
   valStrucutrePostReservation,
 } from "./reservation.catalogs.validations";
+import { validateExistingArrayRooms } from "../../../helpers";
 
 
 const router = Router();
 
-router.get("/", [
-    validateJWT,
-    validateRoles,
+router.get("/", 
+  arrayValidatorAccess,
+  [
     query("limit", "field (limit) should be integer and greater than 0").isInt({ min: 1 }).optional().default(null),
     query("page", "field (page) should be integer and greater than 0").isInt({ min: 1 }).optional().default(null),
     query("pagination", "field (pagination) should be boolean").isBoolean().optional().default(false),
@@ -41,10 +35,9 @@ router.get("/", [
   reservationGetAll,
 );
 
-router.get("/:id_cat_reservation", [
-    validateJWT,
-    validateRoles,
-    validateFields,
+router.get("/:id_cat_reservation", 
+  arrayValidatorAccess,
+  [
     param("id_cat_reservation", "field (id_cat_reservation) can not be empty, should be integer, and greater than 0").not().isEmpty().isInt({ min: 1 }),
     param("id_cat_reservation").custom(reservationExistsById),
     validateFields,
@@ -52,12 +45,10 @@ router.get("/:id_cat_reservation", [
   reservationGet,
 );
 
-router.put("/:id_cat_reservation",
-// [
-//     validateJWT,
-//     validateRoles,
-//     validateFields,
-//     param("id_cat_reservation", "field (id_cat_reservation) can not be empty, should be integer, and greater than 0").not().isEmpty().isInt({ min: 1 }),
+router.put("/:id_cat_reservation", 
+  // arrayValidatorAccess,
+  // [
+  //   param("id_cat_reservation", "field (id_cat_reservation) can not be empty, should be integer, and greater than 0").not().isEmpty().isInt({ min: 1 }),
 //     param("id_cat_reservation").custom(reservationExistsById),
 //     check("group_leader", "field (group_leader) is required").not().isEmpty(),
 //     check("sub_group_leader", "field (sub_group_leader) is required").not().isEmpty(),

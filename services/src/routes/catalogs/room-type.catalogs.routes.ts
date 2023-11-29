@@ -12,21 +12,20 @@ import {
 } from "../../controllers/catalogs/room-type.controllers";
 import {
   validateFields,
-  validateJWT,
 } from "../../middlewares";
 import {
   roomTypeExistsById,
   isValidArraySupplies,
   isValidArrayEquipments,
 } from "../../helpers/db-validators";
-import { validateRoles } from "../../middlewares/validate-roles";
+import { arrayValidatorAccess } from "../../middlewares/validattions-access-list";
 
 
 const router = Router();
 
-router.get("/", [
-    validateJWT,
-    validateRoles,
+router.get("/", 
+  arrayValidatorAccess,
+  [
     query("limit", "field (limit) should be integer and greater than 0").isInt({ min: 1 }).optional().default(null),
     query("page", "field (page) should be integer and greater than 0").isInt({ min: 1 }).optional().default(null),
     query("pagination", "field (pagination) should be boolean").isBoolean().optional().default(false),
@@ -35,10 +34,9 @@ router.get("/", [
   roomTypeGetAll,
 );
 
-router.get("/:id_cat_room_type", [
-    validateJWT,
-    validateRoles,
-    validateFields,
+router.get("/:id_cat_room_type", 
+  arrayValidatorAccess,
+  [
     param("id_cat_room_type", "field (id_cat_room_type) can not be empty, should be integer, and greater than 0").not().isEmpty().isInt({ min: 1 }),
     param("id_cat_room_type").custom(roomTypeExistsById()),
     validateFields,
@@ -46,10 +44,9 @@ router.get("/:id_cat_room_type", [
   roomTypeGet,
 );
 
-router.put("/:id_cat_room_type", [
-    validateJWT,
-    validateRoles,
-    validateFields,
+router.put("/:id_cat_room_type", 
+  arrayValidatorAccess,
+  [
     param("id_cat_room_type", "field (id_cat_room_type) can not be empty, should be integer, and greater than 0").not().isEmpty().isInt({ min: 1 }),
     param("id_cat_room_type").custom(roomTypeExistsById(false)),
     check("room_type", "field (room_type) is required").not().isEmpty(),
@@ -67,10 +64,9 @@ router.put("/:id_cat_room_type", [
   roomTypePut,
 );
 
-router.post("/", [
-    validateJWT,
-    validateRoles,
-    validateFields,
+router.post("/", 
+  arrayValidatorAccess,
+  [
     check("room_type", "field (room_type) is required").not().isEmpty(),
     check("price", "field (price) is required and should be number").not().isEmpty().isNumeric(),
     check("supplies", "field (supplies) is required").not().isEmpty(),
@@ -84,10 +80,9 @@ router.post("/", [
   roomTypePost,
 );
 
-router.delete("/:id_cat_room_type", [
-    validateJWT,
-    validateRoles,
-    validateFields,
+router.delete("/:id_cat_room_type", 
+  arrayValidatorAccess,
+  [
     param("id_cat_room_type", "field (id_cat_room_type) can not be empty, should be integer, and greater than 0").not().isEmpty().isInt({ min: 1 }),
     param("id_cat_room_type").custom(roomTypeExistsById()),
     validateFields,
@@ -95,10 +90,9 @@ router.delete("/:id_cat_room_type", [
   roomTypeDelete,
 );
 
-router.delete("/physical/:id_cat_room_type", [
-    validateJWT,
-    validateRoles,
-    validateFields,
+router.delete("/physical/:id_cat_room_type", 
+  arrayValidatorAccess,
+  [
     param("id_cat_room_type", "field (id_cat_room_type) can not be empty, should be integer, and greater than 0").not().isEmpty().isInt({ min: 1 }),
     param("id_cat_room_type").custom(roomTypeExistsById()),
     validateFields,

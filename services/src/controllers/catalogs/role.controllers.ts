@@ -3,7 +3,9 @@ import { Request, Response } from "express";
 
 import {
   CatFloorEntity,
-  CatRoleEntity, DetailRoleFloorEntity, DetailUserRoleEntity,
+  CatRoleEntity,
+  DetailRoleFloorEntity,
+  DetailUserRoleEntity,
 } from "../../entity";
 import { Equal, FindOperator } from "typeorm";
 

@@ -1,3 +1,8 @@
+import {
+  ENV_INITIAL_EMAIL,
+  ENV_INITIAL_PASSWORD,
+  ENV_INITIAL_USER,
+} from "../config/enviroment";
 
 export const totalFloors: number = 10;
 
@@ -200,9 +205,9 @@ export const employeeInitInformaiton = [
     country: 'USA',
     cat_employee: {
       cat_user: {
-        email: process.env.INITIAL_EMAIL || 'testUser@gmail.com',
-        user_name: process.env.INITIAL_USER || 'testUser',
-        password: process.env.INITIAL_PASSWORD || '12345_abAB'
+        email: ENV_INITIAL_EMAIL,
+        user_name: ENV_INITIAL_USER,
+        password: ENV_INITIAL_PASSWORD,
       }
     }
   },

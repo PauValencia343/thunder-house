@@ -12,19 +12,18 @@ import {
 } from "../../controllers/catalogs/floor.controllers";
 import {
   validateFields,
-  validateJWT,
 } from "../../middlewares";
 import {
   floorExistsById,
 } from "../../helpers/db-validators";
-import { validateRoles } from "../../middlewares/validate-roles";
+import { arrayValidatorAccess } from "../../middlewares/validattions-access-list";
 
 
 const router = Router();
 
-router.get("/", [
-    validateJWT,
-    validateRoles,
+router.get("/", 
+  arrayValidatorAccess,
+  [
     query("limit", "field (limit) should be integer and greater than 0").isInt({ min: 1 }).optional().default(null),
     query("page", "field (page) should be integer and greater than 0").isInt({ min: 1 }).optional().default(null),
     query("pagination", "field (pagination) should be boolean").isBoolean().optional().default(false),
@@ -33,10 +32,9 @@ router.get("/", [
   floorGetAll,
 );
 
-router.get("/:id_cat_floor", [
-    validateJWT,
-    validateRoles,
-    validateFields,
+router.get("/:id_cat_floor", 
+  arrayValidatorAccess,
+  [
     param("id_cat_floor", "field (id_cat_floor) can not be empty").not().isEmpty(),
     param("id_cat_floor", "field (id_cat_floor) should be integer and greater than 0").isInt({ min: 1 }),
     param("id_cat_floor").custom(floorExistsById()),
@@ -45,10 +43,9 @@ router.get("/:id_cat_floor", [
   floorGet,
 );
 
-router.put("/:id_cat_floor", [
-    validateJWT,
-    validateRoles,
-    validateFields,
+router.put("/:id_cat_floor", 
+  arrayValidatorAccess,
+  [
     param("id_cat_floor", "field (id_cat_floor) can not be empty").not().isEmpty(),
     param("id_cat_floor", "field (id_cat_floor) should be integer and greater than 0").isInt({ min: 1 }),
     param("id_cat_floor").custom(floorExistsById(false)),
@@ -64,10 +61,9 @@ router.put("/:id_cat_floor", [
   floorPut,
 );
 
-router.post("/", [
-    validateJWT,
-    validateRoles,
-    validateFields,
+router.post("/", 
+  arrayValidatorAccess,
+  [
     check("number", "field (number) is required").not().isEmpty(),
     check("number", "field (number) should be integer and greater than 0").isInt({ min: 1 }),
     check("name", "field (name) is required").optional(),
@@ -77,10 +73,9 @@ router.post("/", [
   floorPost,
 );
 
-router.delete("/:id_cat_floor", [
-    validateJWT,
-    validateRoles,
-    validateFields,
+router.delete("/:id_cat_floor", 
+  arrayValidatorAccess,
+  [
     param("id_cat_floor", "field (id_cat_floor) can not be empty").not().isEmpty(),
     param("id_cat_floor", "field (id_cat_floor) should be integer and greater than 0").isInt({ min: 1 }),
     param("id_cat_floor").custom(floorExistsById()),
@@ -89,10 +84,9 @@ router.delete("/:id_cat_floor", [
   floorDelete,
 );
 
-router.delete("/physical/:id_cat_floor", [
-    validateJWT,
-    validateRoles,
-    validateFields,
+router.delete("/physical/:id_cat_floor", 
+  arrayValidatorAccess,
+  [
     param("id_cat_floor", "field (id_cat_floor) can not be empty").not().isEmpty(),
     param("id_cat_floor", "field (id_cat_floor) should be integer and greater than 0").isInt({ min: 1 }),
     param("id_cat_floor").custom(floorExistsById()),

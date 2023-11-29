@@ -1,6 +1,7 @@
 
 import "reflect-metadata";
-require('dotenv').config();
+import dotenv from 'dotenv'; 
+dotenv.config();
 
 import Server from './models/server.models';
 

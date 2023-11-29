@@ -1,7 +1,12 @@
 
 import { Request, Response } from "express";
 
-import { CatClientEntity, CatReservationEntity, CatRoomEntity, DetailReservationRoomEntity } from "../../entity";
+import {
+  CatClientEntity,
+  CatReservationEntity,
+  CatRoomEntity,
+  DetailReservationRoomEntity,
+} from "../../entity";
 import { getPrice } from "../../calculous/get-price-by-day";
 import { COST_BREAKFAST } from "../../calculous/get-price-reservation";
 

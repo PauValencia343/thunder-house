@@ -9,7 +9,6 @@ import {
   DetailEquipmentRoomTypeEntity,
   DetailSupplieRoomTypeEntity,
 } from "../../entity";
-import AppDataSource from "../../database/config";
 import { Equal } from "typeorm";
 import { adjustValueBasedOnDay } from "../../calculous/get-price-by-day";
 

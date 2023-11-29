@@ -32,7 +32,13 @@ import {
   roomsInitInformation,
   reservationInitInformation
 } from "./init-data";
-import { COST_EXTRA_PARKING_PASS, COST_EXTRA_PARKING_PASS_FORGOT, COST_EXTRA_PEOPLE, COST_KEY_FORGOT, COST_PARKING_PASS_FORGOT } from "../calculous/get-price-reservation";
+import {
+  COST_EXTRA_PARKING_PASS,
+  COST_EXTRA_PARKING_PASS_FORGOT,
+  COST_EXTRA_PEOPLE,
+  COST_KEY_FORGOT,
+  COST_PARKING_PASS_FORGOT
+} from "../calculous/get-price-reservation";
 
 
 const seedDatabase = async () => {
@@ -339,11 +345,10 @@ const assingRolesToFloors = async () => {
 const generateEmployees = async () => {
   for (let i = 0; i < employeeInitInformaiton.length; i++) {
     const personInit = employeeInitInformaiton[i];
-
     const newUser = new CatUserEntity();
     newUser.email = personInit.cat_employee.cat_user.email;
     newUser.user_name = personInit.cat_employee.cat_user.user_name;
-    newUser.password = bcryptjs.hashSync(personInit.cat_employee.cat_user.user_name, bcryptjs.genSaltSync());
+    newUser.password = bcryptjs.hashSync(personInit.cat_employee.cat_user.password, bcryptjs.genSaltSync());
     const newDetailUserRole = new DetailUserRoleEntity();
     newDetailUserRole.cat_user = newUser;
     newDetailUserRole.cat_role = rolesEntities[i];

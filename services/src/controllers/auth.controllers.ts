@@ -3,15 +3,18 @@ import { Request, Response } from "express";
 import bcryptjs from "bcryptjs";
 
 import { CatUserEntity } from "../entity";
-import { generateJWT } from "../helpers/generate-jwt";
+import { getToken } from "../helpers/generate-jwt";
 
 
 export const login = async (req: Request, res: Response) => {
   const { credential, password } = req.body;
   try {
-    const user: CatUserEntity | null = await CatUserEntity.createQueryBuilder('user')
-    .where('(user.user_name = :credential OR user.email = :credential) AND user.status = :status', { credential, status: true })
-    .getOne();
+    const user: CatUserEntity | null = await CatUserEntity.findOne({
+      where: [
+        { user_name: credential, status: true },
+        { email: credential, status: true },
+      ],
+    });
     if (!user) {
       return res.status(400).json({
         msg: "user_name or password is incorrect - email",
@@ -28,7 +31,7 @@ export const login = async (req: Request, res: Response) => {
         msg: "user_name or password is incorrect - password",
       });
     }
-    const token = await generateJWT(user.id_cat_user!.toString());
+    const token = await getToken(user.id_cat_user!);
     return res.json({
       credential,
       token,

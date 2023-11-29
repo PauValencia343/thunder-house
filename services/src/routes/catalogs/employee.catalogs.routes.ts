@@ -11,23 +11,21 @@ import {
 } from "../../controllers/catalogs/employee.controllers";
 import {
   validateFields,
-  validateJWT,
 } from "../../middlewares";
 import {
   isUniqueUser,
   isValidArrayRoles,
-  rolesExist,
   employeeExistsById,
 } from "../../helpers/db-validators";
-import { validateRoles } from "../../middlewares/validate-roles";
 import { validateRealDate } from "../../helpers";
+import { arrayValidatorAccess } from "../../middlewares/validattions-access-list";
 
 
 const router = Router();
 
-router.get("/", [
-    validateJWT,
-    validateRoles,
+router.get("/", 
+  arrayValidatorAccess,
+  [
     query("limit", "field (limit) should be integer and greater than 0").isInt({ min: 1 }).optional().default(null),
     query("page", "field (page) should be integer and greater than 0").isInt({ min: 1 }).optional().default(null),
     query("pagination", "field (pagination) should be boolean").isBoolean().optional().default(false),
@@ -36,10 +34,9 @@ router.get("/", [
   employeeGetAll,
 );
 
-router.get("/:id_cat_employee", [
-    validateJWT,
-    validateRoles,
-    validateFields,
+router.get("/:id_cat_employee", 
+  arrayValidatorAccess,
+  [
     param("id_cat_employee", "field (id_cat_employee) can not be empty, should be integer, and greater than 0").not().isEmpty().isInt({ min: 1 }),
     param("id_cat_employee").custom(employeeExistsById()),
     validateFields,
@@ -47,10 +44,9 @@ router.get("/:id_cat_employee", [
   employeeGet,
 );
 
-router.put("/:id_cat_employee", [
-    validateJWT,
-    validateRoles,
-    validateFields,
+router.put("/:id_cat_employee", 
+  arrayValidatorAccess,
+  [
     // employee
     param("id_cat_employee", "field (id_cat_employee) can not be empty, should be integer, and greater than 0").not().isEmpty().isInt({ min: 1 }),
     param("id_cat_employee").custom(employeeExistsById(false)),
@@ -91,10 +87,9 @@ router.put("/:id_cat_employee", [
   employeePut,
 );
 
-router.post("/", [
-    validateJWT,
-    validateRoles,
-    validateFields,
+router.post("/", 
+  arrayValidatorAccess,
+  [
     // person
     check("name", "field(name) is required").not().isEmpty(),
     check("surname_father", "field(surname_father) is required").not().isEmpty(),
@@ -127,10 +122,9 @@ router.post("/", [
   employeePost,
 );
 
-router.delete("/:id_cat_employee", [
-    validateJWT,
-    validateRoles,
-    validateFields,
+router.delete("/:id_cat_employee", 
+  arrayValidatorAccess,
+  [
     param("id_cat_employee", "field (id_cat_employee) can not be empty, should be integer, and greater than 0").not().isEmpty().isInt({ min: 1 }),
     param("id_cat_employee").custom(employeeExistsById()),
     validateFields,

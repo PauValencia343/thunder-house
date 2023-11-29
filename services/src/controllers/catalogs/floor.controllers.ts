@@ -2,7 +2,9 @@
 import { Request, Response } from "express";
 
 import {
-  CatFloorEntity, CatRoomEntity, DetailRoleFloorEntity,
+  CatFloorEntity,
+  CatRoomEntity,
+  DetailRoleFloorEntity,
 } from "../../entity";
 import { Equal } from "typeorm";
 

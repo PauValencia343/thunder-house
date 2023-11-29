@@ -1,5 +1,5 @@
 
-import express, { Request, Response } from "express";
+import express from "express";
 import { check } from "express-validator";
 
 import { login } from "../controllers/auth.controllers";

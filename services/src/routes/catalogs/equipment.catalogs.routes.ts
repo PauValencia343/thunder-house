@@ -12,19 +12,18 @@ import {
 } from "../../controllers/catalogs/equipment.controllers";
 import {
   validateFields,
-  validateJWT,
 } from "../../middlewares";
 import {
   equipmentExistsById,
 } from "../../helpers/db-validators";
-import { validateRoles } from "../../middlewares/validate-roles";
+import { arrayValidatorAccess } from "../../middlewares/validattions-access-list";
 
 
 const router = Router();
 
-router.get("/", [
-    validateJWT,
-    validateRoles,
+router.get("/", 
+  arrayValidatorAccess,
+  [
     query("limit", "field (limit) should be integer and greater than 0").isInt({ min: 1 }).optional().default(null),
     query("page", "field (page) should be integer and greater than 0").isInt({ min: 1 }).optional().default(null),
     query("pagination", "field (pagination) should be boolean").isBoolean().optional().default(false),
@@ -33,10 +32,9 @@ router.get("/", [
   equipmentGetAll,
 );
 
-router.get("/:id_cat_equipment", [
-    validateJWT,
-    validateRoles,
-    validateFields,
+router.get("/:id_cat_equipment", 
+  arrayValidatorAccess,
+  [
     param("id_cat_equipment", "field (id_cat_equipment) can not be empty, should be integer, and greater than 0").not().isEmpty().isInt({ min: 1 }),
     param("id_cat_equipment").custom(equipmentExistsById()),
     validateFields,
@@ -44,10 +42,9 @@ router.get("/:id_cat_equipment", [
   equipmentGet,
 );
 
-router.put("/:id_cat_equipment", [
-    validateJWT,
-    validateRoles,
-    validateFields,
+router.put("/:id_cat_equipment", 
+  arrayValidatorAccess,
+  [
     param("id_cat_equipment", "field (id_cat_equipment) can not be empty, should be integer, and greater than 0").not().isEmpty().isInt({ min: 1 }),
     param("id_cat_equipment").custom(equipmentExistsById(false)),
     check("equipment", "field (equipment) is required").not().isEmpty(),
@@ -58,10 +55,9 @@ router.put("/:id_cat_equipment", [
   equipmentPut,
 );
 
-router.post("/", [
-    validateJWT,
-    validateRoles,
-    validateFields,
+router.post("/", 
+  arrayValidatorAccess,
+  [
     check("equipment", "field (equipment) is required").not().isEmpty(),
     check("total_number_people", "field (total_number_people) is required, should be integer, and greater than 0").not().isEmpty().isInt({ min: 1 }),
     validateFields,
@@ -69,10 +65,9 @@ router.post("/", [
   equipmentPost,
 );
 
-router.delete("/:id_cat_equipment", [
-    validateJWT,
-    validateRoles,
-    validateFields,
+router.delete("/:id_cat_equipment", 
+  arrayValidatorAccess,
+  [
     param("id_cat_equipment", "field (id_cat_equipment) can not be empty, should be integer, and greater than 0").not().isEmpty().isInt({ min: 1 }),
     param("id_cat_equipment").custom(equipmentExistsById()),
     validateFields,
@@ -80,10 +75,9 @@ router.delete("/:id_cat_equipment", [
   equipmentDelete,
 );
 
-router.delete("/physical/:id_cat_equipment", [
-    validateJWT,
-    validateRoles,
-    validateFields,
+router.delete("/physical/:id_cat_equipment", 
+  arrayValidatorAccess,
+  [
     param("id_cat_equipment", "field (id_cat_equipment) can not be empty, should be integer, and greater than 0").not().isEmpty().isInt({ min: 1 }),
     param("id_cat_equipment").custom(equipmentExistsById()),
     validateFields,

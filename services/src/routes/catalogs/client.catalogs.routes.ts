@@ -11,22 +11,20 @@ import {
 } from "../../controllers/catalogs/client.controllers";
 import {
   validateFields,
-  validateJWT,
 } from "../../middlewares";
 import {
   isUniqueUser,
-  rolesExist,
   clientExistsById,
 } from "../../helpers/db-validators";
-import { validateRoles } from "../../middlewares/validate-roles";
 import { validateRealDate } from "../../helpers";
+import { arrayValidatorAccess } from "../../middlewares/validattions-access-list";
 
 
 const router = Router();
 
-router.get("/", [
-    validateJWT,
-    validateRoles,
+router.get("/", 
+  arrayValidatorAccess,
+  [
     query("limit", "field (limit) should be integer and greater than 0").isInt({ min: 1 }).optional().default(null),
     query("page", "field (page) should be integer and greater than 0").isInt({ min: 1 }).optional().default(null),
     query("pagination", "field (pagination) should be boolean").isBoolean().optional().default(false),
@@ -35,10 +33,9 @@ router.get("/", [
   clientGetAll,
 );
 
-router.get("/:id_cat_client", [
-    validateJWT,
-    validateRoles,
-    validateFields,
+router.get("/:id_cat_client", 
+  arrayValidatorAccess,
+  [
     param("id_cat_client", "field (id_cat_client) can not be empty, should be integer, and greater than 0").not().isEmpty().isInt({ min: 1 }),
     param("id_cat_client").custom(clientExistsById()),
     validateFields,
@@ -46,10 +43,9 @@ router.get("/:id_cat_client", [
   clientGet,
 );
 
-router.put("/:id_cat_client", [
-    validateJWT,
-    validateRoles,
-    validateFields,
+router.put("/:id_cat_client", 
+  arrayValidatorAccess,
+  [
     // client
     param("id_cat_client", "field (id_cat_client) can not be empty, should be integer, and greater than 0").not().isEmpty().isInt({ min: 1 }),
     param("id_cat_client").custom(clientExistsById(false)),
@@ -87,10 +83,9 @@ router.put("/:id_cat_client", [
   clientPut,
 );
 
-router.post("/", [
-    validateJWT,
-    validateRoles,
-    validateFields,
+router.post("/", 
+  arrayValidatorAccess,
+  [
     // person
     check("name", "field(name) is required").not().isEmpty(),
     check("surname_father", "field(surname_father) is required").not().isEmpty(),
@@ -120,10 +115,9 @@ router.post("/", [
   clientPost,
 );
 
-router.delete("/:id_cat_client", [
-    validateJWT,
-    validateRoles,
-    validateFields,
+router.delete("/:id_cat_client", 
+  arrayValidatorAccess,
+  [
     param("id_cat_client", "field (id_cat_client) can not be empty, should be integer, and greater than 0").not().isEmpty().isInt({ min: 1 }),
     param("id_cat_client").custom(clientExistsById()),
     validateFields,
