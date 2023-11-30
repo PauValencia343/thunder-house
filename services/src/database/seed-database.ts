@@ -211,13 +211,13 @@ const generateReservationsRegister = async () => {
 const generateRooms = async () => {
   for (let i = 0; i < roomsInitInformation.length; i++) {
     const roomInit = roomsInitInformation[i];
-    let numberByFlorr = 0;
     const catTypeRoomSelected = roomTypeEntities[roomInit.roomTypePosition];
     for (let j = 0; j < roomInit.distribution.floors.length; j++) {
+      let numberByFlorr = 0;
       const distribution = roomInit.distribution.floors[j];
-      numberByFlorr++;
       const catFloorSelected = floorsEntities[distribution.floorPosition];
       for (let k = 0; k < distribution.total; k++) {
+        numberByFlorr++;
         const newCatRoomEntity = new CatRoomEntity();
         newCatRoomEntity.number = numberByFlorr;
         newCatRoomEntity.cat_floor = catFloorSelected;

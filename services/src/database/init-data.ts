@@ -16,8 +16,6 @@ export const roomTypeInitInformation = [{room_type: 'Suit',price: 2000,supplies:
 
 export const roleInitInformation = ['Administrator','Receptionist'];
 
-
-
 export const reservationInitInformation = [
   {
     names: ["Alejandro González Herrera","Isabella Ramos Mendoza"],
@@ -100,7 +98,6 @@ export const reservationInitInformation = [
     ],
   }
 ];
-
 
 // 0 - Suit
 // 1 - Jr
