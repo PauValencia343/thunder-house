@@ -57,7 +57,7 @@ export const registerArrive = async (req: Request, res: Response) => {
         id_cat_reservation: parseInt(id_cat_reservation),
       },
     });
-    reservationFound!.subtotal += totalExtra;
+    reservationFound!.subtotal = Number(reservationFound!.subtotal + totalExtra);
     reservationFound!.status_progress = 2;
     reservationFound!.save();
     return res.status(200).json({
@@ -115,7 +115,7 @@ export const registerOutput = async (req: Request, res: Response) => {
           totalExtra += COST_KEY_FORGOT;
         }
         if (reservationFound.extra_charges) {
-          totalExtra += reservationFound.extra_charges;
+          totalExtra += Number(reservationFound.extra_charges);
         }
       }
     });
@@ -124,7 +124,7 @@ export const registerOutput = async (req: Request, res: Response) => {
         id_cat_reservation: parseInt(id_cat_reservation),
       },
     });
-    reservationFound!.subtotal += totalExtra;
+    reservationFound!.subtotal = Number(reservationFound!.subtotal + totalExtra);
     reservationFound!.status_progress = 3;
     reservationFound!.save();
     return res.status(200).json({

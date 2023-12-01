@@ -131,8 +131,8 @@ export const reservationPost = async (req: Request, res: Response) => {
     }[],
   } = req.body;
   try {
-    let totalPriceByRooms = 0;
-    let totalPersonsByRooms = 0;
+    let totalPriceByRooms: number = 0;
+    let totalPersonsByRooms: number = 0;
 
     const clientFound = await CatClientEntity.findOneBy({
       id_cat_client: fk_cat_client,
@@ -164,11 +164,10 @@ export const reservationPost = async (req: Request, res: Response) => {
       });
       newDetailReservationRoom.cat_room = roomFound!;
       
-      totalPriceByRooms += detail_room.total_people_booked * diffDays;
-      totalPersonsByRooms += roomFound!.cat_room_type.price;
+      totalPersonsByRooms += Number(detail_room.total_people_booked);
+      totalPriceByRooms += Number(roomFound!.cat_room_type.price) * diffDays;
       arrEntitiesDetail.push(newDetailReservationRoom);
     }
-    
     if (has_breakfast) {
       totalPriceByRooms += COST_BREAKFAST * totalPersonsByRooms * diffDays;
     }

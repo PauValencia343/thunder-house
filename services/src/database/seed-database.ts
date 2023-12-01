@@ -123,11 +123,11 @@ const generateReservationsOutput = async () => {
       subtotalExtra += COST_KEY_FORGOT;
     }
     if (detail.extra_charges) {
-      subtotalExtra += detail.extra_charges;
+      subtotalExtra += Number(detail.extra_charges);
     }
   
   }
-  reservation.subtotal += subtotalExtra;
+  reservation!.subtotal = Number(reservation!.subtotal + subtotalExtra);
   reservation.status_progress = 3;
   await reservation.save();
 };
@@ -158,7 +158,7 @@ const generateReservationsArrive = async () => {
         subtotalExtra += COST_EXTRA_PARKING_PASS * detail.extra_parking_pass;
       }
     }
-    reservation.subtotal += subtotalExtra;
+    reservation!.subtotal = Number(reservation!.subtotal + subtotalExtra);
     reservation.status_progress = 2;
     await reservation.save();
   }
@@ -194,7 +194,7 @@ const generateReservationsRegister = async () => {
       newDetailReservationRoomEntity.cat_reservation = newCatReservationEntity;
       const roomSelected = roomEntities[detailReservation.positionRoom];
       newDetailReservationRoomEntity.cat_room = roomSelected;
-      subtotal += roomSelected.cat_room_type.price;
+      subtotal += Number(roomSelected.cat_room_type.price);
       detailRoomReservation.push(newDetailReservationRoomEntity);
     }
     newCatReservationEntity.subtotal = subtotal;
