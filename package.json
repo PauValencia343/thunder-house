@@ -6,15 +6,7 @@
   "scripts": {
     "dev": "nodemon ./dist/app.js",
     "ts": "tsc --watch",
-    "start": "node ./dist/app.js",
-    "reset": "node ./dist/app.js --database=true",
-    "resetdev": "nodemon ./dist/app.js --database=true",
-    "clean": "rm -rf node_modules/ && rm -rf dist/",
-    "cleanNode": "rm -rf node_modules/",
-    "cleanTs": "rm -rf dist/",
-    "build": "npm install && tsc",
-    "create": "npm run clean && npm run build && npm run reset",
-    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules && npx jest --config=jest.config.js --detectOpenHandles"
+    "start": "node ./dist/app.js"
   },
   "keywords": [],
   "author": "",
