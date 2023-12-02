@@ -1,73 +1,121 @@
-# **Thunder House**
+# Thunder-House-Services
 
-Thunder House is a hotel management system that aims to provide efficient control of all operations related to the administration of a hotel.
+Brief project description here.
+
+## Prerequisites
+
+Before you begin, ensure you have met the following requirements:
+
+- **MySQL:** Install MySQL on your machine.
+- **Node.js:** Install NodeJS.
+
+## Installation
+1. Create a MySQL Database:
+Execute the following SQL script in your MySQL management tool to create the database:
+
+```
+DROP DATABASE IF EXISTS db_thunder_house;
+CREATE DATABASE db_thunder_house;
+USE db_thunder_house;
+```
+
+2. Navigate to the project directory.
+```
+cd services
+```
+
+3. Configure the enviroment file:
+
+  - Replace the information in the file `.env.example` for you enviroment information.
+  - Replace the file name from `.env.example` to `.env`
+
+4. If this is the first time you are running the project or you have updates, run the following command.
+```
+npm run create
+```
+
+  Note: If you have errors for connectiont try this:
+  ```
+  ALTER USER '<your_user>'@'localhost' IDENTIFIED WITH mysql_native_password BY '<your_password>';
+  flush privileges;
+  ```
+  You can use the command from the step 5 after this.
 
 
-## **Features**
-
-- **Inventory Management:** Keep track of available ceramic products, raw materials, and their quantities.
-
-- **Material Tracking:** Monitor the usage and availability of different materials used in the production process.
-
-- **App Interface:** Intuitive user interface for easy navigation and interaction with the system.
-Services: Backend services to handle data processing, authentication, and API endpoints.
+5. If you have run the project before and just want to run the server again, run the following command.
+```
+npm run start
+```
 
 
-## **Technologies Used**
-
-- **Frontend Web:** TypeScript with Angular
-
-- **Frontend Mobile:** Dart with Flutter
-
-- **Backend:**  Node.js with TypeScript
-
-- **Database:** MySQL
 
 
-## **Getting Started**
 
-### **Prerequisites**
 
-[List any prerequisites or dependencies required to run the project]
 
-### **Installation**
+<!-- Se agregaron los datos de
+start_date
+end_start
+is_from_platform_promotion
+has_breakfast
 
-1. Clone the repository: git clone from [thunder-house](https://github.com/Imom111/thunder-house.git)
-2. [Others steps for the installation...]
+Ubicado en la carpeta de
+catalogs>reservation>add-reservation
+catalogs>reservation>put-reservation
 
-### **Usage**
 
-1. [How to run or deploy the application?]
-2. [Guidelines or important notes]
+Se agrego el precio de habitacion en tipo de habitacion
+price
 
-<!-- ## **Contributing**
+Ubicado en la carpeta de
+catalogs>room-type>add-room-type
+catalogs>room-type>put-room-type
 
-We welcome contributions to improve Thunder House! If you'd like to contribute, please follow these guidelines:
 
-[Specify guidelines for contributing, such as how to submit pull requests or report issues]
-[Provide instructions on how to set up a development environment] -->
 
-## **License**
 
-This project is licensed under the [MIT License](https://opensource.org/license/mit/).
 
-<!-- ## **Acknowledgements** -->
 
-## **Contributors**
 
-We would like to acknowledge the following individuals and projects for their contributions and inspiration to the Thunder House project:
 
-- **Iván Ornelas (IMOM):** Manager and responsible for the maintenance, development and publication of services, Github Administrator, Database Administrator.
-    - [GitHub School **20000804**](https://github.com/IDGS-904-20000804)
-    - [GitHub Personal **Imom111**](https://github.com/Imom111)
 
-- **Paula Valencia (PDVP):** Project Manager, Principal Analyst.
-    - [GitHub School **20002139**](https://github.com/IDGS-904-20002139)
-    - [GitHub Personal **PauValencia343**](https://github.com/PauValencia343)
 
-- **Luis Hernández (LAHS):** Web application development and publication manager and data analysis manager.
-    - [GitHub School **20001532**](https://github.com/IDGS-904-20001532)
-    - [GitHub Personal **AdrianHernandez1**](https://github.com/AdrianHernandez1)
+1. Registro de reservacion
+- Reserva hecha desde plataforma de promoción (variará el precio con este campo)
+- Con nopmbre del lider
+- Con nopmbre del sublider
+- Id del cliente
+- Se envia el detalle de reservaciones (por habitacion):
+- - Cantidad de personas
+- - Id de habitacion
+- - Se indica si se tiene desayuno incluido
 
-- **Edgar Teran (EYET):** Mobile application development and publication manager.
-    - [GitHub School **20001239**](https://github.com/IDGS-904-20001239)
+2. Arribo de huespedes (todos los siguientes campos corresponden a cada habitacion reservada):
+- Se contabiliza el total de personas que llegaron (si difiere con el total de personas que llegaron se sumará al total)
+- Se notifica que se ha entregado el pase de estacionamiento
+- (Opcionalmente) Se indica cuantos pases extras de estacionamiento se entregaron - se sumará al total
+- Se entrega la llave de habitacion
+- Se notifica si se ha dejado el equipaje en resguardo
+- Se entrega a la habitacion los suministros
+
+3. Desalojo de huespedes (todos los siguientes campos corresponden a cada habitacion reservada):
+- Se notifica que se ha retornado el pase de estacionamiento (en caso de perdida se sumará al total)
+- (Opcionalmente) Se indica cuantos pases extras de estacionamiento se retornaron (en caso de perdida se sumará al total)
+- Se retorna la llave de habitacion (en caso de perdida se sumará al total)
+- Se valora si existen daños y se agregan al total
+
+
+
+///////////////
+Validate jwt -->
+
+
+
+
+<!-- Update detail reservation
+make view for get free rooms, total size, and price
+make view for Hoja de registro (detail reservation)
+lotes
+200 pesos por daño a cada producto
+actualizar reservaciones -->
+
